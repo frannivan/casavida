@@ -1,0 +1,67 @@
+<div class="container">
+    <header class="jumbotron">
+        <h1 class="display-4">Bienvenido a CasaVida</h1>
+        <p class="lead">Encuentra el terreno ideal para tu futuro hogar.</p>
+    </header>
+
+    <!-- Filters -->
+    <div class="card mb-4 p-3 bg-light">
+        <div class="form-row align-items-end">
+            <div class="col-md-3">
+                <label>Fraccionamiento</label>
+                <select class="form-control" [(ngModel)]="searchFraccionamiento" (change)="search()">
+                    <option value="">Todos</option>
+                    <option *ngFor="let f of fraccionamientos" [value]="f.id">{{ f.nombre }}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label>Ubicación / Ciudad</label>
+                <select class="form-control" [(ngModel)]="searchUbicacion" (change)="search()">
+                    <option value="">Todas</option>
+                    <option *ngFor="let u of ubicaciones" [value]="u">{{ u }}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label>Ordenar por Precio</label>
+                <select class="form-control" [(ngModel)]="sortDir" (change)="search()">
+                    <option value="asc">Menor a Mayor</option>
+                    <option value="desc">Mayor a Menor</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary btn-block" (click)="search()">Filtrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isLoading" class="text-center">
+        <p>Cargando lotes disponibles...</p>
+    </div>
+
+    <div *ngIf="!isLoading">
+        <app-map [lotes]="lotes" [fraccionamientos]="fraccionamientos"
+            (selectFraccionamiento)="onFraccionamientoSelect($event)"></app-map>
+    </div>
+
+    <div class="grid-container" *ngIf="!isLoading">
+        <div class="card lote-card" *ngFor="let lote of lotes">
+            <img [src]="getDisplayUrl(lote.imagenUrl)" alt="Lote Image" class="lote-img">
+            <div class="card-body">
+                <small class="text-muted font-weight-bold" *ngIf="lote.fraccionamiento">{{ lote.fraccionamiento.nombre
+                    }}</small>
+                <h3 class="card-title mt-1">Lote: {{ lote.numeroLote }}</h3>
+                <p class="badge badge-success">{{ lote.estatus }}</p>
+                <p class="mb-1" *ngIf="lote.fraccionamiento"><i class="fas fa-map-marker-alt text-danger"></i> {{
+                    lote.fraccionamiento.ubicacion }}</p>
+                <p><strong>Manzana:</strong> {{ lote.manzana }}</p>
+                <p><strong>Área:</strong> {{ lote.areaMetrosCuadrados }} m²</p>
+                <p><strong>Precio:</strong> {{ lote.precioTotal | currency:'MXN' }}</p>
+                <button class="btn btn-primary btn-block" [routerLink]="['/lote', lote.id]">Ver Detalles</button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && lotes.length === 0" class="alert alert-warning">
+        No hay lotes disponibles en este momento.
+    </div>
+</div>

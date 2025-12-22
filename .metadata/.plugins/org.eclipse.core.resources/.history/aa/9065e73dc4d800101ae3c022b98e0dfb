@@ -1,0 +1,21 @@
+spring.application.name=backend
+server.port=8080
+
+# Database Configuration (H2)
+spring.datasource.url=jdbc:h2:file:./data/casavida_db;AUTO_SERVER=TRUE
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=admin
+spring.datasource.password=admin
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+
+# H2 Console
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+
+# JPA
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# JWT Configuration (Placeholder - to be moved to env variables in production)
+app.jwt.secret=5Up3rS3cr3tK3yF0rC4s4V1d4JWTG3n3r4t10nMustLB3V3ryL0ng
+app.jwt.expiration-ms=86400000

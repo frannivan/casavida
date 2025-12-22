@@ -1,0 +1,44 @@
+<div id="app">
+
+  <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <a href="#" class="navbar-brand" routerLink="home">CasaVida</a>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a href="/home" class="nav-link" routerLink="home">Inicio</a>
+      </li>
+      <li class="nav-item" *ngIf="showAdminBoard">
+        <a href="/admin" class="nav-link" routerLink="admin">Panel Admin</a>
+      </li>
+      <li class="nav-item" *ngIf="showAdminBoard">
+        <a href="/admin/clientes" class="nav-link" routerLink="admin/clientes">Clientes</a>
+      </li>
+      <li class="nav-item" *ngIf="showUserBoard">
+        <a href="/user" class="nav-link" routerLink="user">Panel Cliente</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
+      <li class="nav-item">
+        <a href="/register" class="nav-link" routerLink="register">Registrarse</a>
+      </li>
+      <li class="nav-item">
+        <a href="/login" class="nav-link" routerLink="login">Ingresar</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
+      <!-- DEBUG INFO -->
+
+      <li class="nav-item">
+        <a href="/profile" class="nav-link" routerLink="profile">{{ username }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" style="cursor: pointer;" (click)="logout()">Salir</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="container mt-3">
+    <router-outlet></router-outlet>
+  </div>
+</div>

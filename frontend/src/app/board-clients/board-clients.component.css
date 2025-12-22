@@ -1,0 +1,13 @@
+/* Basic spacing */
+.card {
+    margin-top: 20px;
+}
+
+.modal-backdrop {
+    opacity: 0.5;
+}
+
+.modal {
+    display: block;
+    overflow-y: auto;
+}

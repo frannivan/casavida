@@ -1,0 +1,93 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Directorio de Clientes</h4>
+            <button class="btn btn-light btn-sm" (click)="openClientModal()">
+                <i class="fa fa-plus"></i> Nuevo Cliente
+            </button>
+        </div>
+        <div class="card-body">
+            <div *ngIf="clientes.length === 0" class="alert alert-info">No hay clientes registrados.</div>
+            <table class="table table-hover" *ngIf="clientes.length > 0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>INE</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let c of clientes">
+                        <td>{{ c.nombre }}</td>
+                        <td>{{ c.apellidos }}</td>
+                        <td>{{ c.email }}</td>
+                        <td>{{ c.telefono }}</td>
+                        <td>{{ c.ine || 'N/A' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" (click)="openClientModal(c)">
+                                <i class="fa fa-edit"></i> Editar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Client Modal -->
+    <div class="modal-backdrop fade show" *ngIf="showClientModal"></div>
+    <div class="modal fade show" tabindex="-1" role="dialog" [style.display]="showClientModal ? 'block' : 'none'"
+        *ngIf="showClientModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ isEditingClient ? 'Editar Cliente' : 'Registrar Nuevo Cliente' }}</h5>
+                    <button type="button" class="close" (click)="showClientModal = false">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div *ngIf="clientSuccessMsg" class="alert alert-success">{{ clientSuccessMsg }}</div>
+                    <div *ngIf="clientErrorMsg" class="alert alert-danger">{{ clientErrorMsg }}</div>
+                    <form (ngSubmit)="submitClient()" #clientForm="ngForm">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" class="form-control" [(ngModel)]="clientData.nombre" name="nombre"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label>Apellidos</label>
+                            <input type="text" class="form-control" [(ngModel)]="clientData.apellidos" name="apellidos"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" [(ngModel)]="clientData.email" name="email"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" class="form-control" [(ngModel)]="clientData.telefono" name="telefono"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <input type="text" class="form-control" [(ngModel)]="clientData.direccion" name="direccion">
+                        </div>
+                        <div class="form-group">
+                            <label>INE / Identificación</label>
+                            <input type="text" class="form-control" [(ngModel)]="clientData.ine" name="ine">
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-block">
+                            {{ isEditingClient ? 'Actualizar Cliente' : 'Registrar Cliente' }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
