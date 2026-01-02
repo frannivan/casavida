@@ -64,6 +64,7 @@ public class WebSecurityConfig {
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/public/**").permitAll()
+                .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 // Explicitly allow both exact match and sub-paths for public endpoints
                 .antMatchers("/api/lotes/public", "/api/lotes/public/**").permitAll()
                 .antMatchers("/api/fraccionamientos/public", "/api/fraccionamientos/public/**").permitAll()
