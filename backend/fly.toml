@@ -4,7 +4,7 @@
 #
 
 app = "casavida"
-primary_region = "qeret" # You might want to change this to your preferred region
+# primary_region = "dfw" # Removed invalid region to let Fly.io decide or use the app's default
 
 [build]
   dockerfile = "Dockerfile"
