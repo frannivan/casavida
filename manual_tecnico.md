@@ -9,7 +9,8 @@ El sistema utiliza una arquitectura de microservicios monolíticos desacoplados 
     - **Persistencia**: Spring Data JPA.
 - **Frontend**: Angular 18.
     - **Estilos**: CSS personalizado con utilidades tipo Bootstrap.
-    - **Comunicación**: HTTP Client con Proxy a Backend.
+    - **Comunicación**: HTTP Client.
+    - **Configuración**: El archivo `src/environments/environment.prod.ts` debe apuntar al host del backend en Fly.io (`https://casavida.fly.dev/api`).
 
 ## 2. Requisitos de Instalación
 - **Java JDK 11** o superior.
@@ -54,3 +55,71 @@ INSERT INTO user_roles (user_id, role_id) VALUES (1, 2); -- Asumiendo ID 2 es Ad
 - **Frontend**:
     - `VentaService`: Manejo de `responseType: 'blob'` para la descarga.
     - Acceso: Modal de Historial en la tabla de Inventario.
+
+## 7. Despliegue en Fly.io (Backend)
+
+La aplicación backend está configurada para desplegarse en [Fly.io](https://fly.io) utilizando Docker.
+
+### Archivos de Configuración
+- `backend/Dockerfile`: Configuración multi-etapa (Maven para compilación y JRE para ejecución).
+- `backend/fly.toml`: Configuración de la aplicación en Fly, incluyendo puerto interno (`8080`) y nombre de la app.
+
+### Pasos para Desplegar
+1.  **Instalar Fly CLI**:
+    ```bash
+    brew install flyctl
+    ```
+2.  **Iniciar Sesión**:
+    ```bash
+    fly auth login
+    ```
+3.  **Desplegar**:
+    Navegar a la carpeta `backend` y ejecutar:
+    ```bash
+    fly deploy
+    ```
+
+### Configuración de Base de Datos (PostgreSQL - UAT)
+
+La base de datos actual para el ambiente de pruebas (UAT) tiene los siguientes detalles:
+
+- **Cluster Name**: `casavida-db`
+- **Hostname**: `casavida-db.internal`
+- **Username**: `postgres`
+- **Status**: Creado y vinculado.
+
+#### Credenciales de Acceso (Solo Referencia)
+- **Password**: `qKR0fFhM3WSMYIb`
+- **Connection String**: `postgres://postgres:qKR0fFhM3WSMYIb@casavida-db.flycast:5432`
+
+> [!WARNING]
+> No compartas estas credenciales públicamente. Se han configurado en los secretos de Fly.io para mayor seguridad.
+
+### 8. Ambientes (Estrategia UAT)
+
+El sistema ahora soporta una etiqueta de ambiente para diferenciar entre Pruebas (UAT) y Producción.
+
+- **Ambiente Actual**: `UAT`
+- **Configuración**: Controlada por la variable de entorno `APP_ENV`.
+
+#### Cambiar de ambiente
+Para pasar a producción u otro ambiente:
+```bash
+fly secrets set APP_ENV=PROD
+```
+
+### 9. Consideraciones de Persistencia
+- **Local**: Continúa usando **H2** en archivo local para facilidad de desarrollo.
+- **UAT (Fly.io)**: Utiliza el cluster de **PostgreSQL** vinculado. Los datos persisten aunque se reinicien las máquinas.
+
+## 10. Pruebas y Verificación (Swagger)
+
+Para facilitar las pruebas de la API y la verificación del estado del sistema, se ha implementado **Swagger UI**.
+
+- **URL de Swagger (Local)**: `http://localhost:8080/swagger-ui.html`
+- **URL de Swagger (UAT)**: `https://casavida.fly.dev/swagger-ui.html`
+
+Desde esta interfaz podrás:
+1. Ver todos los endpoints disponibles.
+2. Probar las peticiones directamente (ej. crear lotes de prueba).
+3. Verificar que la base de datos PostgreSQL está respondiendo correctamente.
