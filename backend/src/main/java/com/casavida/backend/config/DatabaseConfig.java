@@ -27,48 +27,39 @@ public class DatabaseConfig {
     @Primary
     public DataSource dataSource() {
         if (dbUrl == null || dbUrl.isEmpty()) {
-            System.err.println("CRITICAL ERROR: DATABASE_URL is NULL or EMPTY");
-            return DataSourceBuilder.create().build();
+            throw new RuntimeException("DATABASE_URL is not set!");
         }
 
-        // Limpiar espacios, saltos de línea y caracteres invisibles
-        String cleanUrl = dbUrl.replaceAll("[\\n\\r\\s\\t]", "").trim();
-
-        System.out.println("DEBUG: URL recibida (longitud " + cleanUrl.length() + ")");
-
-        // Debug de caracteres (para detectar caracteres invisibles)
-        StringBuilder hex = new StringBuilder();
-        for (char c : cleanUrl.toCharArray()) {
-            hex.append(String.format("%02x ", (int) c));
-        }
-        System.out.println("DEBUG: HEX URL: " + hex.toString());
-
-        // Si ya tiene jdbc: lo respetamos, si no lo agregamos
-        if (!cleanUrl.startsWith("jdbc:")) {
-            if (cleanUrl.startsWith("postgresql://")) {
-                cleanUrl = "jdbc:" + cleanUrl;
-            } else {
-                // Caso extremo: No tiene ni jdbc ni postgresql:// (solo el host)
-                cleanUrl = "jdbc:postgresql://" + cleanUrl;
-            }
+        // Limpiar URL
+        String cleanUrl = dbUrl.trim();
+        if (cleanUrl.startsWith("postgresql://")) {
+            cleanUrl = "jdbc:" + cleanUrl;
         }
 
-        // Eliminar duplicados si los hay (ej: jdbc:postgresql://...postgresql://...)
-        int secondProto = cleanUrl.indexOf("postgresql://", 15);
-        if (secondProto != -1) {
-            System.err.println("DEBUG: Detectado duplicado en URL, recortando...");
-            cleanUrl = cleanUrl.substring(0, secondProto);
-            // Limpiar si quedó un & o ? al final
+        // Quitar parámetros problemáticos
+        if (cleanUrl.contains("channel_binding=")) {
+            cleanUrl = cleanUrl.split("channel_binding=")[0];
             if (cleanUrl.endsWith("&") || cleanUrl.endsWith("?")) {
                 cleanUrl = cleanUrl.substring(0, cleanUrl.length() - 1);
             }
         }
 
-        System.out.println("DEBUG URL FINAL A USAR: [" + cleanUrl + "]");
+        System.out.println("--- DB CONFIG START ---");
+        System.out.println("Original URL: " + dbUrl);
+        System.out.println("Clean URL: " + cleanUrl);
+
+        try {
+            // Forzar carga del driver
+            Class.forName("org.postgresql.Driver");
+            System.out.println("Driver org.postgresql.Driver loaded successfully.");
+        } catch (Exception e) {
+            System.err.println("CRITICAL: Failed to load PostgreSQL Driver!");
+            e.printStackTrace();
+        }
 
         return DataSourceBuilder.create()
                 .url(cleanUrl)
-                .driverClassName(driverClassName)
+                .driverClassName("org.postgresql.Driver")
                 .username(username)
                 .password(password)
                 .build();
