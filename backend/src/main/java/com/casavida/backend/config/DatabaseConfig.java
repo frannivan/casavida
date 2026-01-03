@@ -26,34 +26,48 @@ public class DatabaseConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
-        String finalUrl = dbUrl.trim();
-
-        System.out.println("DEBUG: Configurando DataSource con URL: " + finalUrl);
-
-        // Limpieza de posibles duplicados o errores de pegado
-        if (finalUrl.contains("postgresql://")
-                && finalUrl.indexOf("postgresql://") != finalUrl.lastIndexOf("postgresql://")) {
-            System.err.println("DEBUG ERROR: URL detectada como duplicada. Tomando solo la primera parte.");
-            finalUrl = finalUrl.substring(0, finalUrl.indexOf("postgresql://", 10)).trim();
+        if (dbUrl == null || dbUrl.isEmpty()) {
+            System.err.println("CRITICAL ERROR: DATABASE_URL is NULL or EMPTY");
+            return DataSourceBuilder.create().build();
         }
 
-        // Asegurar el prefijo jdbc:
-        if (finalUrl.startsWith("postgresql://")) {
-            finalUrl = "jdbc:" + finalUrl;
-        }
+        // Limpiar espacios, saltos de línea y caracteres invisibles
+        String cleanUrl = dbUrl.replaceAll("[\\n\\r\\s\\t]", "").trim();
 
-        // Eliminar parámetros que a veces dan problemas en versiones viejas del driver
-        if (finalUrl.contains("channel_binding=")) {
-            finalUrl = finalUrl.split("channel_binding=")[0];
-            if (finalUrl.endsWith("&") || finalUrl.endsWith("?")) {
-                finalUrl = finalUrl.substring(0, finalUrl.length() - 1);
+        System.out.println("DEBUG: URL recibida (longitud " + cleanUrl.length() + ")");
+
+        // Debug de caracteres (para detectar caracteres invisibles)
+        StringBuilder hex = new StringBuilder();
+        for (char c : cleanUrl.toCharArray()) {
+            hex.append(String.format("%02x ", (int) c));
+        }
+        System.out.println("DEBUG: HEX URL: " + hex.toString());
+
+        // Si ya tiene jdbc: lo respetamos, si no lo agregamos
+        if (!cleanUrl.startsWith("jdbc:")) {
+            if (cleanUrl.startsWith("postgresql://")) {
+                cleanUrl = "jdbc:" + cleanUrl;
+            } else {
+                // Caso extremo: No tiene ni jdbc ni postgresql:// (solo el host)
+                cleanUrl = "jdbc:postgresql://" + cleanUrl;
             }
         }
 
-        System.out.println("DEBUG URL FINAL: " + finalUrl);
+        // Eliminar duplicados si los hay (ej: jdbc:postgresql://...postgresql://...)
+        int secondProto = cleanUrl.indexOf("postgresql://", 15);
+        if (secondProto != -1) {
+            System.err.println("DEBUG: Detectado duplicado en URL, recortando...");
+            cleanUrl = cleanUrl.substring(0, secondProto);
+            // Limpiar si quedó un & o ? al final
+            if (cleanUrl.endsWith("&") || cleanUrl.endsWith("?")) {
+                cleanUrl = cleanUrl.substring(0, cleanUrl.length() - 1);
+            }
+        }
+
+        System.out.println("DEBUG URL FINAL A USAR: [" + cleanUrl + "]");
 
         return DataSourceBuilder.create()
-                .url(finalUrl)
+                .url(cleanUrl)
                 .driverClassName(driverClassName)
                 .username(username)
                 .password(password)
