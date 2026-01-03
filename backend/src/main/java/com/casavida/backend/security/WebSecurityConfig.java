@@ -85,8 +85,8 @@ public class WebSecurityConfig {
     public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(Collections.singletonList("*"));
+        config.setAllowCredentials(false);
+        config.setAllowedOrigins(Collections.singletonList("*"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
         source.registerCorsConfiguration("/**", config);
@@ -103,6 +103,7 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/health").permitAll()
                 .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/*/ping").permitAll()
                 .antMatchers("/api/lotes/public/**", "/api/lotes/public").permitAll()
                 .antMatchers("/api/fraccionamientos/public/**", "/api/fraccionamientos/public").permitAll()
                 .antMatchers("/api/clientes/public/**", "/api/clientes/public").permitAll()

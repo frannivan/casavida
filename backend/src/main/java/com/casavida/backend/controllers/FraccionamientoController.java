@@ -19,6 +19,11 @@ public class FraccionamientoController {
         System.out.println("--- FraccionamientoController INSTANTIATED ---");
     }
 
+    @GetMapping("/ping")
+    public String ping() {
+        return "FraccionamientoController is UP";
+    }
+
     @Autowired
     FraccionamientoRepository fraccionamientoRepository;
 

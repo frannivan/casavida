@@ -30,6 +30,11 @@ public class LoteController {
         System.out.println("--- LoteController INSTANTIATED ---");
     }
 
+    @GetMapping("/ping")
+    public String ping() {
+        return "LoteController is UP";
+    }
+
     @Autowired
     LoteRepository loteRepository;
 
