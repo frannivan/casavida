@@ -79,17 +79,8 @@ public class WebSecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/api/health").permitAll()
-                .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/*/ping").permitAll()
-                .antMatchers("/api/lotes/public/**", "/api/lotes/public").permitAll()
-                .antMatchers("/api/fraccionamientos/public/**", "/api/fraccionamientos/public").permitAll()
-                .antMatchers("/api/clientes/public/**", "/api/clientes/public").permitAll()
-                .antMatchers("/api/**").permitAll() // TEMPORARIO PARA DEBUG
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/**").permitAll()
+                .anyRequest().permitAll();
 
         // fix H2 database console: refused to display in a frame because it set
         // 'X-Frame-Options' to 'deny'
