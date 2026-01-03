@@ -24,26 +24,31 @@ public class DatabaseConfig {
     @Primary
     public DataSource dataSource() {
         if (dbUrl == null || dbUrl.isEmpty()) {
-            throw new RuntimeException("DATABASE_URL is not set!");
+            throw new RuntimeException("NEON_DATABASE_URL is not set!");
         }
 
         System.out.println("--- DB CONFIG START ---");
-        System.out.println("Input URL: " + dbUrl);
 
         String cleanUrl = dbUrl.trim();
-        String finalJdbcUrl;
+        String finalJdbcUrl = "";
         String finalUser = username;
         String finalPass = password;
 
         try {
-            // Manejar formato postgresql://user:pass@host/db
-            if (cleanUrl.startsWith("postgresql://") || cleanUrl.startsWith("postgres://")) {
-                String sub = cleanUrl.replaceFirst("postgres(ql)?://", "");
+            // 1. Quitar el prefijo jdbc: si existe para normalizar
+            String normalized = cleanUrl;
+            if (normalized.startsWith("jdbc:")) {
+                normalized = normalized.substring(5);
+            }
 
-                // Extraer user:pass si existen
-                if (sub.contains("@")) {
-                    String credentials = sub.substring(0, sub.indexOf("@"));
-                    String remainder = sub.substring(sub.indexOf("@") + 1);
+            // 2. Manejar formato postgresql://user:pass@host/db o postgresql://host/db
+            if (normalized.startsWith("postgresql://") || normalized.startsWith("postgres://")) {
+                String uriPart = normalized.replaceFirst("postgres(ql)?://", "");
+
+                if (uriPart.contains("@")) {
+                    // Extraer credenciales
+                    String credentials = uriPart.substring(0, uriPart.indexOf("@"));
+                    String remainder = uriPart.substring(uriPart.indexOf("@") + 1);
 
                     if (credentials.contains(":")) {
                         finalUser = credentials.substring(0, credentials.indexOf(":"));
@@ -51,27 +56,30 @@ public class DatabaseConfig {
                     } else {
                         finalUser = credentials;
                     }
-
-                    // Reconstruir la URL de JDBC sin credenciales internas
                     finalJdbcUrl = "jdbc:postgresql://" + remainder;
                 } else {
-                    finalJdbcUrl = "jdbc:postgresql://" + sub;
+                    finalJdbcUrl = "jdbc:postgresql://" + uriPart;
                 }
-            } else if (cleanUrl.startsWith("jdbc:postgresql://")) {
-                finalJdbcUrl = cleanUrl;
             } else {
-                finalJdbcUrl = "jdbc:postgresql://" + cleanUrl;
+                // Si no tiene protocolo, asumimos que es el host
+                finalJdbcUrl = "jdbc:postgresql://" + normalized;
             }
 
-            // Quitar parámetros problemáticos del final de la URL si se colaron
-            if (finalJdbcUrl.contains("channel_binding=")) {
-                finalJdbcUrl = finalJdbcUrl.split("channel_binding=")[0];
-                if (finalJdbcUrl.endsWith("&") || finalJdbcUrl.endsWith("?")) {
-                    finalJdbcUrl = finalJdbcUrl.substring(0, finalJdbcUrl.length() - 1);
-                }
+            // 3. Limpieza final de parámetros molestos de Neon
+            if (finalJdbcUrl.contains("?")) {
+                String[] parts = finalJdbcUrl.split("\\?");
+                String baseUrl = parts[0];
+                String query = parts[1];
+
+                // Neon a veces manda channel_binding=require que el driver de Java no entiende
+                query = query.replaceAll("channel_binding=[^&]*&?", "");
+                if (query.endsWith("&"))
+                    query = query.substring(0, query.length() - 1);
+
+                finalJdbcUrl = baseUrl + (query.isEmpty() ? "" : "?" + query);
             }
 
-            System.out.println("Final JDBC URL: " + finalJdbcUrl);
+            System.out.println("JDBC URL cleaned: " + finalJdbcUrl);
             System.out.println("Final User: " + finalUser);
 
             return DataSourceBuilder.create()

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.casavida.backend.entity.Fraccionamiento;
 import com.casavida.backend.repository.FraccionamientoRepository;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/fraccionamientos")
 public class FraccionamientoController {

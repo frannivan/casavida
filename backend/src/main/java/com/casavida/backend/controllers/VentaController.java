@@ -28,7 +28,6 @@ import com.casavida.backend.repository.LoteRepository;
 import com.casavida.backend.services.CreditService;
 import com.casavida.backend.services.CreditService.AmortizationRow;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/ventas")
 public class VentaController {

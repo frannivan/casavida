@@ -18,7 +18,6 @@ import com.casavida.backend.entity.Cliente;
 import com.casavida.backend.payload.response.MessageResponse;
 import com.casavida.backend.repository.ClienteRepository;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {

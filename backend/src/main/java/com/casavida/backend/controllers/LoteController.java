@@ -22,7 +22,6 @@ import com.casavida.backend.entity.Lote;
 import com.casavida.backend.payload.response.MessageResponse;
 import com.casavida.backend.repository.LoteRepository;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/lotes")
 public class LoteController {

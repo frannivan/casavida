@@ -32,7 +32,6 @@ import com.casavida.backend.repository.UserRepository;
 import com.casavida.backend.security.jwt.JwtUtils;
 import com.casavida.backend.security.services.UserDetailsImpl;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
