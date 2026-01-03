@@ -15,6 +15,10 @@ import com.casavida.backend.repository.FraccionamientoRepository;
 @RequestMapping("/api/fraccionamientos")
 public class FraccionamientoController {
 
+    public FraccionamientoController() {
+        System.out.println("--- FraccionamientoController INSTANTIATED ---");
+    }
+
     @Autowired
     FraccionamientoRepository fraccionamientoRepository;
 

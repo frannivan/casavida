@@ -26,6 +26,10 @@ import com.casavida.backend.repository.LoteRepository;
 @RequestMapping("/api/lotes")
 public class LoteController {
 
+    public LoteController() {
+        System.out.println("--- LoteController INSTANTIATED ---");
+    }
+
     @Autowired
     LoteRepository loteRepository;
 
