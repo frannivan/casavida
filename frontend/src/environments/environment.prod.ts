@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://casavida.fly.dev/api'
+    apiUrl: 'https://TU-NUEVO-HOST.com/api' // Cambiar por la URL del nuevo servidor
 };

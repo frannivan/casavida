@@ -11,7 +11,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Run Stage
-FROM eclipse-temurin:11-jre-jammy
+FROM eclipse-temurin:11-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
@@ -19,4 +19,5 @@ COPY --from=build /app/target/*.jar app.jar
 ENV PORT=8080
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Optimización para arranque rápido y bajo consumo en memoria (Plan Gratuito)
+ENTRYPOINT ["java", "-XX:+UseSerialGC", "-Xss512k", "-XX:MaxRAMPercentage=75.0", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
