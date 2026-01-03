@@ -17,7 +17,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.core.Ordered;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import java.util.Arrays;
+import java.util.Collections;
 
 import com.casavida.backend.security.jwt.AuthEntryPointJwt;
 import com.casavida.backend.security.jwt.AuthTokenFilter;
@@ -79,8 +86,17 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
-        return new CorsFilter(corsConfigurationSource());
+    public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOriginPatterns(Collections.singletonList("*"));
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
     }
 
     @Bean
@@ -89,17 +105,14 @@ public class WebSecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/api/health").permitAll()
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/lotes/public/**", "/api/lotes/public").permitAll()
+                .antMatchers("/api/fraccionamientos/public/**", "/api/fraccionamientos/public").permitAll()
+                .antMatchers("/api/clientes/public/**", "/api/clientes/public").permitAll()
+                .antMatchers("/api/**").permitAll() // TEMPORARIO PARA DEBUG
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/api/public/**").permitAll()
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                // Explicitly allow both exact match and sub-paths for public endpoints
-                .antMatchers("/api/lotes/public", "/api/lotes/public/**").permitAll()
-                .antMatchers("/api/fraccionamientos/public", "/api/fraccionamientos/public/**").permitAll()
-                .antMatchers("/api/clientes/public", "/api/clientes/public/**").permitAll()
                 .anyRequest().authenticated();
 
         // fix H2 database console: refused to display in a frame because it set
