@@ -27,38 +27,64 @@ public class DatabaseConfig {
             throw new RuntimeException("DATABASE_URL is not set!");
         }
 
-        // Limpiar URL
-        String cleanUrl = dbUrl.trim();
-        if (cleanUrl.startsWith("postgresql://")) {
-            cleanUrl = "jdbc:" + cleanUrl;
-        }
-
-        // Quitar parámetros problemáticos
-        if (cleanUrl.contains("channel_binding=")) {
-            cleanUrl = cleanUrl.split("channel_binding=")[0];
-            if (cleanUrl.endsWith("&") || cleanUrl.endsWith("?")) {
-                cleanUrl = cleanUrl.substring(0, cleanUrl.length() - 1);
-            }
-        }
-
         System.out.println("--- DB CONFIG START ---");
-        System.out.println("Original URL: " + dbUrl);
-        System.out.println("Clean URL: " + cleanUrl);
+        System.out.println("Input URL: " + dbUrl);
+
+        String cleanUrl = dbUrl.trim();
+        String finalJdbcUrl;
+        String finalUser = username;
+        String finalPass = password;
 
         try {
-            // Forzar carga del driver
-            Class.forName("org.postgresql.Driver");
-            System.out.println("Driver org.postgresql.Driver loaded successfully.");
-        } catch (Exception e) {
-            System.err.println("CRITICAL: Failed to load PostgreSQL Driver!");
-            e.printStackTrace();
-        }
+            // Manejar formato postgresql://user:pass@host/db
+            if (cleanUrl.startsWith("postgresql://") || cleanUrl.startsWith("postgres://")) {
+                String sub = cleanUrl.replaceFirst("postgres(ql)?://", "");
 
-        return DataSourceBuilder.create()
-                .url(cleanUrl)
-                .driverClassName("org.postgresql.Driver")
-                .username(username)
-                .password(password)
-                .build();
+                // Extraer user:pass si existen
+                if (sub.contains("@")) {
+                    String credentials = sub.substring(0, sub.indexOf("@"));
+                    String remainder = sub.substring(sub.indexOf("@") + 1);
+
+                    if (credentials.contains(":")) {
+                        finalUser = credentials.substring(0, credentials.indexOf(":"));
+                        finalPass = credentials.substring(credentials.indexOf(":") + 1);
+                    } else {
+                        finalUser = credentials;
+                    }
+
+                    // Reconstruir la URL de JDBC sin credenciales internas
+                    finalJdbcUrl = "jdbc:postgresql://" + remainder;
+                } else {
+                    finalJdbcUrl = "jdbc:postgresql://" + sub;
+                }
+            } else if (cleanUrl.startsWith("jdbc:postgresql://")) {
+                finalJdbcUrl = cleanUrl;
+            } else {
+                finalJdbcUrl = "jdbc:postgresql://" + cleanUrl;
+            }
+
+            // Quitar parámetros problemáticos del final de la URL si se colaron
+            if (finalJdbcUrl.contains("channel_binding=")) {
+                finalJdbcUrl = finalJdbcUrl.split("channel_binding=")[0];
+                if (finalJdbcUrl.endsWith("&") || finalJdbcUrl.endsWith("?")) {
+                    finalJdbcUrl = finalJdbcUrl.substring(0, finalJdbcUrl.length() - 1);
+                }
+            }
+
+            System.out.println("Final JDBC URL: " + finalJdbcUrl);
+            System.out.println("Final User: " + finalUser);
+
+            return DataSourceBuilder.create()
+                    .url(finalJdbcUrl)
+                    .driverClassName("org.postgresql.Driver")
+                    .username(finalUser)
+                    .password(finalPass)
+                    .build();
+
+        } catch (Exception e) {
+            System.err.println("CRITICAL ERROR during DataSource creation: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }
