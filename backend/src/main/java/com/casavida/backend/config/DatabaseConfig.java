@@ -23,7 +23,9 @@ public class DatabaseConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
+        System.out.println("--- DATABASE CONFIGURATION STARTING ---");
         if (dbUrl == null || dbUrl.isEmpty()) {
+            System.err.println("ERROR: NEON_DATABASE_URL is NULL or EMPTY!");
             throw new RuntimeException("NEON_DATABASE_URL is not set!");
         }
 

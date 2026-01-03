@@ -3,6 +3,7 @@ package com.casavida.backend.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -78,14 +79,20 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter(corsConfigurationSource());
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().configurationSource(corsConfigurationSource()).and().csrf().disable()
+        http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight checks
+                .antMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
+                .antMatchers("/api/health").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/public/**").permitAll()
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
