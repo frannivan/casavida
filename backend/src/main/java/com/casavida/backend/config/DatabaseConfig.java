@@ -26,13 +26,31 @@ public class DatabaseConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
-        String finalUrl = dbUrl;
+        String finalUrl = dbUrl.trim();
 
-        // Si la URL viene de una variable de entorno tipo postgresql://
-        // pero le falta el prefijo jdbc: exigido por el driver de Java
+        System.out.println("DEBUG: Configurando DataSource con URL: " + finalUrl);
+
+        // Limpieza de posibles duplicados o errores de pegado
+        if (finalUrl.contains("postgresql://")
+                && finalUrl.indexOf("postgresql://") != finalUrl.lastIndexOf("postgresql://")) {
+            System.err.println("DEBUG ERROR: URL detectada como duplicada. Tomando solo la primera parte.");
+            finalUrl = finalUrl.substring(0, finalUrl.indexOf("postgresql://", 10)).trim();
+        }
+
+        // Asegurar el prefijo jdbc:
         if (finalUrl.startsWith("postgresql://")) {
             finalUrl = "jdbc:" + finalUrl;
         }
+
+        // Eliminar parámetros que a veces dan problemas en versiones viejas del driver
+        if (finalUrl.contains("channel_binding=")) {
+            finalUrl = finalUrl.split("channel_binding=")[0];
+            if (finalUrl.endsWith("&") || finalUrl.endsWith("?")) {
+                finalUrl = finalUrl.substring(0, finalUrl.length() - 1);
+            }
+        }
+
+        System.out.println("DEBUG URL FINAL: " + finalUrl);
 
         return DataSourceBuilder.create()
                 .url(finalUrl)
