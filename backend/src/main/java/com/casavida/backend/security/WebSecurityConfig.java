@@ -79,6 +79,7 @@ public class WebSecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                .antMatchers("/").permitAll()
                 .antMatchers("/api/health").permitAll()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/*/ping").permitAll()
