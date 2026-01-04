@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AppStatusController {
 
-    @GetMapping("/")
+    @GetMapping("/api/welcome")
     public String welcome() {
         return "CasaVida Backend is ALIVE on Render/Railway! (Status: OK)";
     }
