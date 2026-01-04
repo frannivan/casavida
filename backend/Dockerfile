@@ -16,8 +16,8 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Set default port
-ENV PORT=8000
-EXPOSE 8000
+ENV PORT=8080
+EXPOSE 8080
 
 # Optimización para arranque rápido y bajo consumo en memoria (Plan Gratuito)
 ENTRYPOINT ["java", "-XX:+UseSerialGC", "-Xss1024k", "-XX:MaxRAMPercentage=75.0", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
