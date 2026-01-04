@@ -37,7 +37,19 @@ public class DatabaseConfig {
         String finalPass = password;
 
         try {
-            // 1. Quitar el prefijo jdbc: si existe para normalizar
+            // 0. Detectar H2 explícitamente y usar su driver
+            if (cleanUrl.startsWith("jdbc:h2:")) {
+                System.out.println("Using H2 Database Fallback");
+                return DataSourceBuilder.create()
+                        .url(cleanUrl)
+                        .driverClassName("org.h2.Driver")
+                        .username("sa")
+                        .password("")
+                        .build();
+            }
+
+            // 1. Quitar el prefijo jdbc: si existe para normalizar (Solo para Postgres
+            // logic)
             String normalized = cleanUrl;
             if (normalized.startsWith("jdbc:")) {
                 normalized = normalized.substring(5);
