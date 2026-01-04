@@ -8,7 +8,7 @@ public class RootController {
 
     @GetMapping("/")
     public String welcome() {
-        return "CasaVida Backend is ALIVE at Root! (Commit diagnostic-wide-open)";
+        return "CasaVida Backend is ALIVE at Root! (DEPLOY_ID: 1931-PORT-8080)";
     }
 
     @GetMapping("/api/health")
