@@ -6,10 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AppStatusController {
 
-    @GetMapping("/")
-    public String welcome() {
-        return "CasaVida Backend is ALIVE! (Ghost-Buster Mode)";
-    }
+    // Root mapping removed to avoid conflict with potential Zombie RootController
+    // @GetMapping("/")
+    // public String welcome() { ... }
 
     @GetMapping("/api/status") // Renamed from 'health' to avoid conflict
     public String status() {
