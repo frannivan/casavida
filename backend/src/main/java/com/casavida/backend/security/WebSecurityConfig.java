@@ -25,7 +25,7 @@ import com.casavida.backend.security.jwt.AuthTokenFilter;
 import com.casavida.backend.security.services.UserDetailsServiceImpl;
 
 @Configuration
-// @EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
     @Autowired
@@ -75,18 +75,24 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // SECURITY OFF MODE
         http.cors().and().csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .anyRequest().permitAll();
+                .antMatchers("/").permitAll()
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/health").permitAll()
+                .antMatchers("/api/lotes/public/**").permitAll()
+                .antMatchers("/api/fraccionamientos/public/**").permitAll()
+                .antMatchers("/api/clientes/public/**").permitAll()
+                .antMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                .anyRequest().authenticated();
 
         http.headers().frameOptions().sameOrigin();
 
-        // Remove filters for debug
-        // http.authenticationProvider(authenticationProvider());
-        // http.addFilterBefore(authenticationJwtTokenFilter(),
-        // UsernamePasswordAuthenticationFilter.class);
+        http.authenticationProvider(authenticationProvider());
+
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
