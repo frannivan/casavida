@@ -81,7 +81,7 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/health").permitAll()
+                .antMatchers("/api/status").permitAll() // Updated endpoint
                 .antMatchers("/api/lotes/public/**").permitAll()
                 .antMatchers("/api/fraccionamientos/public/**").permitAll()
                 .antMatchers("/api/clientes/public/**").permitAll()
