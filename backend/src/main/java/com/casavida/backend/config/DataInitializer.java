@@ -8,7 +8,7 @@ import com.casavida.backend.entity.ERole;
 import com.casavida.backend.entity.Role;
 import com.casavida.backend.repository.RoleRepository;
 
-@Component
+// @Component
 @org.springframework.transaction.annotation.Transactional
 public class DataInitializer implements CommandLineRunner {
 
