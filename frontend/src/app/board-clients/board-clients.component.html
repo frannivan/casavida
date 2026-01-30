@@ -7,8 +7,17 @@
             </button>
         </div>
         <div class="card-body">
-            <div *ngIf="clientes.length === 0" class="alert alert-info">No hay clientes registrados.</div>
-            <table class="table table-hover" *ngIf="clientes.length > 0">
+            <!-- Search Bar -->
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Buscar por nombre, email o teléfono..."
+                    [(ngModel)]="searchTerm">
+            </div>
+
+            <div *ngIf="filteredClientes.length === 0" class="alert alert-info">No se encontraron clientes.</div>
+            <table class="table table-hover table-lux" *ngIf="filteredClientes.length > 0">
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -20,13 +29,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let c of clientes">
+                    <tr *ngFor="let c of filteredClientes" (click)="openDossier(c)" style="cursor: pointer;">
                         <td>{{ c.nombre }}</td>
                         <td>{{ c.apellidos }}</td>
                         <td>{{ c.email }}</td>
                         <td>{{ c.telefono }}</td>
                         <td>{{ c.ine || 'N/A' }}</td>
-                        <td>
+                        <td (click)="$event.stopPropagation()">
+                            <button class="btn btn-sm btn-info mr-1" (click)="openDossier(c)">
+                                <i class="fa fa-folder-open"></i> Expediente
+                            </button>
                             <button class="btn btn-sm btn-warning" (click)="openClientModal(c)">
                                 <i class="fa fa-edit"></i> Editar
                             </button>
@@ -90,4 +102,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Dossier Component -->
+    <app-client-dossier [show]="showDossier" [cliente]="selectedClientForDossier" (closeEvent)="closeDossier()"
+        (editEvent)="closeDossier(); openClientModal(selectedClientForDossier)">
+    </app-client-dossier>
 </div>

@@ -1,0 +1,102 @@
+<div class="container mt-4">
+    <div *ngIf="isLoading" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Cargando...</span>
+        </div>
+        <p>Cargando detalles...</p>
+    </div>
+
+    <div *ngIf="errorMsg" class="alert alert-danger">
+        {{ errorMsg }}
+        <br>
+        <button class="btn btn-outline-danger mt-2" routerLink="/home">Volver al Inicio</button>
+    </div>
+
+    <div *ngIf="fraccionamiento && !isLoading" class="card shadow-lg">
+        <div class="row no-gutters">
+            <!-- Left Side: Map/Main Image -->
+            <div class="col-md-7 bg-light rounded-left p-0">
+                <div class="p-3" style="height: 500px;">
+                    <app-map [lotes]="lotes" [fraccionamientos]="[fraccionamiento]"></app-map>
+                </div>
+            </div>
+
+            <!-- Right Side: Details -->
+            <div class="col-md-5">
+                <div class="card-body p-4 text-center d-flex flex-column justify-content-center h-100">
+                    <div class="mb-3">
+                        <img [src]="fraccionamiento.logoUrl || 'assets/no-img.png'" class="img-fluid"
+                            style="max-height: 100px;">
+                    </div>
+
+                    <h1 class="h2 font-weight-bold text-dark mb-1">{{ fraccionamiento.nombre }}</h1>
+
+                    <div class="d-inline-block bg-light rounded-pill px-3 py-2 mb-3 align-self-center mx-auto">
+                        <i class="fas fa-map-marker-alt text-danger mr-1 small"></i>
+                        <span class="text-dark font-weight-bold small">{{ fraccionamiento.ubicacion }}</span>
+                    </div>
+
+                    <hr class="my-3 w-75 mx-auto" style="border-top: 1px solid rgba(0,0,0,0.1);">
+
+                    <div class="description-box overflow-auto mb-4" style="max-height: 150px;">
+                        <p class="text-secondary small" style="line-height: 1.6;">
+                            {{ fraccionamiento.descripcion }}
+                        </p>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-auto">
+                        <button routerLink="/home" class="btn btn-sm btn-outline-secondary px-3 rounded-pill">
+                            <i class="fas fa-arrow-left mr-1"></i> Volver al Inicio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lotes Section (Inside the card, effectively) -->
+        <div class="bg-white p-4">
+            <h3 class="font-weight-bold text-center mb-4 text-dark">Lotes Disponibles</h3>
+
+            <div class="alert alert-info text-center" *ngIf="lotes.length === 0">
+                No hay lotes disponibles para visualización pública en este momento.
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-4" *ngFor="let lote of lotes">
+                    <div class="card h-100 border shadow-sm hover-lift transition-all">
+                        <div class="position-relative">
+                            <img [src]="lote.imagenUrl || 'https://placehold.co/300x200?text=Sin+Imagen'"
+                                class="card-img-top" style="height: 200px; object-fit: cover;">
+                            <span class="badge position-absolute m-2"
+                                [ngClass]="{'badge-success': lote.estatus === 'DISPONIBLE', 'badge-warning': lote.estatus === 'APARTADO', 'badge-danger': lote.estatus === 'VENDIDO'}"
+                                style="top: 0; right: 0;">
+                                {{ lote.estatus }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title font-weight-bold mb-1">Lote {{ lote.numeroLote }}</h5>
+                            <small class="text-muted text-uppercase d-block mb-2">{{ lote.manzana }}</small>
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div>
+                                    <small class="d-block text-muted">Superficie</small>
+                                    <span class="font-weight-bold">{{ lote.areaMetrosCuadrados }} m²</span>
+                                </div>
+                                <div class="text-right">
+                                    <small class="d-block text-muted">Precio</small>
+                                    <span class="text-success font-weight-bold">{{ lote.precioTotal | currency:'MXN'
+                                        }}</span>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-outline-primary btn-block rounded-pill mt-3 btn-sm"
+                                [routerLink]="['/lote', lote.id]">
+                                Ver Detalles
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

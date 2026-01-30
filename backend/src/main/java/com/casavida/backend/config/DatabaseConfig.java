@@ -43,8 +43,8 @@ public class DatabaseConfig {
                 return DataSourceBuilder.create()
                         .url(cleanUrl)
                         .driverClassName("org.h2.Driver")
-                        .username("sa")
-                        .password("")
+                        .username(finalUser)
+                        .password(finalPass)
                         .build();
             }
 

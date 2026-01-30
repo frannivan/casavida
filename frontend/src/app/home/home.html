@@ -43,6 +43,26 @@
             (selectFraccionamiento)="onFraccionamientoSelect($event)"></app-map>
     </div>
 
+    <!-- Fraccionamientos List -->
+    <div *ngIf="!isLoading && fraccionamientos.length > 0" class="my-4">
+        <h3>Nuestros Desarrollos</h3>
+        <div class="row">
+            <div class="col-md-4 mb-3" *ngFor="let f of fraccionamientos">
+                <div class="card h-100 shadow-sm" style="cursor: pointer;" [routerLink]="['/fraccionamiento', f.id]">
+                    <img [src]="getDisplayUrl(f.logoUrl)" class="card-img-top"
+                        style="height: 150px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ f.nombre }}</h5>
+                        <p class="card-text text-muted small"><i class="fas fa-map-marker-alt text-danger"></i> {{
+                            f.ubicacion }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <h3>Lotes Disponibles</h3>
+    </div>
+
     <div class="grid-container" *ngIf="!isLoading">
         <div class="card lote-card" *ngFor="let lote of lotes">
             <img [src]="getDisplayUrl(lote.imagenUrl)" alt="Lote Image" class="lote-img">

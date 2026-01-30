@@ -66,6 +66,12 @@ public class LoteController {
         return loteRepository.findAll();
     }
 
+    @GetMapping("/adm/by-fraccionamiento/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Lote> getLotesByFraccionamiento(@PathVariable Long id) {
+        return loteRepository.findByFraccionamientoId(id);
+    }
+
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createLote(@RequestBody Lote lote) {
@@ -85,6 +91,11 @@ public class LoteController {
             lote.setEstatus(loteDetails.getEstatus());
             lote.setDescripcion(loteDetails.getDescripcion());
             lote.setImagenUrl(loteDetails.getImagenUrl());
+            if (loteDetails.getFraccionamiento() != null) {
+                lote.setFraccionamiento(loteDetails.getFraccionamiento());
+            } else {
+                lote.setFraccionamiento(null);
+            }
             loteRepository.save(lote);
             return ResponseEntity.ok(new MessageResponse("Lote actualizado exitosamente."));
         }).orElse(ResponseEntity.notFound().build());

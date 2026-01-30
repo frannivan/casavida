@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -25,7 +25,9 @@ export interface ContratoRequest {
   providedIn: 'root'
 })
 export class VentaService {
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
+
+  constructor() { }
 
   cotizar(request: CotizacionRequest): Observable<any> {
     return this.http.post(API_URL + 'cotizar', request);

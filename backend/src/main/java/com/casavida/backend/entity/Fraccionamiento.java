@@ -15,6 +15,8 @@ public class Fraccionamiento {
     private String ubicacion;
     private String descripcion;
     private String logoUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String coordenadasGeo;
 
     public Fraccionamiento() {

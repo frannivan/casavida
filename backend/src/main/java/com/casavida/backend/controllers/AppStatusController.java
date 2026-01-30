@@ -16,8 +16,4 @@ public class AppStatusController {
         return "{\"status\":\"UP\", \"source\":\"AppStatusController\"}";
     }
 
-    @GetMapping("/api/lotes/ping")
-    public String ping() {
-        return "Ping from AppStatusController";
-    }
 }

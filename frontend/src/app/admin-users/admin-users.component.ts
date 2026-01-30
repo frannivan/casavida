@@ -1,0 +1,172 @@
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AdminService } from '../services/admin';
+
+@Component({
+    selector: 'app-admin-users',
+    standalone: true,
+    imports: [CommonModule, FormsModule],
+    template: `
+<div class="row">
+    <div class="col-12 d-flex justify-content-between align-items-center mb-4">
+        <h2>Gestión de Usuarios</h2>
+        <button class="btn btn-primary" (click)="openCreateModal()">
+            <i class="fas fa-user-plus mr-2"></i>Nuevo Usuario
+        </button>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th class="text-right">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users">
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="user.role === 'ADMIN' ? 'badge-danger' : 'badge-info'">
+                            {{ user.role }}
+                        </span>
+                    </td>
+                    <td class="text-right">
+                        <button class="btn btn-sm btn-outline-info mr-2" (click)="openEditModal(user)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user.id)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" [ngClass]="{'show d-block': showModal}" tabindex="-1" *ngIf="showModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ isEditing ? 'Editar Usuario' : 'Nuevo Usuario' }}</h5>
+                <button type="button" class="close" (click)="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" [(ngModel)]="currentUser.username">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" [(ngModel)]="currentUser.email">
+                </div>
+                <div class="form-group">
+                    <label>Password {{ isEditing ? '(vacío para mantener)' : '' }}</label>
+                    <input type="password" class="form-control" [(ngModel)]="currentUser.password">
+                </div>
+                <div class="form-group">
+                    <label>Rol</label>
+                    <select class="form-control" [(ngModel)]="currentUser.role">
+                        <option value="">Seleccionar rol...</option>
+                        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="saveUser()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showModal"></div>
+`
+})
+export class AdminUsersComponent implements OnInit {
+    users: any[] = [];
+    showModal = false;
+    isEditing = false;
+
+    currentUser: any = {
+        username: '',
+        email: '',
+        password: '',
+        role: ''  // Default empty, per request
+    };
+
+    roles = ['ADMIN', 'USER'];
+
+    private adminService = inject(AdminService);
+    private cdr = inject(ChangeDetectorRef);
+
+    constructor() { }
+
+    ngOnInit(): void {
+        this.loadUsers();
+    }
+
+    loadUsers(): void {
+        this.adminService.getUsers().subscribe({
+            next: (data) => {
+                this.users = data;
+                this.cdr.detectChanges();
+            },
+            error: (err) => console.error(err)
+        });
+    }
+
+    openCreateModal(): void {
+        this.isEditing = false;
+        this.currentUser = { username: '', email: '', password: '', role: '' };
+        this.showModal = true;
+    }
+
+    openEditModal(user: any): void {
+        this.isEditing = true;
+        this.currentUser = { ...user, password: '' };
+        this.showModal = true;
+    }
+
+    closeModal(): void {
+        this.showModal = false;
+    }
+
+    saveUser(): void {
+        if (this.isEditing) {
+            this.adminService.updateUser(this.currentUser.id, this.currentUser).subscribe({
+                next: () => {
+                    this.loadUsers();
+                    this.closeModal();
+                },
+                error: (err) => alert('Error actualizando: ' + (err.error?.message || err.message))
+            });
+        } else {
+            this.adminService.createUser(this.currentUser).subscribe({
+                next: () => {
+                    this.loadUsers();
+                    this.closeModal();
+                },
+                error: (err) => alert('Error creando: ' + (err.error?.message || err.message))
+            });
+        }
+    }
+
+    deleteUser(id: number): void {
+        if (confirm('¿Eliminar usuario?')) {
+            this.adminService.deleteUser(id).subscribe({
+                next: () => this.loadUsers(),
+                error: (err) => alert('Error eliminando: ' + (err.error?.message || err.message))
+            });
+        }
+    }
+}

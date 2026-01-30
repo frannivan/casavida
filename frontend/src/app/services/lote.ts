@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -10,7 +10,9 @@ const API_URL = environment.apiUrl + '/lotes/';
 })
 export class LoteService {
 
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
+
+  constructor() { }
 
   getPublicLotes(fraccionamientoId?: any, ubicacion?: string, sortDir: string = 'asc'): Observable<any> {
     let params: any = { sortDir };
@@ -26,6 +28,10 @@ export class LoteService {
 
   getAllLotes(): Observable<any> {
     return this.http.get(API_URL + 'all');
+  }
+
+  getLotesByFraccionamiento(fraccionamientoId: number): Observable<any> {
+    return this.http.get(API_URL + 'adm/by-fraccionamiento/' + fraccionamientoId);
   }
 
   createLote(lote: any): Observable<any> {

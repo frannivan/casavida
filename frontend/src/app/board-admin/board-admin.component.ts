@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { LoteService } from '../services/lote';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +19,16 @@ import { RouterLink } from '@angular/router';
     styleUrl: './board-admin.component.css'
 })
 export class BoardAdminComponent implements OnInit {
+    getClientNameForPayment(): string {
+        const client = this.clientes.find(c => c.id === this.paymentData.clienteId);
+        return client ? client.nombre + ' ' + client.apellidos : '';
+    }
+
+    getLoteInfoForPayment(): string {
+        const contract = this.contratosCliente.find(c => c.id === this.paymentData.contratoId);
+        return contract ? 'Lote ' + contract.lote?.numeroLote + ' (' + contract.lote?.fraccionamiento?.nombre + ')' : '';
+    }
+
     content?: string;
     lotes: any[] = [];
     fraccionamientos: any[] = [];
@@ -32,6 +42,19 @@ export class BoardAdminComponent implements OnInit {
         estatus: 'DISPONIBLE'
     };
     isCreating = false;
+
+    // Fraccionamiento Management
+    isCreatingFracc = false;
+    showFraccDetailModal = false;
+    selectedFracc: any = null;
+    fraccLotes: any[] = [];
+    newFracc: any = {
+        nombre: '',
+        ubicacion: '',
+        descripcion: '',
+        logoUrl: '',
+        coordenadasGeo: ''
+    };
     stats: any = null;
 
     // Sales & Payments Modules
@@ -74,23 +97,18 @@ export class BoardAdminComponent implements OnInit {
     showHistoryModal = false;
     historyContract: any = null;
 
-    constructor(
-        private loteService: LoteService,
-        private fraccionamientoService: FraccionamientoService,
-        private reporteService: ReporteService,
-        private venteService: VentaService,
-        private clienteService: ClienteService,
-        private pagoService: PagoService
-    ) { }
+    private loteService = inject(LoteService);
+    private fraccionamientoService = inject(FraccionamientoService);
+    private reporteService = inject(ReporteService);
+    private venteService = inject(VentaService);
+    private clienteService = inject(ClienteService);
+    private pagoService = inject(PagoService);
+
+    constructor() { }
 
     ngOnInit(): void {
-        this.reporteService.getDashboardStats().subscribe({
-            next: data => {
-                this.stats = data;
-            },
-            error: err => console.error('Error fetching stats', err)
-        });
-
+        this.loadStats();
+        this.loadFraccionamientos();
         this.loadLotes();
         this.loadClientes();
         this.loadAllContratos(); // New: Fetch contracts for inventory mapping
@@ -267,6 +285,36 @@ export class BoardAdminComponent implements OnInit {
             },
             error: err => console.error(err)
         });
+    }
+
+    // --- FRACCIONAMIENTO Logic ---
+    onCreateFracc(): void {
+        this.fraccionamientoService.createFraccionamiento(this.newFracc).subscribe({
+            next: res => {
+                this.isCreatingFracc = false;
+                this.loadFraccionamientos();
+                this.newFracc = { nombre: '', ubicacion: '', descripcion: '', logoUrl: '', coordenadasGeo: '' };
+            },
+            error: err => console.error(err)
+        });
+    }
+
+    viewFraccDetail(fracc: any): void {
+        this.selectedFracc = fracc;
+        this.showFraccDetailModal = true;
+        this.loteService.getLotesByFraccionamiento(fracc.id).subscribe({
+            next: data => this.fraccLotes = data,
+            error: err => console.error(err)
+        });
+    }
+
+    deleteFracc(id: number): void {
+        if (confirm('¿Seguro de eliminar este fraccionamiento?')) {
+            this.fraccionamientoService.deleteFraccionamiento(id).subscribe({
+                next: () => this.loadFraccionamientos(),
+                error: err => console.error(err)
+            });
+        }
     }
 
     verHistorial(lote: any): void {

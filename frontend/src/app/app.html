@@ -10,7 +10,16 @@
         <a href="/admin" class="nav-link" routerLink="admin">Panel Admin</a>
       </li>
       <li class="nav-item" *ngIf="showAdminBoard">
-        <a href="/admin/clientes" class="nav-link" routerLink="admin/clientes">Clientes</a>
+        <a href="/admin/clientes" class="nav-link" routerLink="/admin/clientes">Clientes</a>
+      </li>
+      <li class="nav-item" *ngIf="showAdminBoard">
+        <a href="/admin/users" class="nav-link" routerLink="/admin/users">Usuarios</a>
+      </li>
+      <li class="nav-item" *ngIf="showAdminBoard">
+        <a href="/admin/crm/leads" class="nav-link" routerLink="/admin/crm/leads">Prospectos</a>
+      </li>
+      <li class="nav-item" *ngIf="showAdminBoard">
+        <a href="/admin/crm/opportunities" class="nav-link" routerLink="/admin/crm/opportunities">Oportunidades</a>
       </li>
       <li class="nav-item" *ngIf="showUserBoard">
         <a href="/user" class="nav-link" routerLink="user">Panel Cliente</a>
@@ -40,5 +49,6 @@
 
   <div class="container mt-3">
     <router-outlet></router-outlet>
+    <app-chatbot></app-chatbot>
   </div>
 </div>

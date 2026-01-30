@@ -8,5 +8,6 @@ import java.util.List;
 public interface ContratoRepository extends JpaRepository<Contrato, Long> {
     List<Contrato> findByEstatus(EStatusContrato estatus);
 
-    List<Contrato> findByClienteId(Long clienteId);
+    @org.springframework.data.jpa.repository.Query("SELECT DISTINCT c FROM Contrato c LEFT JOIN FETCH c.pagos WHERE c.cliente.id = :clienteId")
+    List<Contrato> findByClienteId(@org.springframework.web.bind.annotation.PathVariable("clienteId") Long clienteId);
 }

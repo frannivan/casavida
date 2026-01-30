@@ -1,0 +1,61 @@
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary font-weight-bold"><i class="fas fa-handshake mr-2"></i>Seguimiento de Oportunidades</h2>
+    </div>
+
+    <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+    <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light text-dark">
+                        <tr>
+                            <th>Prospecto</th>
+                            <th>Lote</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Cierre Est.</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let opp of opportunities">
+                            <td>
+                                <div class="font-weight-bold">{{ opp.leadNombre }}</div>
+                                <small class="text-muted">ID: #{{ opp.leadId }}</small>
+                            </td>
+                            <td>
+                                <span class="badge badge-light p-2 border">Lote {{ opp.loteNumero }}</span>
+                            </td>
+                            <td><strong class="text-success">{{ opp.montoEstimado | currency:'MXN' }}</strong></td>
+                            <td>
+                                <select class="form-control form-control-sm border-0 bg-transparent fw-bold"
+                                    [(ngModel)]="opp.status" (change)="updateStatus(opp, opp.status)">
+                                    <option value="NEGOTIATION">NEGOCIACIÓN</option>
+                                    <option value="PROPOSAL_SENT">PROPUESTA</option>
+                                    <option value="WON">GANADA</option>
+                                    <option value="LOST">PERDIDA</option>
+                                </select>
+                            </td>
+                            <td>
+                                {{ (opp.fechaCierreEstimada | date:'dd/MM/yyyy') || 'Sin fecha' }}
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-primary rounded-pill px-3" *ngIf="opp.status === 'WON'"
+                                    (click)="convertToClient(opp)">
+                                    <i class="fas fa-user-plus mr-1"></i> Crear Cliente
+                                </button>
+                                <span *ngIf="opp.status !== 'WON'" class="text-muted small">En proceso</span>
+                            </td>
+                        </tr>
+                        <tr *ngIf="opportunities.length === 0">
+                            <td colspan="6" class="text-center py-4 text-muted">No hay oportunidades activas.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

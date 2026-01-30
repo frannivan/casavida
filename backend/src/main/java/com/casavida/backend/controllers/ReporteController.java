@@ -20,105 +20,200 @@ import java.util.List;
 @RequestMapping("/api/reportes")
 public class ReporteController {
 
-    @Autowired
-    ContratoRepository contratoRepository;
+        @Autowired
+        ContratoRepository contratoRepository;
 
-    @Autowired
-    PagoRepository pagoRepository;
+        @Autowired
+        PagoRepository pagoRepository;
 
-    @Autowired
-    PdfService pdfService;
+        @Autowired
+        PdfService pdfService;
 
-    @Autowired
-    com.casavida.backend.repository.LoteRepository loteRepository;
+        @Autowired
+        com.casavida.backend.repository.LoteRepository loteRepository;
 
-    @Autowired
-    com.casavida.backend.repository.ClienteRepository clienteRepository;
+        @Autowired
+        com.casavida.backend.repository.ClienteRepository clienteRepository;
 
-    @GetMapping("/dashboard")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getDashboardStats() {
-        long totalLotes = loteRepository.count();
-        int lotesDisponibles = loteRepository.findByEstatus(com.casavida.backend.entity.EStatusLote.DISPONIBLE).size();
-        int lotesVendidos = loteRepository.findByEstatus(com.casavida.backend.entity.EStatusLote.VENDIDO).size();
-        long totalClientes = clienteRepository.count();
-        long totalContratos = contratoRepository.count();
+        @Autowired
+        com.casavida.backend.repository.LeadRepository leadRepository;
 
-        // Financial Metrics
-        java.math.BigDecimal ingresosTotales = pagoRepository.findAll().stream()
-                .map(Pago::getMonto)
-                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+        @Autowired
+        com.casavida.backend.repository.OpportunityRepository opportunityRepository;
 
-        java.math.BigDecimal totalContratosMonto = contratoRepository.findAll().stream()
-                .map(Contrato::getMontoTotal)
-                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+        @GetMapping("/dashboard")
+        @PreAuthorize("hasRole('ADMIN')")
+        public ResponseEntity<?> getDashboardStats() {
+                long totalLotes = loteRepository.count();
+                int lotesDisponibles = loteRepository.findByEstatus(com.casavida.backend.entity.EStatusLote.DISPONIBLE)
+                                .size();
+                int lotesVendidos = loteRepository.findByEstatus(com.casavida.backend.entity.EStatusLote.VENDIDO)
+                                .size();
+                long totalClientes = clienteRepository.count();
+                long totalContratos = contratoRepository.count();
+                long totalLeads = leadRepository.count();
+                long totalOpportunities = opportunityRepository.count();
 
-        java.math.BigDecimal saldoPendienteTotal = totalContratosMonto.subtract(ingresosTotales);
+                // Financial Metrics
+                java.math.BigDecimal ingresosTotales = pagoRepository.findAll().stream()
+                                .map(Pago::getMonto)
+                                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
 
-        // Recent Sales (Last 5 contracts)
-        List<VentaRecienteDTO> ventasRecientes = contratoRepository
-                .findAll(org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC,
-                        "fechaContrato"))
-                .stream()
-                .limit(5)
-                .map(c -> new VentaRecienteDTO(
-                        c.getLote().getNumeroLote(),
-                        c.getCliente().getNombre() + " " + c.getCliente().getApellidos(),
-                        c.getFechaContrato(),
-                        c.getMontoTotal()))
-                .collect(java.util.stream.Collectors.toList());
+                java.math.BigDecimal totalContratosMonto = contratoRepository.findAll().stream()
+                                .map(Contrato::getMontoTotal)
+                                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
 
-        return ResponseEntity.ok(new DashboardStats(
-                totalLotes,
-                lotesDisponibles,
-                lotesVendidos,
-                totalClientes,
-                totalContratos,
-                ingresosTotales,
-                saldoPendienteTotal,
-                ventasRecientes));
-    }
+                java.math.BigDecimal saldoPendienteTotal = totalContratosMonto.subtract(ingresosTotales);
 
-    @GetMapping("/estado-cuenta/{contratoId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<InputStreamResource> reporteEstadoCuenta(@PathVariable Long contratoId) {
-        Contrato contrato = contratoRepository.findById(contratoId)
-                .orElseThrow(() -> new RuntimeException("Contrato no encontrado"));
+                // Recent Sales (Last 5 contracts)
+                List<VentaRecienteDTO> ventasRecientes = contratoRepository
+                                .findAll(org.springframework.data.domain.Sort.by(
+                                                org.springframework.data.domain.Sort.Direction.DESC,
+                                                "fechaContrato"))
+                                .stream()
+                                .limit(5)
+                                .map(c -> new VentaRecienteDTO(
+                                                c.getLote().getNumeroLote(),
+                                                c.getCliente().getNombre() + " " + c.getCliente().getApellidos(),
+                                                c.getFechaContrato(),
+                                                c.getMontoTotal()))
+                                .collect(java.util.stream.Collectors.toList());
 
-        List<Pago> pagos = pagoRepository.findByContratoId(contratoId);
+                return ResponseEntity.ok(new DashboardStats(
+                                totalLotes,
+                                lotesDisponibles,
+                                lotesVendidos,
+                                totalClientes,
+                                totalContratos,
+                                totalLeads,
+                                totalOpportunities,
+                                ingresosTotales,
+                                saldoPendienteTotal,
+                                ventasRecientes));
+        }
 
-        ByteArrayInputStream bis = pdfService.generateEstadoCuenta(contrato, pagos);
+        @GetMapping("/estado-cuenta/{contratoId}")
+        @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+        public ResponseEntity<InputStreamResource> reporteEstadoCuenta(@PathVariable Long contratoId) {
+                Contrato contrato = contratoRepository.findById(contratoId)
+                                .orElseThrow(() -> new RuntimeException("Contrato no encontrado"));
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename=estado_cuenta_" + contratoId + ".pdf");
+                List<Pago> pagos = pagoRepository.findByContratoId(contratoId);
 
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(bis));
-    }
+                ByteArrayInputStream bis = pdfService.generateEstadoCuenta(contrato, pagos);
 
-    // Inner DTO Class
-    @lombok.Data
-    @lombok.AllArgsConstructor
-    static class DashboardStats {
-        private long totalLotes;
-        private int lotesDisponibles;
-        private int lotesVendidos;
-        private long totalClientes;
-        private long totalContratos;
-        private java.math.BigDecimal ingresosTotales;
-        private java.math.BigDecimal saldoPendienteTotal;
-        private List<VentaRecienteDTO> ventasRecientes;
-    }
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Content-Disposition", "inline; filename=estado_cuenta_" + contratoId + ".pdf");
 
-    @lombok.Data
-    @lombok.AllArgsConstructor
-    static class VentaRecienteDTO {
-        private String lote;
-        private String cliente;
-        private java.time.LocalDate fecha;
-        private java.math.BigDecimal monto;
-    }
+                return ResponseEntity
+                                .ok()
+                                .headers(headers)
+                                .contentType(MediaType.APPLICATION_PDF)
+                                .body(new InputStreamResource(bis));
+        }
+
+        // Inner DTO Class
+        @lombok.Data
+        @lombok.AllArgsConstructor
+        static class DashboardStats {
+                private long totalLotes;
+                private int lotesDisponibles;
+                private int lotesVendidos;
+                private long totalClientes;
+                private long totalContratos;
+                private long totalLeads;
+                private long totalOpportunities;
+                private java.math.BigDecimal ingresosTotales;
+                private java.math.BigDecimal saldoPendienteTotal;
+                private List<VentaRecienteDTO> ventasRecientes;
+
+                public DashboardStats(long totalLotes, int lotesDisponibles, int lotesVendidos, long totalClientes,
+                                long totalContratos, long totalLeads, long totalOpportunities,
+                                java.math.BigDecimal ingresosTotales, java.math.BigDecimal saldoPendienteTotal,
+                                List<VentaRecienteDTO> ventasRecientes) {
+                        this.totalLotes = totalLotes;
+                        this.lotesDisponibles = lotesDisponibles;
+                        this.lotesVendidos = lotesVendidos;
+                        this.totalClientes = totalClientes;
+                        this.totalContratos = totalContratos;
+                        this.totalLeads = totalLeads;
+                        this.totalOpportunities = totalOpportunities;
+                        this.ingresosTotales = ingresosTotales;
+                        this.saldoPendienteTotal = saldoPendienteTotal;
+                        this.ventasRecientes = ventasRecientes;
+                }
+
+                public long getTotalLotes() {
+                        return totalLotes;
+                }
+
+                public int getLotesDisponibles() {
+                        return lotesDisponibles;
+                }
+
+                public int getLotesVendidos() {
+                        return lotesVendidos;
+                }
+
+                public long getTotalClientes() {
+                        return totalClientes;
+                }
+
+                public long getTotalContratos() {
+                        return totalContratos;
+                }
+
+                public long getTotalLeads() {
+                        return totalLeads;
+                }
+
+                public long getTotalOpportunities() {
+                        return totalOpportunities;
+                }
+
+                public java.math.BigDecimal getIngresosTotales() {
+                        return ingresosTotales;
+                }
+
+                public java.math.BigDecimal getSaldoPendienteTotal() {
+                        return saldoPendienteTotal;
+                }
+
+                public List<VentaRecienteDTO> getVentasRecientes() {
+                        return ventasRecientes;
+                }
+        }
+
+        @lombok.Data
+        @lombok.AllArgsConstructor
+        static class VentaRecienteDTO {
+                private String lote;
+                private String cliente;
+                private java.time.LocalDate fecha;
+                private java.math.BigDecimal monto;
+
+                public VentaRecienteDTO(String lote, String cliente, java.time.LocalDate fecha,
+                                java.math.BigDecimal monto) {
+                        this.lote = lote;
+                        this.cliente = cliente;
+                        this.fecha = fecha;
+                        this.monto = monto;
+                }
+
+                public String getLote() {
+                        return lote;
+                }
+
+                public String getCliente() {
+                        return cliente;
+                }
+
+                public java.time.LocalDate getFecha() {
+                        return fecha;
+                }
+
+                public java.math.BigDecimal getMonto() {
+                        return monto;
+                }
+        }
 }

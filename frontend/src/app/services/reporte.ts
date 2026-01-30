@@ -11,6 +11,11 @@ export interface DashboardStats {
     lotesVendidos: number;
     totalClientes: number;
     totalContratos: number;
+    totalLeads: number;
+    totalOpportunities: number;
+    ingresosTotales: number;
+    saldoPendienteTotal: number;
+    ventasRecientes: any[];
 }
 
 @Injectable({

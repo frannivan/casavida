@@ -14,8 +14,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
   form: any = {
-    username: '',
-    password: ''
+    username: 'admin',
+    password: 'password'
   };
   isLoggedIn = false;
   isLoginFailed = false;
@@ -45,7 +45,7 @@ export class LoginComponent {
         this.reloadPage();
       },
       error: err => {
-        this.errorMessage = err.error.message;
+        this.errorMessage = err.error?.message || err.message || 'Error desconocido';
         this.isLoginFailed = true;
       }
     });

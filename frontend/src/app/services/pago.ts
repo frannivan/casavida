@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -11,13 +11,16 @@ export interface Pago {
     monto: number;
     referencia: string;
     concepto: string;
+    hasComprobante?: boolean;
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class PagoService {
-    constructor(private http: HttpClient) { }
+    private http = inject(HttpClient);
+
+    constructor() { }
 
     getPagosByContrato(contratoId: number): Observable<Pago[]> {
         return this.http.get<Pago[]>(API_URL + 'contrato/' + contratoId);

@@ -17,7 +17,7 @@
     </div>
 
     <div class="row mb-4" *ngIf="stats">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card text-white bg-success mb-3 h-100">
                 <div class="card-header font-weight-bold">Lotes Disponibles</div>
                 <div class="card-body">
@@ -26,30 +26,22 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-danger mb-3 h-100">
-                <div class="card-header font-weight-bold">Lotes Vendidos</div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3 h-100" routerLink="/admin/crm/leads" style="cursor: pointer;">
+                <div class="card-header font-weight-bold">Nuevos Prospectos</div>
                 <div class="card-body">
-                    <h1 class="card-title text-center">{{ stats.lotesVendidos }}</h1>
-                    <p class="card-text text-center"><small>Unidades cerradas</small></p>
+                    <h1 class="card-title text-center text-white">{{ stats.totalLeads }}</h1>
+                    <p class="card-text text-center"><small>Capturados vía Web/Chatbot</small></p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-info mb-3 h-100" routerLink="/admin/clientes" style="cursor: pointer;">
-                <div class="card-header font-weight-bold">Total Clientes</div>
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3 h-100" routerLink="/admin/crm/opportunities"
+                style="cursor: pointer;">
+                <div class="card-header font-weight-bold">Oportunidades</div>
                 <div class="card-body">
-                    <h1 class="card-title text-center">{{ stats.totalClientes }}</h1>
-                    <p class="card-text text-center"><small>Registrados en sistema</small></p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3 h-100">
-                <div class="card-header font-weight-bold">Contratos Activos</div>
-                <div class="card-body">
-                    <h1 class="card-title text-center">{{ stats.totalContratos }}</h1>
-                    <p class="card-text text-center"><small>En proceso de pago</small></p>
+                    <h1 class="card-title text-center text-white">{{ stats.totalOpportunities }}</h1>
+                    <p class="card-text text-center"><small>Seguimiento de ventas</small></p>
                 </div>
             </div>
         </div>
@@ -60,19 +52,24 @@
         <div class="card-body">
             <h4>Gestión de Ventas y Pagos</h4>
             <div class="row">
-                <div class="col-md-4">
-                    <button class="btn btn-outline-primary btn-lg btn-block" routerLink="/admin/clientes">
-                        👤 Registrar Cliente
+                <div class="col-md-3">
+                    <button class="btn btn-outline-primary btn-block mb-2" routerLink="/admin/clientes">
+                        👤 Clientes
                     </button>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn btn-outline-success btn-lg btn-block" (click)="openContractModal()">
-                        📝 Generar Contrato
+                <div class="col-md-3">
+                    <button class="btn btn-outline-info btn-block mb-2" routerLink="/admin/crm/leads">
+                        📧 Prospectos
                     </button>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn btn-outline-info btn-lg btn-block" (click)="openPaymentModal()">
-                        💳 Registrar Pago
+                <div class="col-md-3">
+                    <button class="btn btn-outline-success btn-block mb-2" (click)="openContractModal()">
+                        📝 Contrato
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-outline-dark btn-block mb-2" (click)="openPaymentModal()">
+                        💳 Pago
                     </button>
                 </div>
             </div>
@@ -127,6 +124,65 @@
         </div>
     </div>
 
+    <!-- Gestión Fraccionamientos -->
+    <div class="card mt-3 border-info">
+        <div class="card-body">
+            <h4>Inventario de Fraccionamientos</h4>
+            <button class="btn btn-info mb-3" (click)="isCreatingFracc = !isCreatingFracc">
+                {{ isCreatingFracc ? 'Cancelar' : 'Nuevo Fraccionamiento' }}
+            </button>
+
+            <!-- Create Form -->
+            <form *ngIf="isCreatingFracc" (ngSubmit)="onCreateFracc()" class="mb-4 p-3 bg-light border rounded">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" [(ngModel)]="newFracc.nombre" name="nombre" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Ubicación (Texto)</label>
+                        <input type="text" class="form-control" [(ngModel)]="newFracc.ubicacion" name="ubicacion">
+                    </div>
+                </div>
+                <div class="form-group mt-2">
+                    <label>Descripción</label>
+                    <textarea class="form-control" [(ngModel)]="newFracc.descripcion" name="descripcion"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>URL Logo</label>
+                    <input type="text" class="form-control" [(ngModel)]="newFracc.logoUrl" name="logoUrl">
+                </div>
+                <div class="form-group">
+                    <label>Ubicación / Área (Mapa)</label>
+                    <app-location-picker [initialCoords]="newFracc.coordenadasGeo"
+                        (coordsSelected)="newFracc.coordenadasGeo = $event"></app-location-picker>
+                </div>
+                <button class="btn btn-success mt-2">Guardar Fraccionamiento</button>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Ubicación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of fraccionamientos">
+                        <td>{{ f.nombre }}</td>
+                        <td>{{ f.ubicacion }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info mr-2" (click)="viewFraccDetail(f)">Ver Detalle /
+                                Lotes</button>
+                            <button class="btn btn-sm btn-danger" (click)="deleteFracc(f.id)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="card mt-3">
         <div class="card-body">
             <h4>Inventario de Lotes</h4>
@@ -148,7 +204,7 @@
                         <td>{{ l.manzana }}</td>
                         <td>{{ l.precioTotal | currency:'MXN' }}</td>
                         <td>{{ l.areaMetrosCuadrados }} m²</td>
-                        <td>{{ l.fraccionamiento?.nombre || 'N/A' }}</td>
+                        <td>{{ l.fraccionamiento?.nombre || 'Independiente' }}</td>
                         <td>
                             <span class="badge" [ngClass]="{
                                     'badge-success': l.estatus === 'DISPONIBLE',
@@ -280,6 +336,12 @@
                                 contratos activos.</small>
                         </div>
 
+                        <!-- Readonly Info Selection -->
+                        <div class="alert alert-info" *ngIf="paymentData.contratoId">
+                            <strong>Cliente:</strong> {{ getClientNameForPayment() }}<br>
+                            <strong>Lote:</strong> {{ getLoteInfoForPayment() }}
+                        </div>
+
                         <div class="form-group">
                             <label>Monto</label>
                             <input type="number" class="form-control" [(ngModel)]="paymentData.monto" name="monto"
@@ -367,4 +429,70 @@
         </div>
     </div>
 </div>
+
+<!-- Fraccionamiento Detail Modal -->
+<div class="modal-backdrop fade show" *ngIf="showFraccDetailModal"></div>
+<div class="modal fade show" tabindex="-1" role="dialog" [style.display]="showFraccDetailModal ? 'block' : 'none'"
+    *ngIf="showFraccDetailModal">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ selectedFracc?.nombre }}</h5>
+                <button type="button" class="close" (click)="showFraccDetailModal = false">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img [src]="selectedFracc?.logoUrl || 'assets/no-image.png'" class="img-fluid rounded mb-3"
+                            style="max-height: 150px;">
+                        <p><strong>Ubicación:</strong> {{ selectedFracc?.ubicacion }}</p>
+                        <p><strong>Descripción:</strong> {{ selectedFracc?.descripcion }}</p>
+                        <div *ngIf="selectedFracc?.coordenadasGeo" class="alert alert-info py-2">
+                            <small *ngIf="!selectedFracc.coordenadasGeo.startsWith('[')">📍 {{
+                                selectedFracc.coordenadasGeo }}</small>
+                            <small *ngIf="selectedFracc.coordenadasGeo.startsWith('[')">🔷 Área de Polígono
+                                Definida</small>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h5>Lotes en este Fraccionamiento ({{ fraccLotes.length }})</h5>
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Lote</th>
+                                    <th>Manzana</th>
+                                    <th>Precio</th>
+                                    <th>Área</th>
+                                    <th>Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let fl of fraccLotes">
+                                    <td>{{ fl.numeroLote }}</td>
+                                    <td>{{ fl.manzana }}</td>
+                                    <td>{{ fl.precioTotal | currency:'MXN' }}</td>
+                                    <td>{{ fl.areaMetrosCuadrados }} m²</td>
+                                    <td>
+                                        <span class="badge" [ngClass]="{
+                                                'badge-success': fl.estatus === 'DISPONIBLE',
+                                                'badge-danger': fl.estatus === 'VENDIDO',
+                                                'badge-warning': fl.estatus === 'APARTADO',
+                                                'badge-info': fl.estatus === 'CONTRATADO'
+                                              }">{{ fl.estatus }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showFraccDetailModal = false">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 ```

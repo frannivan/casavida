@@ -85,6 +85,7 @@ public class WebSecurityConfig {
                 .antMatchers("/api/lotes/public/**").permitAll()
                 .antMatchers("/api/fraccionamientos/public/**").permitAll()
                 .antMatchers("/api/clientes/public/**").permitAll()
+                .antMatchers("/api/crm/leads").permitAll()
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
                 .anyRequest().authenticated();
 

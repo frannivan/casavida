@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StorageService } from './services/storage';
 import { AuthService } from './services/auth';
+import { ChatbotComponent } from './components/chatbot/chatbot.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule],
+  imports: [RouterOutlet, RouterLink, CommonModule, ChatbotComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -19,7 +20,11 @@ export class AppComponent {
   showUserBoard = false;
   username?: string;
 
-  constructor(private storageService: StorageService, private authService: AuthService) { }
+  private storageService = inject(StorageService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  constructor() { }
 
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
@@ -45,13 +50,12 @@ export class AppComponent {
     this.authService.logout().subscribe({
       next: res => {
         this.storageService.clean();
-        window.location.href = '/login';
+        this.router.navigate(['/login']);
       },
       error: err => {
         console.log(err);
-        // Force logout even if server fails
         this.storageService.clean();
-        window.location.href = '/login';
+        this.router.navigate(['/login']);
       }
     });
   }

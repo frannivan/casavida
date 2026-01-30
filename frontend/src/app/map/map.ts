@@ -47,9 +47,8 @@ export class MapComponent implements AfterViewInit, OnChanges {
     let hasMarkers = false;
 
     // 1. Plot Fraccionamientos (If available)
-    // Create a custom icon for Fraccionamientos (Red/Gold)
     const fracIcon = L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png',
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
       iconSize: [25, 41],
       iconAnchor: [12, 41],
@@ -60,39 +59,91 @@ export class MapComponent implements AfterViewInit, OnChanges {
     if (this.fraccionamientos && this.fraccionamientos.length > 0) {
       this.fraccionamientos.forEach(f => {
         if (f.coordenadasGeo) {
-          const [lat, lng] = this.parseCoords(f.coordenadasGeo);
-          if (lat && lng) {
-            const marker = L.marker([lat, lng], { icon: fracIcon }).addTo(this.markersLayer);
-            marker.bindPopup(`
-                         <b>${f.nombre}</b><br>
-                         ${f.ubicacion}<br>
-                         <button class="btn btn-sm btn-warning mt-2" id="btn-frac-${f.id}">Ver Lotes</button>
-                     `);
-            marker.on('popupopen', () => {
-              const btn = document.getElementById(`btn-frac-${f.id}`);
-              if (btn) {
-                btn.addEventListener('click', () => {
-                  this.selectFraccionamiento.emit(f.id);
-                  this.map.closePopup();
-                });
+          // Check for Polygon (JSON)
+          if (f.coordenadasGeo.trim().startsWith('[')) {
+            try {
+              const points = JSON.parse(f.coordenadasGeo);
+              if (Array.isArray(points) && points.length > 0) {
+                const polygon = L.polygon(points, { color: 'blue', fillColor: '#3388ff', fillOpacity: 0.2 }).addTo(this.markersLayer);
+
+                // Polygon Popup
+                const center = polygon.getBounds().getCenter();
+                // Add Marker at Center (to make it visible from afar)
+                const marker = L.marker(center, { icon: fracIcon }).addTo(this.markersLayer);
+
+                const popupContent = `
+                             <b>${f.nombre}</b><br>
+                             ${f.ubicacion}<br>
+                             <button class="btn btn-sm btn-warning mt-2" id="btn-frac-${f.id}">Ver Lotes</button>
+                        `;
+
+                // Bind popup to both polygon and marker
+                polygon.bindPopup(popupContent);
+                marker.bindPopup(popupContent);
+
+                const openHandler = () => {
+                  const btn = document.getElementById(`btn-frac-${f.id}`);
+                  if (btn) {
+                    btn.addEventListener('click', () => {
+                      this.selectFraccionamiento.emit(f.id);
+                      this.map.closePopup();
+                    });
+                  }
+                };
+
+                polygon.on('popupopen', openHandler);
+                marker.on('popupopen', openHandler);
+
+
+                bounds.extend(polygon.getBounds());
+                hasMarkers = true;
               }
-            });
-            bounds.extend([lat, lng]);
-            hasMarkers = true;
+            } catch (e) { console.error('Error parsing polygon', e); }
+          } else {
+            // Fallback: Point
+            const [lat, lng] = this.parseCoords(f.coordenadasGeo);
+            if (lat && lng) {
+              const marker = L.marker([lat, lng], { icon: fracIcon }).addTo(this.markersLayer);
+              marker.bindPopup(`
+                                 <b>${f.nombre}</b><br>
+                                 ${f.ubicacion}<br>
+                                 <button class="btn btn-sm btn-warning mt-2" id="btn-frac-${f.id}">Ver Lotes</button>
+                             `);
+              marker.on('popupopen', () => {
+                const btn = document.getElementById(`btn-frac-${f.id}`);
+                if (btn) {
+                  btn.addEventListener('click', () => {
+                    this.selectFraccionamiento.emit(f.id);
+                    this.map.closePopup();
+                  });
+                }
+              });
+              bounds.extend([lat, lng]);
+              hasMarkers = true;
+            }
           }
         }
       });
     }
 
     // 2. Plot ONLY Independent Lotes (No Fraccionamiento)
-    // If a lote belongs to a fraccionamiento, it is represented by the Fraccionamiento pin.
     const lotesIndependientes = this.lotes.filter(l => !l.fraccionamiento);
+
+    // Green Icon for Lotes
+    const loteIcon = L.icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
 
     lotesIndependientes.forEach(lote => {
       if (lote.coordenadasGeo) {
         const [lat, lng] = this.parseCoords(lote.coordenadasGeo);
         if (lat && lng) {
-          const marker = L.marker([lat, lng]).addTo(this.markersLayer); // Default Blue
+          const marker = L.marker([lat, lng], { icon: loteIcon }).addTo(this.markersLayer); // Green for Independent Lotes
           marker.bindPopup(`
                      <b>Lote Independiente ${lote.numeroLote}</b><br>
                      $${lote.precioTotal}<br>

@@ -25,6 +25,12 @@ public class Pago {
 
     private String concepto; // Mensualidad X, Enganche, etc
 
+    @Lob
+    @JsonIgnore
+    private byte[] comprobante;
+
+    private String comprobanteContentType;
+
     public Pago() {
     }
 
@@ -83,5 +89,27 @@ public class Pago {
 
     public void setConcepto(String concepto) {
         this.concepto = concepto;
+    }
+
+    public byte[] getComprobante() {
+        return comprobante;
+    }
+
+    public void setComprobante(byte[] comprobante) {
+        this.comprobante = comprobante;
+    }
+
+    public String getComprobanteContentType() {
+        return comprobanteContentType;
+    }
+
+    public void setComprobanteContentType(String comprobanteContentType) {
+        this.comprobanteContentType = comprobanteContentType;
+    }
+
+    // Virtual Property for JSON (lighter payload)
+    @com.fasterxml.jackson.annotation.JsonProperty("hasComprobante")
+    public boolean getHasComprobante() {
+        return this.comprobante != null && this.comprobante.length > 0;
     }
 }

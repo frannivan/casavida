@@ -1,0 +1,90 @@
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary font-weight-bold"><i class="fas fa-user-tie mr-2"></i>Gestión de Prospectos (Leads)</h2>
+    </div>
+
+    <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+    <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Nombre</th>
+                            <th>Contacto</th>
+                            <th>Origen</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let lead of leads">
+                            <td>{{ lead.fechaRegistro | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td><strong>{{ lead.nombre }}</strong></td>
+                            <td>
+                                <div class="small"><i class="fas fa-envelope mr-1 text-muted"></i>{{ lead.email }}</div>
+                                <div class="small"><i class="fas fa-phone mr-1 text-muted"></i>{{ lead.telefono }}</div>
+                            </td>
+                            <td><span class="badge badge-info">{{ lead.source }}</span></td>
+                            <td>
+                                <span class="badge" [ngClass]="{
+                                    'badge-primary': lead.status === 'NEW',
+                                    'badge-warning': lead.status === 'QUALIFIED',
+                                    'badge-secondary': lead.status === 'LOST'
+                                }">{{ lead.status }}</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-success rounded-pill" (click)="openConvertModal(lead)"
+                                    *ngIf="lead.status !== 'QUALIFIED'">
+                                    <i class="fas fa-exchange-alt mr-1"></i> Convertir
+                                </button>
+                                <span *ngIf="lead.status === 'QUALIFIED'" class="text-muted small">Convertido</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Convert Modal -->
+    <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; background: rgba(0,0,0,0.5);"
+        *ngIf="showConvertModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Convertir a Oportunidad</h5>
+                    <button type="button" class="close text-white" (click)="showConvertModal = false">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body py-4">
+                    <p>Selecciona el lote en el que <strong>{{ selectedLead?.nombre }}</strong> tiene interés:</p>
+                    <div class="form-group">
+                        <label>Lote Disponible</label>
+                        <select class="form-control h-auto py-2" [(ngModel)]="selectedLoteId">
+                            <option [ngValue]="null" disabled>-- Seleccione un lote --</option>
+                            <option *ngFor="let lote of availableLotes" [value]="lote.id">
+                                Lote {{ lote.numeroLote }} - {{ lote.manzana }} ({{ lote.precioTotal | currency:'MXN'
+                                }})
+                            </option>
+                        </select>
+                    </div>
+                    <div *ngIf="errorMsg" class="alert alert-danger mt-2 small">{{ errorMsg }}</div>
+                    <div *ngIf="successMsg" class="alert alert-success mt-2 small">{{ successMsg }}</div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4"
+                        (click)="showConvertModal = false">Cancelar</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" (click)="confirmConvert()"
+                        [disabled]="!selectedLoteId">
+                        Confirmar Interés
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

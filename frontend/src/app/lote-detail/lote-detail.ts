@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoteService } from '../services/lote';
 import { ClienteService } from '../services/cliente';
+import { CRMService } from '../services/crm.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -28,12 +29,13 @@ export class LoteDetail implements OnInit {
   quoteSuccess = '';
   quoteError = '';
 
-  constructor(
-    private loteService: LoteService,
-    private clienteService: ClienteService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) { }
+  private loteService = inject(LoteService);
+  private clienteService = inject(ClienteService);
+  private crmService = inject(CRMService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
+  constructor() { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -123,27 +125,21 @@ export class LoteDetail implements OnInit {
       return;
     }
 
-    // construct lead object matching Backend Cliente entity or simply passing data
-    // The backend expects Cliente entity structure.
     const lead = {
       nombre: this.quoteData.nombre,
-      // Backend requires apellidos, but our simple form might just have one name field.
-      // Let's split or just use same.
-      apellidos: '-',
       email: this.quoteData.email,
       telefono: this.quoteData.telefono,
-      // message is not in Entity but we might want to log it or ignore it for now.
-      // Backend ignores extra fields in JSON if not mapped.
+      mensaje: this.quoteData.mensaje,
+      source: 'LOTE_DETAIL: ' + this.lote.numeroLote
     };
 
-    this.clienteService.registerLead(lead).subscribe({
-      next: (res) => {
-        this.quoteSuccess = res.message;
+    this.crmService.createLead(lead).subscribe({
+      next: (res: any) => {
+        this.quoteSuccess = '¡Solicitud enviada con éxito! Un asesor te contactará pronto.';
         this.quoteError = '';
-        // Clear form
         this.quoteData = { nombre: '', email: '', telefono: '', mensaje: '' };
       },
-      error: (err) => {
+      error: (err: any) => {
         this.quoteError = err.error?.message || 'Error al enviar solicitud.';
         console.error(err);
       }

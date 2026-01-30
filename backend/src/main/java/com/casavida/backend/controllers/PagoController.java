@@ -12,14 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.casavida.backend.entity.Contrato;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.casavida.backend.entity.Pago;
-import com.casavida.backend.payload.response.MessageResponse;
-import com.casavida.backend.repository.ContratoRepository;
+import com.casavida.backend.entity.Contrato;
 import com.casavida.backend.repository.PagoRepository;
+import com.casavida.backend.repository.ContratoRepository;
+import com.casavida.backend.payload.response.MessageResponse;
 
 @RestController
 @RequestMapping("/api/pagos")
@@ -37,66 +39,53 @@ public class PagoController {
         return pagoRepository.findByContratoId(contratoId);
     }
 
-    public static class PagoRequest {
-        private Long contratoId;
-        private LocalDate fechaPago; // Jackson parses "YYYY-MM-DD"
-        private BigDecimal monto;
-        private String referencia;
-        private String concepto;
-
-        public Long getContratoId() {
-            return contratoId;
+    // Serve Receipt Image
+    @GetMapping("/{id}/comprobante")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ResponseEntity<byte[]> getComprobante(@PathVariable Long id) {
+        Pago pago = pagoRepository.findById(id).orElse(null);
+        if (pago == null || pago.getComprobante() == null) {
+            return ResponseEntity.notFound().build();
         }
 
-        public void setContratoId(Long contratoId) {
-            this.contratoId = contratoId;
-        }
-
-        public LocalDate getFechaPago() {
-            return fechaPago;
-        }
-
-        public void setFechaPago(LocalDate fechaPago) {
-            this.fechaPago = fechaPago;
-        }
-
-        public BigDecimal getMonto() {
-            return monto;
-        }
-
-        public void setMonto(BigDecimal monto) {
-            this.monto = monto;
-        }
-
-        public String getReferencia() {
-            return referencia;
-        }
-
-        public void setReferencia(String referencia) {
-            this.referencia = referencia;
-        }
-
-        public String getConcepto() {
-            return concepto;
-        }
-
-        public void setConcepto(String concepto) {
-            this.concepto = concepto;
-        }
+        return ResponseEntity.ok()
+                .header(org.springframework.http.HttpHeaders.CONTENT_TYPE, pago.getComprobanteContentType())
+                .body(pago.getComprobante());
     }
 
     @PostMapping("/registrar")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> registrarPago(@RequestBody PagoRequest request) {
-        Contrato contrato = contratoRepository.findById(request.getContratoId())
+    public ResponseEntity<?> registrarPago(
+            @RequestParam("contratoId") Long contratoId,
+            @RequestParam("monto") BigDecimal monto,
+            @RequestParam(value = "fechaPago", required = false) String fechaPagoStr,
+            @RequestParam(value = "referencia", required = false) String referencia,
+            @RequestParam(value = "concepto", required = false) String concepto,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
+
+        Contrato contrato = contratoRepository.findById(contratoId)
                 .orElseThrow(() -> new RuntimeException("Error: Contrato no encontrado."));
 
         Pago pago = new Pago();
         pago.setContrato(contrato);
-        pago.setMonto(request.getMonto());
-        pago.setReferencia(request.getReferencia());
-        pago.setConcepto(request.getConcepto());
-        pago.setFechaPago(request.getFechaPago() != null ? request.getFechaPago() : LocalDate.now());
+        pago.setMonto(monto);
+        pago.setReferencia(referencia);
+        pago.setConcepto(concepto);
+
+        if (fechaPagoStr != null && !fechaPagoStr.isEmpty()) {
+            pago.setFechaPago(LocalDate.parse(fechaPagoStr));
+        } else {
+            pago.setFechaPago(LocalDate.now());
+        }
+
+        if (file != null && !file.isEmpty()) {
+            try {
+                pago.setComprobante(file.getBytes());
+                pago.setComprobanteContentType(file.getContentType());
+            } catch (IOException e) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error al subir imagen."));
+            }
+        }
 
         pagoRepository.save(pago);
         return ResponseEntity.ok(new MessageResponse("Pago registrado exitosamente."));
