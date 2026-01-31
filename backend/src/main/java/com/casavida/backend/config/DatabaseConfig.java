@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 public class DatabaseConfig {
 
     @Value("${app.datasource.url}")
@@ -20,8 +20,8 @@ public class DatabaseConfig {
     @Value("${app.datasource.password}")
     private String password;
 
-    @Bean
-    @Primary
+    // @Bean
+    // @Primary
     public DataSource dataSource() {
         System.out.println("--- DATABASE CONFIGURATION STARTING ---");
         if (dbUrl == null || dbUrl.isEmpty()) {

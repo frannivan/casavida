@@ -3,13 +3,13 @@ INSERT INTO roles (name) SELECT 'ROLE_USER' WHERE NOT EXISTS (SELECT 1 FROM role
 INSERT INTO roles (name) SELECT 'ROLE_ADMIN' WHERE NOT EXISTS (SELECT 1 FROM roles WHERE name = 'ROLE_ADMIN');
 
 -- 2. Admin User
--- Password: 'password' ($2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlNBxBFve4ZlLq)
+-- Password: 'password'
 INSERT INTO users (username, email, password)
-SELECT 'admin', 'admin@casavida.com', '$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlNBxBFve4ZlLq'
+SELECT 'admin', 'admin@casavida.com', '$2a$10$r2RaGNzNO0b/P.vIaOC9kuKI4rDO2bdRxswDcNux0bGkesbhX46ga'
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin');
 
 -- FORCE RESET PASSWORD (in case user already exists with old hash)
-UPDATE users SET password = '$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlNBxBFve4ZlLq' WHERE username = 'admin';
+UPDATE users SET password = '$2a$10$r2RaGNzNO0b/P.vIaOC9kuKI4rDO2bdRxswDcNux0bGkesbhX46ga' WHERE username = 'admin';
 
 INSERT INTO user_roles (user_id, role_id)
 SELECT u.id, r.id FROM users u, roles r WHERE u.username = 'admin' AND r.name = 'ROLE_ADMIN'
