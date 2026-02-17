@@ -1,0 +1,199 @@
+<div class="sidebar bg-dark" id="sidebar-wrapper">
+  <div class="sidebar-heading text-center py-4 text-white border-bottom">
+    <i class="fas fa-building text-primary me-2"></i> CasaVida Admin
+  </div>
+  
+  <div class="sidebar-content">
+    <div class="list-group list-group-flush">
+      <!-- Inicio -->
+      <a routerLink="/home" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+        <i class="fas fa-home me-2"></i> Inicio
+      </a>
+
+      <!-- Admin Menu -->
+      <ng-container *ngIf="isAdmin">
+        <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-tachometer-alt me-2"></i> Panel Admin
+        </a>
+        <a routerLink="/admin/clientes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-users me-2"></i> Clientes
+        </a>
+        <a routerLink="/admin/users" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-user-cog me-2"></i> Usuarios
+        </a>
+        <a routerLink="/admin/crm/leads" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-user-plus me-2"></i> Prospectos
+        </a>
+        <a routerLink="/admin/crm/opportunities" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-chart-line me-2"></i> Oportunidades
+        </a>
+        
+        <div class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Inventario</div>
+        
+        <a routerLink="/admin/fraccionamientos" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-city me-2"></i> Fraccionamientos
+        </a>
+        
+        <a routerLink="/admin/lotes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-th me-2"></i> Inventario de Lotes
+        </a>
+
+        <div class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Herramientas</div>
+        
+        <a routerLink="/admin/reportes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-chart-bar me-2"></i> Reportes
+        </a>
+        
+        <a routerLink="/admin/carga-datos" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-file-upload me-2"></i> Carga Masiva
+        </a>
+        
+        <a routerLink="/admin/documentacion" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-book me-2"></i> Documentación
+        </a>
+      </ng-container>
+
+      <!-- Recepcion Menu -->
+      <ng-container *ngIf="isRecepcion && !isAdmin">
+        <a routerLink="/recepcion" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-credit-card me-2"></i> Validación de Pagos
+        </a>
+        <a routerLink="/admin" [queryParams]="{view: 'payments'}" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-money-bill-wave me-2"></i> Registro de Pagos
+        </a>
+
+        <div class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Gestión Ventas</div>
+        <a routerLink="/admin/generar-contrato" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-file-signature me-2"></i> Generar Contrato
+        </a>
+        <a routerLink="/admin" [queryParams]="{view: 'contracts'}" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-file-contract me-2"></i> Mis Contratos
+        </a>
+        <a routerLink="/admin/leads" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-user-tag me-2"></i> Prospectos
+        </a>
+        <a routerLink="/admin/clientes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-users me-2"></i> Clientes
+        </a>
+        <a routerLink="/admin/fraccionamientos" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-city me-2"></i> Fraccionamientos
+        </a>
+        <a routerLink="/admin/lotes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-th me-2"></i> Inventario de Lotes
+        </a>
+        
+        <div class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Herramientas</div>
+        <a routerLink="/admin/documentacion" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-book me-2"></i> Documentación
+        </a>
+      </ng-container>
+
+      <!-- Vendedor Menu -->
+      <ng-container *ngIf="isVendedor && !isAdmin">
+        <a routerLink="/panel-vendedor" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-columns me-2"></i> Mi Panel
+        </a>
+        <a routerLink="/admin/clientes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-users me-2"></i> Clientes
+        </a>
+        <a routerLink="/admin/crm/leads" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-user-plus me-2"></i> Prospectos
+        </a>
+        <a routerLink="/admin/crm/opportunities" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-chart-line me-2"></i> Oportunidades
+        </a>
+        
+        <div class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Inventario</div>
+
+        <a routerLink="/admin/fraccionamientos" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-city me-2"></i> Fraccionamientos
+        </a>
+        
+        <a routerLink="/admin/lotes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-th me-2"></i> Inventario de Lotes
+        </a>
+
+        <div class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Herramientas</div>
+
+        <a routerLink="/cotizar" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-calculator me-2"></i> Generar Cotización
+        </a>
+
+        <a routerLink="/admin/documentacion" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-book me-2"></i> Documentación
+        </a>
+      </ng-container>
+
+      <!-- Contabilidad Menu -->
+      <ng-container *ngIf="isContabilidad && !isAdmin">
+        <a routerLink="/contabilidad" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-file-invoice-dollar me-2"></i> Panel Contabilidad
+        </a>
+        
+        <div class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Pagos</div>
+        
+        <a routerLink="/admin" [queryParams]="{view: 'payments'}" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-money-bill-wave me-2"></i> Todos los Pagos
+        </a>
+        <a routerLink="/recepcion" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-check-circle me-2"></i> Validar Pagos
+        </a>
+        
+        <div class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Clientes y Reportes</div>
+        
+        <a routerLink="/admin/clientes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-users me-2"></i> Clientes
+        </a>
+        <a routerLink="/admin/reportes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-chart-bar me-2"></i> Reportes Financieros
+        </a>
+      </ng-container>
+
+      <!-- Directivo Menu -->
+      <ng-container *ngIf="isDirectivo && !isAdmin">
+        <a routerLink="/directivo" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-chart-line me-2"></i> Panel Directivo
+        </a>
+        <a routerLink="/admin/reportes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-chart-pie me-2"></i> KPI & Inteligencia
+        </a>
+        <a routerLink="/admin/fraccionamientos" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-city me-2"></i> Proyectos
+        </a>
+      </ng-container>
+
+      <!-- User/Cliente Menu -->
+      <ng-container *ngIf="isUser && !isAdmin && !isVendedor && !isRecepcion && !isContabilidad && !isDirectivo">
+        <a routerLink="/user" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-user-circle me-2"></i> Mi Portal de Cliente
+        </a>
+        
+        <div class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Mi Información</div>
+        
+        <a routerLink="/profile" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-id-card me-2"></i> Mi Perfil
+        </a>
+        <a routerLink="/profile" [queryParams]="{view: 'payments'}" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-money-check-alt me-2"></i> Historial de Pagos
+        </a>
+        <a routerLink="/profile" [queryParams]="{view: 'contract'}" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-file-contract me-2"></i> Mi Contrato
+        </a>
+        <a routerLink="/profile" [queryParams]="{view: 'lot'}" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-map-marked-alt me-2"></i> Mi Lote
+        </a>
+        
+        <div class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Explorar</div>
+        
+        <a routerLink="/home" class="list-group-item list-group-item-action bg-dark text-white">
+          <i class="fas fa-search me-2"></i> Explorar Propiedades
+        </a>
+      </ng-container>
+    </div>
+  </div>
+    
+  <!-- Logout -->
+  <a (click)="logout()" class="list-group-item list-group-item-action bg-dark text-white mt-auto cursor-pointer" style="cursor: pointer; border-top: 1px solid #444;">
+    <i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar Sesión
+  </a>
+</div>
