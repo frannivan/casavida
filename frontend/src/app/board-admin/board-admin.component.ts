@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, Input } from '@angular/core';
 import { LoteService } from '../services/lote';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +8,7 @@ import { ReporteService } from '../services/reporte';
 import { VentaService } from '../services/venta';
 import { ClienteService } from '../services/cliente';
 import { PagoService } from '../services/pago';
+import { ActivatedRoute } from '@angular/router';
 
 import { RouterLink } from '@angular/router';
 
@@ -19,6 +20,10 @@ import { RouterLink } from '@angular/router';
     styleUrl: './board-admin.component.css'
 })
 export class BoardAdminComponent implements OnInit {
+    @Input() view: string | null = null;  // Input para vistas específicas (payments, contracts, etc.)
+    
+    activeTab: string = 'dashboard';  // Tab activa por defecto
+
     getClientNameForPayment(): string {
         const client = this.clientes.find(c => c.id === this.paymentData.clienteId);
         return client ? client.nombre + ' ' + client.apellidos : '';
@@ -103,15 +108,39 @@ export class BoardAdminComponent implements OnInit {
     private venteService = inject(VentaService);
     private clienteService = inject(ClienteService);
     private pagoService = inject(PagoService);
+    private route = inject(ActivatedRoute);
 
     constructor() { }
 
     ngOnInit(): void {
+        // Check for view parameter from route or input
+        this.route.queryParamMap.subscribe(params => {
+            const viewParam = params.get('view');
+            if (viewParam) {
+                this.view = viewParam;
+            }
+            this.setActiveTabFromView();
+        });
+
         this.loadStats();
         this.loadFraccionamientos();
         this.loadLotes();
         this.loadClientes();
-        this.loadAllContratos(); // New: Fetch contracts for inventory mapping
+        this.loadAllContratos();
+    }
+
+    setActiveTabFromView(): void {
+        switch(this.view) {
+            case 'payments':
+                this.activeTab = 'payments';
+                this.showPaymentModal = true;
+                break;
+            case 'contracts':
+                this.activeTab = 'contracts';
+                break;
+            default:
+                this.activeTab = 'dashboard';
+        }
     }
 
     loadStats(): void {

@@ -13,18 +13,171 @@ import { FraccionamientoDetailComponent } from './fraccionamiento-detail/fraccio
 import { CrmLeadsComponent } from './admin/crm/leads/crm-leads.component';
 import { CrmOpportunitiesComponent } from './admin/crm/opportunities/crm-opportunities.component';
 
+// Componentes placeholder para rutas faltantes
+// TODO: Crear estos componentes proper o reutilizar board-admin con parámetros
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-fraccionamientos',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-city me-2"></i>Fraccionamientos</h2>
+    <p class="text-muted">Gestión de fraccionamientos y desarrollos.</p>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>Esta funcionalidad está en desarrollo.
+    </div>
+  </div>`
+})
+export class FraccionamientosComponent {}
+
+@Component({
+  selector: 'app-lotes-inventario',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-th me-2"></i>Inventario de Lotes</h2>
+    <p class="text-muted">Gestión completa del inventario de lotes.</p>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>Esta funcionalidad está en desarrollo.
+    </div>
+  </div>`
+})
+export class LotesInventarioComponent {}
+
+@Component({
+  selector: 'app-reportes',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-chart-bar me-2"></i>Reportes</h2>
+    <p class="text-muted">Reportes financieros y operativos.</p>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>Esta funcionalidad está en desarrollo.
+    </div>
+  </div>`
+})
+export class ReportesComponent {}
+
+@Component({
+  selector: 'app-carga-datos',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-file-upload me-2"></i>Carga Masiva de Datos</h2>
+    <p class="text-muted">Importación masiva vía Excel/CSV.</p>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>Esta funcionalidad está en desarrollo.
+    </div>
+  </div>`
+})
+export class CargaDatosComponent {}
+
+@Component({
+  selector: 'app-documentacion',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-book me-2"></i>Documentación</h2>
+    <p class="text-muted">Manuales y documentación del sistema.</p>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>Esta funcionalidad está en desarrollo.
+    </div>
+  </div>`
+})
+export class DocumentacionComponent {}
+
+// Componentes para otros roles
+@Component({
+  selector: 'app-recepcion',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-credit-card me-2"></i>Panel de Recepción</h2>
+    <p class="text-muted">Validación de pagos y gestión de contratos.</p>
+    <app-board-admin [view]="'payments'"></app-board-admin>
+  </div>`,
+  imports: [BoardAdminComponent]
+})
+export class RecepcionComponent {}
+
+@Component({
+  selector: 'app-panel-vendedor',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-columns me-2"></i>Panel de Vendedor</h2>
+    <p class="text-muted">Gestión de prospectos y oportunidades.</p>
+    <app-board-admin></app-board-admin>
+  </div>`,
+  imports: [BoardAdminComponent]
+})
+export class PanelVendedorComponent {}
+
+@Component({
+  selector: 'app-contabilidad',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-file-invoice-dollar me-2"></i>Panel de Contabilidad</h2>
+    <p class="text-muted">Gestión de pagos y reportes financieros.</p>
+    <app-board-admin [view]="'payments'"></app-board-admin>
+  </div>`,
+  imports: [BoardAdminComponent]
+})
+export class ContabilidadComponent {}
+
+@Component({
+  selector: 'app-directivo',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-chart-line me-2"></i>Panel Directivo</h2>
+    <p class="text-muted">KPIs e inteligencia de negocio.</p>
+    <app-board-admin></app-board-admin>
+  </div>`,
+  imports: [BoardAdminComponent]
+})
+export class DirectivoComponent {}
+
+@Component({
+  selector: 'app-cotizar',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-calculator me-2"></i>Generar Cotización</h2>
+    <p class="text-muted">Simulador financiero para clientes.</p>
+    <app-board-admin></app-board-admin>
+  </div>`,
+  imports: [BoardAdminComponent]
+})
+export class CotizarComponent {}
+
 export const routes: Routes = [
+    // Rutas públicas
     { path: 'home', component: HomeComponent },
     { path: 'lote/:id', component: LoteDetail },
     { path: 'fraccionamiento/:id', component: FraccionamientoDetailComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'profile', component: ProfileComponent },
+    
+    // Rutas de usuario
     { path: 'user', component: BoardUser },
+    
+    // Rutas de Admin
     { path: 'admin', component: BoardAdminComponent },
     { path: 'admin/clientes', component: BoardClientsComponent },
     { path: 'admin/users', component: AdminUsersComponent },
     { path: 'admin/crm/leads', component: CrmLeadsComponent },
     { path: 'admin/crm/opportunities', component: CrmOpportunitiesComponent },
+    
+    // Rutas de Inventario (nuevas)
+    { path: 'admin/fraccionamientos', component: FraccionamientosComponent },
+    { path: 'admin/lotes', component: LotesInventarioComponent },
+    
+    // Rutas de Herramientas (nuevas)
+    { path: 'admin/reportes', component: ReportesComponent },
+    { path: 'admin/carga-datos', component: CargaDatosComponent },
+    { path: 'admin/documentacion', component: DocumentacionComponent },
+    
+    // Rutas para otros roles (nuevas)
+    { path: 'recepcion', component: RecepcionComponent },
+    { path: 'panel-vendedor', component: PanelVendedorComponent },
+    { path: 'contabilidad', component: ContabilidadComponent },
+    { path: 'directivo', component: DirectivoComponent },
+    { path: 'cotizar', component: CotizarComponent },
+    
+    // Redirect default
     { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
