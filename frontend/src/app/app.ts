@@ -13,7 +13,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   roles: string[] = [];
   isLoggedIn = false;
   showAdminBoard = false;
@@ -42,19 +42,19 @@ export class AppComponent {
       }
     });
 
+    this.loadUserData();
+  }
+
+  loadUserData(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
 
     if (this.isLoggedIn) {
       const user = this.storageService.getUser();
-      this.roles = user.roles;
+      this.roles = user?.roles || [];
+      this.username = user?.username;
 
-      console.log('Current User:', user);
-
-      // DEBUG: Remove in production
-      // alert('DEBUG: User loaded: ' + JSON.stringify(user));
-
-      this.username = user.username;
-      this.roles = user.roles || [];
+      console.log('[AppComponent] User loaded:', user);
+      console.log('[AppComponent] Roles:', this.roles);
 
       this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
       this.showRecepcionBoard = this.roles.includes('ROLE_RECEPCION');
@@ -62,6 +62,15 @@ export class AppComponent {
       this.showContabilidadBoard = this.roles.includes('ROLE_CONTABILIDAD');
       this.showDirectivoBoard = this.roles.includes('ROLE_DIRECTIVO');
       this.showUserBoard = this.roles.includes('ROLE_USER');
+      
+      console.log('[AppComponent] Role flags:', {
+        showAdminBoard: this.showAdminBoard,
+        showRecepcionBoard: this.showRecepcionBoard,
+        showVendedorBoard: this.showVendedorBoard,
+        showContabilidadBoard: this.showContabilidadBoard,
+        showDirectivoBoard: this.showDirectivoBoard,
+        showUserBoard: this.showUserBoard
+      });
     }
   }
 
@@ -79,12 +88,12 @@ export class AppComponent {
     this.authService.logout().subscribe({
       next: res => {
         this.storageService.clean();
-        window.location.href = '/casavida/home'; // Redirect to Home
+        window.location.href = '/casavida/home';
       },
       error: err => {
         console.log(err);
         this.storageService.clean();
-        window.location.href = '/casavida/home'; // Redirect to Home
+        window.location.href = '/casavida/home';
       }
     });
   }
