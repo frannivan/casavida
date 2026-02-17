@@ -27,6 +27,7 @@ public class Lead {
     private String mensaje;
 
     private String source; // e.g., 'WEB', 'CHATBOT'
+    private String interes; // e.g., 'COTIZACION', 'REPRESENTANTE'
 
     @Enumerated(EnumType.STRING)
     private ELeadStatus status = ELeadStatus.NEW;
@@ -79,6 +80,14 @@ public class Lead {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getInteres() {
+        return interes;
+    }
+
+    public void setInteres(String interes) {
+        this.interes = interes;
     }
 
     public ELeadStatus getStatus() {

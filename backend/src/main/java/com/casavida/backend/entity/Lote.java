@@ -38,6 +38,9 @@ public class Lote {
     @Column(columnDefinition = "TEXT")
     private String notas;
 
+    @Column(columnDefinition = "TEXT")
+    private String planoCoordinates; // JSON Array of points relative to plan image
+
     // Relaciones
     @ManyToOne
     @JoinColumn(name = "fraccionamiento_id")
@@ -142,6 +145,14 @@ public class Lote {
 
     public void setNotas(String notas) {
         this.notas = notas;
+    }
+
+    public String getPlanoCoordinates() {
+        return planoCoordinates;
+    }
+
+    public void setPlanoCoordinates(String planoCoordinates) {
+        this.planoCoordinates = planoCoordinates;
     }
 
     public Fraccionamiento getFraccionamiento() {

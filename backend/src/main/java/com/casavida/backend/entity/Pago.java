@@ -14,7 +14,7 @@ public class Pago {
 
     @ManyToOne
     @JoinColumn(name = "contrato_id", nullable = false)
-    @JsonIgnore
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("pagos")
     private Contrato contrato;
 
     private LocalDate fechaPago;
@@ -30,6 +30,17 @@ public class Pago {
     private byte[] comprobante;
 
     private String comprobanteContentType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private EPagoStatus estatus = EPagoStatus.PENDIENTE;
+
+    @Column(nullable = false)
+    private boolean validado = false;
+
+    private java.time.LocalDateTime fechaValidacion;
+
+    private String validadoPor;
 
     public Pago() {
     }
@@ -107,9 +118,51 @@ public class Pago {
         this.comprobanteContentType = comprobanteContentType;
     }
 
+    public EPagoStatus getEstatus() {
+        return estatus;
+    }
+
+    public void setEstatus(EPagoStatus estatus) {
+        this.estatus = estatus;
+    }
+
     // Virtual Property for JSON (lighter payload)
     @com.fasterxml.jackson.annotation.JsonProperty("hasComprobante")
     public boolean getHasComprobante() {
         return this.comprobante != null && this.comprobante.length > 0;
+    }
+
+    private String metodoPago;
+
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+
+    public boolean isValidado() {
+        return validado;
+    }
+
+    public void setValidado(boolean validado) {
+        this.validado = validado;
+    }
+
+    public java.time.LocalDateTime getFechaValidacion() {
+        return fechaValidacion;
+    }
+
+    public void setFechaValidacion(java.time.LocalDateTime fechaValidacion) {
+        this.fechaValidacion = fechaValidacion;
+    }
+
+    public String getValidadoPor() {
+        return validadoPor;
+    }
+
+    public void setValidadoPor(String validadoPor) {
+        this.validadoPor = validadoPor;
     }
 }

@@ -29,6 +29,30 @@ public class CRMService {
         return leadRepository.findAll();
     }
 
+    public List<Lead> getAllLeadsFiltered(List<String> roles) {
+        List<Lead> allLeads = leadRepository.findAll();
+
+        if (roles.contains("ROLE_ADMIN")) {
+            return allLeads;
+        }
+
+        if (roles.contains("ROLE_RECEPCION")) {
+            // Reception sees "REPRESENTANTE" AND null/default ones
+            return allLeads.stream()
+                    .filter(l -> "REPRESENTANTE".equalsIgnoreCase(l.getInteres()) || l.getInteres() == null)
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        if (roles.contains("ROLE_VENDEDOR")) {
+            // Vendedores see everything EXCEPT "REPRESENTANTE"
+            return allLeads.stream()
+                    .filter(l -> !"REPRESENTANTE".equalsIgnoreCase(l.getInteres()))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        return List.of(); // Default empty if no relevant role
+    }
+
     public Lead createLead(Lead lead) {
         if (lead.getFechaRegistro() == null) {
             lead.setFechaRegistro(LocalDateTime.now());

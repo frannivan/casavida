@@ -52,7 +52,7 @@ public class PdfService {
 
             // Lot Info
             cell = new PdfPCell(new Phrase("Lote: " + contrato.getLote().getNumeroLote() + " - "
-                    + contrato.getLote().getFraccionamiento().getNombre()));
+                    + (contrato.getLote().getFraccionamiento() != null ? contrato.getLote().getFraccionamiento().getNombre() : "Independiente")));
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             cell.setBorder(Rectangle.NO_BORDER);
             infoTable.addCell(cell);
@@ -125,6 +125,130 @@ public class PdfService {
             ex.printStackTrace();
         }
 
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    public ByteArrayInputStream generateUsersReport(List<java.util.Map<String, Object>> users) {
+        Document document = new Document(PageSize.A4);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, Font.BOLD);
+            Font subHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Font.BOLD);
+            Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.NORMAL);
+
+            Paragraph title = new Paragraph("Reporte de Usuarios Registrados", headerFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(20);
+            document.add(title);
+
+            PdfPTable table = new PdfPTable(4);
+            table.setWidthPercentage(100);
+            table.setWidths(new int[]{1, 3, 4, 3});
+
+            java.util.stream.Stream.of("ID", "Usuario", "Email", "Roles")
+                .forEach(h -> {
+                    PdfPCell cell = new PdfPCell(new Phrase(h, subHeaderFont));
+                    cell.setBackgroundColor(java.awt.Color.LIGHT_GRAY);
+                    table.addCell(cell);
+                });
+
+            for (java.util.Map<String, Object> user : users) {
+                table.addCell(new Phrase(String.valueOf(user.get("id")), normalFont));
+                table.addCell(new Phrase(String.valueOf(user.get("username")), normalFont));
+                table.addCell(new Phrase(String.valueOf(user.get("email")), normalFont));
+                table.addCell(new Phrase(String.valueOf(user.get("roles")), normalFont));
+            }
+            document.add(table);
+            document.close();
+        } catch (Exception ex) { ex.printStackTrace(); }
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    public ByteArrayInputStream generateInventarioReport(List<com.casavida.backend.entity.Lote> lotes) {
+        Document document = new Document(PageSize.A4.rotate());
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, Font.BOLD);
+            Font subHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Font.BOLD);
+            Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.NORMAL);
+            NumberFormat currency = NumberFormat.getCurrencyInstance(new Locale("es", "MX"));
+
+            Paragraph title = new Paragraph("Reporte de Inventario Disponible", headerFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(20);
+            document.add(title);
+
+            PdfPTable table = new PdfPTable(6);
+            table.setWidthPercentage(100);
+            table.setWidths(new int[]{2, 2, 4, 3, 2, 2});
+
+            java.util.stream.Stream.of("Lote", "Manzana", "Fraccionamiento", "Precio", "Área", "Estatus")
+                .forEach(h -> {
+                    PdfPCell cell = new PdfPCell(new Phrase(h, subHeaderFont));
+                    cell.setBackgroundColor(java.awt.Color.LIGHT_GRAY);
+                    table.addCell(cell);
+                });
+
+            for (com.casavida.backend.entity.Lote lote : lotes) {
+                table.addCell(new Phrase(lote.getNumeroLote(), normalFont));
+                table.addCell(new Phrase(lote.getManzana(), normalFont));
+                table.addCell(new Phrase(lote.getFraccionamiento() != null ? lote.getFraccionamiento().getNombre() : "Indep.", normalFont));
+                table.addCell(new Phrase(currency.format(lote.getPrecioTotal()), normalFont));
+                table.addCell(new Phrase(lote.getAreaMetrosCuadrados() + " m2", normalFont));
+                table.addCell(new Phrase(String.valueOf(lote.getEstatus()), normalFont));
+            }
+            document.add(table);
+            document.close();
+        } catch (Exception ex) { ex.printStackTrace(); }
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    public ByteArrayInputStream generatePagosReport(List<Pago> pagos) {
+        Document document = new Document(PageSize.A4.rotate());
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, Font.BOLD);
+            Font subHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Font.BOLD);
+            Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.NORMAL);
+            NumberFormat currency = NumberFormat.getCurrencyInstance(new Locale("es", "MX"));
+
+            Paragraph title = new Paragraph("Reporte Detallado de Pagos", headerFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(20);
+            document.add(title);
+
+            PdfPTable table = new PdfPTable(6);
+            table.setWidthPercentage(100);
+            table.setWidths(new int[]{2, 3, 2, 4, 2, 2});
+
+            java.util.stream.Stream.of("Fecha", "Cliente", "Monto", "Concepto", "Lote", "Referencia")
+                .forEach(h -> {
+                    PdfPCell cell = new PdfPCell(new Phrase(h, subHeaderFont));
+                    cell.setBackgroundColor(java.awt.Color.LIGHT_GRAY);
+                    table.addCell(cell);
+                });
+
+            for (Pago p : pagos) {
+                table.addCell(new Phrase(p.getFechaPago().toString(), normalFont));
+                String cli = p.getContrato() != null && p.getContrato().getCliente() != null ? 
+                    p.getContrato().getCliente().getNombre() + " " + p.getContrato().getCliente().getApellidos() : "N/A";
+                table.addCell(new Phrase(cli, normalFont));
+                table.addCell(new Phrase(currency.format(p.getMonto()), normalFont));
+                table.addCell(new Phrase(p.getConcepto(), normalFont));
+                String lote = p.getContrato() != null && p.getContrato().getLote() != null ? 
+                    "Lote " + p.getContrato().getLote().getNumeroLote() : "N/A";
+                table.addCell(new Phrase(lote, normalFont));
+                table.addCell(new Phrase(p.getReferencia(), normalFont));
+            }
+            document.add(table);
+            document.close();
+        } catch (Exception ex) { ex.printStackTrace(); }
         return new ByteArrayInputStream(out.toByteArray());
     }
 }

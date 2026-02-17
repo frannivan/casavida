@@ -19,6 +19,20 @@ public class Fraccionamiento {
     @Column(columnDefinition = "TEXT")
     private String coordenadasGeo;
 
+    private String imagenPlanoUrl;
+
+    @ElementCollection
+    @CollectionTable(name = "fraccionamiento_imagenes", joinColumns = @JoinColumn(name = "fraccionamiento_id"))
+    @Column(name = "imagen_url")
+    private java.util.List<String> galeriaImagenes = new java.util.ArrayList<>();
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String planoSvg; // SVG content of the development floor plan
+
+    @Column(columnDefinition = "TEXT")
+    private String poligonoDelimitador; // JSON array of points for the boundary polygon
+
     public Fraccionamiento() {
     }
 
@@ -76,5 +90,37 @@ public class Fraccionamiento {
 
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
+    }
+
+    public String getImagenPlanoUrl() {
+        return imagenPlanoUrl;
+    }
+
+    public void setImagenPlanoUrl(String imagenPlanoUrl) {
+        this.imagenPlanoUrl = imagenPlanoUrl;
+    }
+
+    public java.util.List<String> getGaleriaImagenes() {
+        return galeriaImagenes;
+    }
+
+    public void setGaleriaImagenes(java.util.List<String> galeriaImagenes) {
+        this.galeriaImagenes = galeriaImagenes;
+    }
+
+    public String getPlanoSvg() {
+        return planoSvg;
+    }
+
+    public void setPlanoSvg(String planoSvg) {
+        this.planoSvg = planoSvg;
+    }
+
+    public String getPoligonoDelimitador() {
+        return poligonoDelimitador;
+    }
+
+    public void setPoligonoDelimitador(String poligonoDelimitador) {
+        this.poligonoDelimitador = poligonoDelimitador;
     }
 }

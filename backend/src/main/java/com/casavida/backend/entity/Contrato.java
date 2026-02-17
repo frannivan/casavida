@@ -36,6 +36,10 @@ public class Contrato {
     @Enumerated(EnumType.STRING)
     private EStatusContrato estatus; // ACTIVO, PAGADO, CANCELADO
 
+    @ManyToOne
+    @JoinColumn(name = "vendedor_id")
+    private User vendedor;
+
     @OneToMany(mappedBy = "contrato", cascade = CascadeType.ALL)
     private List<Pago> pagos;
 
@@ -143,5 +147,13 @@ public class Contrato {
 
     public void setPagos(List<Pago> pagos) {
         this.pagos = pagos;
+    }
+
+    public User getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(User vendedor) {
+        this.vendedor = vendedor;
     }
 }
