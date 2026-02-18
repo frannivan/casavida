@@ -134,7 +134,7 @@ export class HomeComponent implements OnInit {
   saveFracc(): void {
     if (this.editingFracc) {
       // Actualizar
-      this.fraccionamientoService.update(this.editingFracc.id, this.newFracc).subscribe({
+      this.fraccionamientoService.updateFraccionamiento(this.editingFracc.id, this.newFracc).subscribe({
         next: () => {
           this.showFraccModal = false;
           this.loadFraccionamientos();
@@ -143,7 +143,7 @@ export class HomeComponent implements OnInit {
       });
     } else {
       // Crear nuevo
-      this.fraccionamientoService.create(this.newFracc).subscribe({
+      this.fraccionamientoService.createFraccionamiento(this.newFracc).subscribe({
         next: () => {
           this.showFraccModal = false;
           this.loadFraccionamientos();
@@ -156,7 +156,7 @@ export class HomeComponent implements OnInit {
   // Eliminar fraccionamiento
   deleteFracc(fracc: any): void {
     if (confirm(`¿Estás seguro de eliminar el fraccionamiento "${fracc.nombre}"?`)) {
-      this.fraccionamientoService.delete(fracc.id).subscribe({
+      this.fraccionamientoService.deleteFraccionamiento(fracc.id).subscribe({
         next: () => this.loadFraccionamientos(),
         error: err => console.error('Error eliminando fraccionamiento:', err)
       });
@@ -188,7 +188,7 @@ export class HomeComponent implements OnInit {
   saveLote(): void {
     if (this.editingLote) {
       // Actualizar
-      this.loteService.update(this.editingLote.id, this.newLote).subscribe({
+      this.loteService.updateLote(this.editingLote.id, this.newLote).subscribe({
         next: () => {
           this.showLoteModal = false;
           this.search();
@@ -197,7 +197,7 @@ export class HomeComponent implements OnInit {
       });
     } else {
       // Crear nuevo
-      this.loteService.create(this.newLote).subscribe({
+      this.loteService.createLote(this.newLote).subscribe({
         next: () => {
           this.showLoteModal = false;
           this.search();
@@ -210,7 +210,7 @@ export class HomeComponent implements OnInit {
   // Eliminar lote
   deleteLote(lote: any): void {
     if (confirm(`¿Estás seguro de eliminar el lote "${lote.numeroLote}"?`)) {
-      this.loteService.delete(lote.id).subscribe({
+      this.loteService.deleteLote(lote.id).subscribe({
         next: () => this.search(),
         error: err => console.error('Error eliminando lote:', err)
       });

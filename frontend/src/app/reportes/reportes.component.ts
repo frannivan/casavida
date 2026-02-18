@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ReporteService, UploadService } from '../services/reporte';
 import { ClienteService } from '../services/cliente';
 import { FraccionamientoService } from '../services/fraccionamiento';
-import { UserService } from '../services/user';
+import { AdminService } from '../services/admin';
 
 @Component({
   selector: 'app-reportes',
@@ -50,7 +50,7 @@ import { UserService } from '../services/user';
           <div *ngIf="tipoReporte" class="card bg-light mb-4">
             <div class="card-body">
               <h5><i class="fas fa-filter me-2"></i>Filtros</h5>
-              
+
               <div class="row">
                 <!-- Filtro por fecha - disponible para todos -->
                 <div class="col-md-4">
@@ -59,14 +59,14 @@ import { UserService } from '../services/user';
                     <input type="date" class="form-control" [(ngModel)]="filtros.fechaDesde">
                   </div>
                 </div>
-                
+
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Fecha Hasta:</label>
                     <input type="date" class="form-control" [(ngModel)]="filtros.fechaHasta">
                   </div>
                 </div>
-                
+
                 <!-- Filtro por cliente - disponible para contratos, pagos -->
                 <div class="col-md-4" *ngIf="tipoReporte === 'contratos' || tipoReporte === 'pagos'">
                   <div class="form-group">
@@ -79,7 +79,7 @@ import { UserService } from '../services/user';
                     </select>
                   </div>
                 </div>
-                
+
                 <!-- Filtro por fraccionamiento - solo para lotes -->
                 <div class="col-md-4" *ngIf="tipoReporte === 'lotes'">
                   <div class="form-group">
@@ -92,7 +92,7 @@ import { UserService } from '../services/user';
                     </select>
                   </div>
                 </div>
-                
+
                 <!-- Filtro por vendedor - para contratos -->
                 <div class="col-md-4" *ngIf="tipoReporte === 'contratos'">
                   <div class="form-group">
@@ -106,7 +106,7 @@ import { UserService } from '../services/user';
                   </div>
                 </div>
               </div>
-              
+
               <div class="row mt-3">
                 <div class="col-12">
                   <button class="btn btn-primary" (click)="generarReporte()" [disabled]="loading">
@@ -114,7 +114,7 @@ import { UserService } from '../services/user';
                     <i *ngIf="!loading" class="fas fa-search me-2"></i>
                     {{ loading ? 'Generando...' : 'Generar Reporte' }}
                   </button>
-                  
+
                   <button class="btn btn-outline-secondary ms-2" (click)="limpiarFiltros()">
                     <i class="fas fa-eraser me-2"></i>Limpiar Filtros
                   </button>
@@ -142,7 +142,7 @@ import { UserService } from '../services/user';
                 </button>
               </div>
             </div>
-            
+
             <div class="table-responsive">
               <table class="table table-striped table-hover">
                 <thead class="thead-dark">
@@ -172,14 +172,14 @@ export class ReportesComponent implements OnInit {
   private reporteService = inject(ReporteService);
   private clienteService = inject(ClienteService);
   private fraccService = inject(FraccionamientoService);
-  private userService = inject(UserService);
-  
+  private adminService = inject(AdminService);
+
   // Configuración
   tipoReporte = '';
   formato = 'pantalla';
   loading = false;
   reporteGenerado = false;
-  
+
   // Filtros
   filtros: any = {
     fechaDesde: '',
@@ -188,63 +188,63 @@ export class ReportesComponent implements OnInit {
     fraccionamientoId: '',
     vendedorId: ''
   };
-  
+
   // Datos para selects
   clientes: any[] = [];
   fraccionamientos: any[] = [];
   vendedores: any[] = [];
-  
+
   // Resultados
   resultados: any[] = [];
   columnas: any[] = [];
   resumen: any = null;
-  
+
   ngOnInit(): void {
     this.cargarClientes();
     this.cargarFraccionamientos();
     this.cargarVendedores();
   }
-  
+
   cargarClientes(): void {
-    this.clienteService.getAll().subscribe({
+    this.clienteService.getAllClientes().subscribe({
       next: (data) => this.clientes = data,
       error: (err) => console.error('Error cargando clientes:', err)
     });
   }
-  
+
   cargarFraccionamientos(): void {
-    this.fraccService.getAll().subscribe({
+    this.fraccService.getAllFraccionamientos().subscribe({
       next: (data) => this.fraccionamientos = data,
       error: (err) => console.error('Error cargando fraccionamientos:', err)
     });
   }
-  
+
   cargarVendedores(): void {
-    this.userService.getAll().subscribe({
+    this.adminService.getUsers().subscribe({
       next: (data) => {
         // Filtrar solo usuarios con rol VENDEDOR o ADMIN
-        this.vendedores = data.filter((u: any) => 
+        this.vendedores = data.filter((u: any) =>
           u.roles?.some((r: any) => r.name === 'ROLE_VENDEDOR' || r.name === 'ROLE_ADMIN')
         );
       },
       error: (err) => console.error('Error cargando vendedores:', err)
     });
   }
-  
+
   onTipoReporteChange(): void {
     this.resultados = [];
     this.reporteGenerado = false;
     this.resumen = null;
     this.limpiarFiltros();
   }
-  
+
   setFormato(fmt: string): void {
     this.formato = fmt;
     if (fmt !== 'pantalla') {
       this.generarReporte();
     }
   }
-  
+
   limpiarFiltros(): void {
     this.filtros = {
       fechaDesde: '',
@@ -254,11 +254,11 @@ export class ReportesComponent implements OnInit {
       vendedorId: ''
     };
   }
-  
+
   generarReporte(): void {
     this.loading = true;
     this.reporteGenerado = false;
-    
+
     if (this.formato === 'excel') {
       this.reporteService.exportarExcel(this.tipoReporte, this.filtros).subscribe({
         next: (blob) => this.downloadFile(blob, `reporte_${this.tipoReporte}.xlsx`),
@@ -270,7 +270,7 @@ export class ReportesComponent implements OnInit {
       });
       return;
     }
-    
+
     if (this.formato === 'pdf') {
       this.reporteService.exportarPDF(this.tipoReporte, this.filtros).subscribe({
         next: (blob) => this.downloadFile(blob, `reporte_${this.tipoReporte}.pdf`),
@@ -282,7 +282,7 @@ export class ReportesComponent implements OnInit {
       });
       return;
     }
-    
+
     // Pantalla
     switch (this.tipoReporte) {
       case 'lotes':
@@ -297,7 +297,7 @@ export class ReportesComponent implements OnInit {
           complete: () => this.loading = false
         });
         break;
-        
+
       case 'clientes':
         this.reporteService.getClientesReport(this.filtros).subscribe({
           next: (data) => {
@@ -309,7 +309,7 @@ export class ReportesComponent implements OnInit {
           complete: () => this.loading = false
         });
         break;
-        
+
       case 'contratos':
         this.reporteService.getContratosReport(this.filtros).subscribe({
           next: (data) => {
@@ -321,7 +321,7 @@ export class ReportesComponent implements OnInit {
           complete: () => this.loading = false
         });
         break;
-        
+
       case 'pagos':
         this.reporteService.getPagosReport(this.filtros).subscribe({
           next: (data) => {
@@ -335,7 +335,7 @@ export class ReportesComponent implements OnInit {
         break;
     }
   }
-  
+
   getColumnasLotes(): any[] {
     return [
       { field: 'id', header: 'ID' },
@@ -347,7 +347,7 @@ export class ReportesComponent implements OnInit {
       { field: 'estatus', header: 'Estatus' }
     ];
   }
-  
+
   getColumnasClientes(): any[] {
     return [
       { field: 'id', header: 'ID' },
@@ -357,7 +357,7 @@ export class ReportesComponent implements OnInit {
       { field: 'createdAt', header: 'Fecha Registro' }
     ];
   }
-  
+
   getColumnasContratos(): any[] {
     return [
       { field: 'id', header: 'ID' },
@@ -369,7 +369,7 @@ export class ReportesComponent implements OnInit {
       { field: 'estatus', header: 'Estatus' }
     ];
   }
-  
+
   getColumnasPagos(): any[] {
     return [
       { field: 'id', header: 'ID' },
@@ -381,7 +381,7 @@ export class ReportesComponent implements OnInit {
       { field: 'metodoPago', header: 'Método' }
     ];
   }
-  
+
   getCellValue(row: any, field: string): any {
     const fields = field.split('.');
     let value = row;
@@ -389,29 +389,29 @@ export class ReportesComponent implements OnInit {
       value = value?.[f];
       if (value === undefined || value === null) return '-';
     }
-    
+
     // Formatear arrays (como roles)
     if (Array.isArray(value)) {
       return value.join(', ');
     }
-    
+
     return value;
   }
-  
+
   exportarExcel(): void {
     this.reporteService.exportarExcel(this.tipoReporte, this.filtros).subscribe({
       next: (blob) => this.downloadFile(blob, `reporte_${this.tipoReporte}.xlsx`),
       error: (err) => console.error('Error exportando Excel:', err)
     });
   }
-  
+
   exportarPDF(): void {
     this.reporteService.exportarPDF(this.tipoReporte, this.filtros).subscribe({
       next: (blob) => this.downloadFile(blob, `reporte_${this.tipoReporte}.pdf`),
       error: (err) => console.error('Error exportando PDF:', err)
     });
   }
-  
+
   downloadFile(blob: Blob, filename: string): void {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
