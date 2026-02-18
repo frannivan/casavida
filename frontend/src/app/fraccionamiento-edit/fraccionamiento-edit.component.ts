@@ -64,6 +64,11 @@ export class FraccionamientoEditComponent implements OnInit {
       this.loadFraccionamiento(Number(id));
     }
   }
+
+  // Getter para lotes disponibles
+  get lotesDisponiblesCount(): number {
+    return this.lotes.filter((l: any) => l.estatus === 'DISPONIBLE').length;
+  }
   
   checkAdminRole(): void {
     const user = this.storageService.getUser();
