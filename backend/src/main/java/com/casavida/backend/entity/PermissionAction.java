@@ -4,12 +4,13 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Action entity for RBAC
+ * PermissionAction entity for RBAC
  * Represents possible actions (VIEW, CREATE, EDIT, DELETE, APPROVE, EXPORT)
+ * Renamed from 'Action' to avoid conflict with logback's Action class
  */
 @Entity
 @Table(name = "actions")
-public class Action {
+public class PermissionAction {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,10 +34,10 @@ public class Action {
     }
     
     // Constructors
-    public Action() {
+    public PermissionAction() {
     }
     
-    public Action(String name, String displayName) {
+    public PermissionAction(String name, String displayName) {
         this.name = name;
         this.displayName = displayName;
     }

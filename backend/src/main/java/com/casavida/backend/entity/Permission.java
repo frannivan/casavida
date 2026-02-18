@@ -28,7 +28,7 @@ public class Permission {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "action_id", nullable = false)
-    private Action action;
+    private PermissionAction action;  // Changed from Action to PermissionAction
     
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -94,11 +94,11 @@ public class Permission {
         this.component = component;
     }
     
-    public Action getAction() {
+    public PermissionAction getAction() {
         return action;
     }
     
-    public void setAction(Action action) {
+    public void setAction(PermissionAction action) {
         this.action = action;
     }
     

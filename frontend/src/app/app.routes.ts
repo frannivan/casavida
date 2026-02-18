@@ -143,6 +143,31 @@ export class DirectivoComponent {}
 })
 export class CotizarComponent {}
 
+// Componentes adicionales para rutas faltantes
+@Component({
+  selector: 'app-generar-contrato',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-file-signature me-2"></i>Generar Contrato</h2>
+    <p class="text-muted">Creación de nuevos contratos de venta.</p>
+    <app-board-admin [view]="'contracts'"></app-board-admin>
+  </div>`,
+  imports: [BoardAdminComponent]
+})
+export class GenerarContratoComponent {}
+
+@Component({
+  selector: 'app-leads-short',
+  standalone: true,
+  template: `<div class="container py-4">
+    <h2><i class="fas fa-user-tag me-2"></i>Prospectos</h2>
+    <p class="text-muted">Gestión de leads y prospectos.</p>
+    <app-crm-leads></app-crm-leads>
+  </div>`,
+  imports: [CrmLeadsComponent]
+})
+export class LeadsShortComponent {}
+
 export const routes: Routes = [
     // Rutas públicas
     { path: 'home', component: HomeComponent },
@@ -162,16 +187,20 @@ export const routes: Routes = [
     { path: 'admin/crm/leads', component: CrmLeadsComponent },
     { path: 'admin/crm/opportunities', component: CrmOpportunitiesComponent },
     
-    // Rutas de Inventario (nuevas)
+    // Rutas de Inventario
     { path: 'admin/fraccionamientos', component: FraccionamientosComponent },
     { path: 'admin/lotes', component: LotesInventarioComponent },
     
-    // Rutas de Herramientas (nuevas)
+    // Rutas de Herramientas
     { path: 'admin/reportes', component: ReportesComponent },
     { path: 'admin/carga-datos', component: CargaDatosComponent },
     { path: 'admin/documentacion', component: DocumentacionComponent },
     
-    // Rutas para otros roles (nuevas)
+    // Rutas adicionales para Recepción y otros roles
+    { path: 'admin/generar-contrato', component: GenerarContratoComponent },
+    { path: 'admin/leads', component: LeadsShortComponent },
+    
+    // Rutas para otros roles
     { path: 'recepcion', component: RecepcionComponent },
     { path: 'panel-vendedor', component: PanelVendedorComponent },
     { path: 'contabilidad', component: ContabilidadComponent },
