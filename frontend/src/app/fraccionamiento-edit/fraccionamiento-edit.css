@@ -1,0 +1,25 @@
+/* Fraccionamiento Edit Styles */
+.card {
+  margin-bottom: 1.5rem;
+}
+
+.modal {
+  display: block;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.img-thumbnail {
+  transition: transform 0.2s;
+}
+
+.img-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.badge {
+  font-size: 0.9em;
+}
+
+.btn-group .btn {
+  flex: 1;
+}
