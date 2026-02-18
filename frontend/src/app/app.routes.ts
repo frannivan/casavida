@@ -13,8 +13,11 @@ import { FraccionamientoDetailComponent } from './fraccionamiento-detail/fraccio
 import { CrmLeadsComponent } from './admin/crm/leads/crm-leads.component';
 import { CrmOpportunitiesComponent } from './admin/crm/opportunities/crm-opportunities.component';
 
+// Importar paneles específicos por rol
+import { RecepcionPanelComponent } from './panel-recepcion/recepcion-panel.component';
+import { VendedorPanelComponent } from './panel-vendedor/vendedor-panel.component';
+
 // Componentes placeholder para rutas faltantes
-// TODO: Crear estos componentes proper o reutilizar board-admin con parámetros
 import { Component } from '@angular/core';
 
 @Component({
@@ -82,33 +85,6 @@ export class CargaDatosComponent {}
 })
 export class DocumentacionComponent {}
 
-// Componentes para otros roles
-@Component({
-  selector: 'app-recepcion',
-  standalone: true,
-  template: `<div class="container py-4">
-    <h2><i class="fas fa-credit-card me-2"></i>Panel de Recepción</h2>
-    <p class="text-muted">Validación de pagos y gestión de contratos.</p>
-    <hr>
-    <app-board-admin [view]="'payments'"></app-board-admin>
-  </div>`,
-  imports: [BoardAdminComponent]
-})
-export class RecepcionComponent {}
-
-@Component({
-  selector: 'app-panel-vendedor',
-  standalone: true,
-  template: `<div class="container py-4">
-    <h2><i class="fas fa-columns me-2"></i>Panel de Vendedor</h2>
-    <p class="text-muted">Gestión de prospectos y oportunidades.</p>
-    <hr>
-    <app-board-admin></app-board-admin>
-  </div>`,
-  imports: [BoardAdminComponent]
-})
-export class PanelVendedorComponent {}
-
 @Component({
   selector: 'app-contabilidad',
   standalone: true,
@@ -148,7 +124,6 @@ export class DirectivoComponent {}
 })
 export class CotizarComponent {}
 
-// Componentes adicionales para rutas faltantes
 @Component({
   selector: 'app-generar-contrato',
   standalone: true,
@@ -194,7 +169,7 @@ export const routes: Routes = [
     { path: 'admin/crm/leads', component: CrmLeadsComponent },
     { path: 'admin/crm/opportunities', component: CrmOpportunitiesComponent },
     
-    // Rutas de Inventario - Ahora usan BoardAdmin con funcionalidad real
+    // Rutas de Inventario
     { path: 'admin/fraccionamientos', component: FraccionamientosComponent },
     { path: 'admin/lotes', component: LotesInventarioComponent },
     
@@ -207,9 +182,9 @@ export const routes: Routes = [
     { path: 'admin/generar-contrato', component: GenerarContratoComponent },
     { path: 'admin/leads', component: LeadsShortComponent },
     
-    // Rutas para otros roles - Ahora usan BoardAdmin con funcionalidad real
-    { path: 'recepcion', component: RecepcionComponent },
-    { path: 'panel-vendedor', component: PanelVendedorComponent },
+    // Rutas para otros roles - Cada uno con su propio panel personalizado
+    { path: 'recepcion', component: RecepcionPanelComponent },
+    { path: 'panel-vendedor', component: VendedorPanelComponent },
     { path: 'contabilidad', component: ContabilidadComponent },
     { path: 'directivo', component: DirectivoComponent },
     { path: 'cotizar', component: CotizarComponent },
