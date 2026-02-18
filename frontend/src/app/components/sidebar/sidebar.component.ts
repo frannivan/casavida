@@ -15,9 +15,6 @@ export class SidebarComponent {
   isAdmin = false;
   isRecepcion = false;
   isVendedor = false;
-  isContabilidad = false;
-  isDirectivo = false;
-  isUser = false;
 
   private storageService = inject(StorageService);
   private router = inject(Router);
@@ -25,22 +22,20 @@ export class SidebarComponent {
   constructor() {
     const user = this.storageService.getUser();
     this.roles = user?.roles || [];
-    
     this.isAdmin = this.roles.includes('ROLE_ADMIN');
     this.isRecepcion = this.roles.includes('ROLE_RECEPCION');
     this.isVendedor = this.roles.includes('ROLE_VENDEDOR');
-    this.isContabilidad = this.roles.includes('ROLE_CONTABILIDAD');
-    this.isDirectivo = this.roles.includes('ROLE_DIRECTIVO');
-    this.isUser = this.roles.includes('ROLE_USER');
   }
 
   logout(): void {
     this.storageService.clean();
+    // Also clear localStorage just in case, as per previous implementation
     localStorage.clear();
     sessionStorage.clear();
     document.cookie.split(";").forEach(function(c) {
       document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
+    // Force reload to clear all states
     window.location.href = '/casavida/home';
   }
 }

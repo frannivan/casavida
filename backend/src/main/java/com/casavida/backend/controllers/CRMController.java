@@ -20,9 +20,14 @@ public class CRMController {
 
     // LEADS
     @GetMapping("/leads")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION')")
     public List<Lead> getAllLeads() {
-        return crmService.getAllLeads();
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        List<String> roles = auth.getAuthorities().stream()
+                .map(org.springframework.security.core.GrantedAuthority::getAuthority)
+                .collect(java.util.stream.Collectors.toList());
+
+        return crmService.getAllLeadsFiltered(roles);
     }
 
     @PostMapping("/leads")
@@ -32,20 +37,20 @@ public class CRMController {
     }
 
     @PostMapping("/leads/{id}/convert")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
     public ResponseEntity<Opportunity> convertLead(@PathVariable Long id, @RequestParam Long loteId) {
         return ResponseEntity.ok(crmService.convertLeadToOpportunity(id, loteId));
     }
 
     // OPPORTUNITIES
     @GetMapping("/opportunities")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
     public List<Opportunity> getAllOpportunities() {
         return crmService.getAllOpportunities();
     }
 
     @PutMapping("/opportunities/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
     public ResponseEntity<Opportunity> updateOpportunity(@PathVariable Long id, @RequestBody Opportunity opportunity) {
         return ResponseEntity.ok(crmService.updateOpportunity(id, opportunity));
     }

@@ -1,5 +1,7 @@
 package com.casavida.backend.controllers;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,14 +22,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.casavida.backend.entity.ERole;
-import com.casavida.backend.entity.Role;
-import com.casavida.backend.entity.User;
+import com.casavida.backend.entity.*;
+import com.casavida.backend.repository.*;
 import com.casavida.backend.payload.request.LoginRequest;
 import com.casavida.backend.payload.request.SignupRequest;
 import com.casavida.backend.payload.response.JwtResponse;
 import com.casavida.backend.payload.response.MessageResponse;
-import com.casavida.backend.repository.RoleRepository;
+import org.springframework.transaction.annotation.Transactional;
 import com.casavida.backend.repository.UserRepository;
 import com.casavida.backend.security.jwt.JwtUtils;
 import com.casavida.backend.security.services.UserDetailsImpl;
@@ -45,6 +46,12 @@ public class AuthController {
     RoleRepository roleRepository;
 
     @Autowired
+    LoteRepository loteRepository;
+
+    @Autowired
+    FraccionamientoRepository fraccionamientoRepository;
+
+    @Autowired
     PasswordEncoder encoder;
 
     @Autowired
@@ -52,23 +59,31 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    roles));
+        } catch (org.springframework.security.authentication.BadCredentialsException e) {
+            System.err.println("DEBUG: Authentication failed for user " + loginRequest.getUsername() + " - Bad Credentials");
+            throw e;
+        } catch (Exception e) {
+            System.err.println("DEBUG: Authentication error: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @PostMapping("/signup")
@@ -120,5 +135,34 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("Usuario registrado exitosamente!"));
+    }
+
+    // DEBUG ENDPOINT - REMOVE IN PRODUCTION
+
+    @PostMapping("/debug/reset-admin")
+    public ResponseEntity<?> debugResetAdmin(@RequestBody LoginRequest request) {
+        if (!"admin-secret-key".equals(request.getUsername())) { // simple protection
+            return ResponseEntity.badRequest().body(new MessageResponse("Unauthorized Debug Access"));
+        }
+
+        User user = userRepository.findByUsername("admin")
+                .orElseThrow(() -> new RuntimeException("Error: Admin user not found."));
+
+        user.setPassword(encoder.encode(request.getPassword()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("Admin password reset successfully via DEBUG endpoint. New hash: " + user.getPassword()));
+    }
+
+    // DEBUG ENDPOINT - CHECK PASSWORD
+    @PostMapping("/debug/check")
+    public ResponseEntity<?> debugCheckPassword(@RequestBody LoginRequest request) {
+        if (!userRepository.existsByUsername(request.getUsername())) {
+             return ResponseEntity.badRequest().body(new MessageResponse("User " + request.getUsername() + " does not exist"));
+        }
+        User user = userRepository.findByUsername(request.getUsername()).get();
+        boolean matches = encoder.matches(request.getPassword(), user.getPassword());
+        
+        return ResponseEntity.ok(new MessageResponse("Password match for " + request.getUsername() + ": " + matches + ". Stored: " + user.getPassword() + ". Encoded input would be: " + encoder.encode(request.getPassword())));
     }
 }

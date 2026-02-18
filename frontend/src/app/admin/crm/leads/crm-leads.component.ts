@@ -19,6 +19,17 @@ export class CrmLeadsComponent implements OnInit {
     showConvertModal = false;
     successMsg = '';
     errorMsg = '';
+    searchTerm = '';
+
+    get filteredLeads() {
+        if (!this.searchTerm) return this.leads;
+        const s = this.searchTerm.toLowerCase();
+        return this.leads.filter(l => 
+            (l.nombre?.toLowerCase().includes(s) || false) || 
+            (l.email?.toLowerCase().includes(s) || false) ||
+            (l.telefono?.includes(s) || false)
+        );
+    }
 
     private crmService = inject(CRMService);
     private loteService = inject(LoteService);
@@ -39,7 +50,7 @@ export class CrmLeadsComponent implements OnInit {
 
     loadLotes(): void {
         this.loteService.getAllLotes().subscribe({
-            next: (data: any) => this.availableLotes = data.filter((l: any) => l.estatus === 'DISPONIBLE'),
+            next: (data: any) => this.availableLotes = data,
             error: (err: any) => console.error('Error al cargar lotes', err)
         });
     }

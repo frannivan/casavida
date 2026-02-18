@@ -66,6 +66,11 @@ export class ClientDossierComponent implements OnChanges {
             next: (data: any[]) => {
                 this.contracts = data;
                 this.calculateStats();
+                // Calculate amortization for the first active contract found
+                const activeContract = this.contracts.find(c => c.estatus === 'ACTIVO') || this.contracts[0];
+                if (activeContract) {
+                    this.calculateAmortizationSchedule(activeContract);
+                }
             },
             error: err => console.error('Error fetching contracts for dossier', err)
         });
@@ -95,9 +100,62 @@ export class ClientDossierComponent implements OnChanges {
         this.allPayments.sort((a, b) => new Date(b.fechaPago).getTime() - new Date(a.fechaPago).getTime());
     }
 
+    // Amortization State
+    amortizationTable: any[] = [];
+
     getGlobalProgress(): number {
         if (this.totalInvested === 0) return 0;
         return (this.totalPaid / this.totalInvested) * 100;
+    }
+
+    calculateAmortizationSchedule(contract: any): void {
+        if (!contract) return;
+        
+        const monto = contract.montoTotal - (contract.enganche || 0);
+        const plazo = contract.plazoMeses || 12;
+        const tasaAnual = contract.tasaAnual || 0;
+        const tasaMensual = (tasaAnual / 100) / 12;
+        
+        this.amortizationTable = [];
+        
+        let saldo = monto;
+        let cuota = 0;
+
+        // Formula Cuota Fija (Método Francés)
+        if (tasaMensual > 0) {
+            cuota = (monto * tasaMensual * Math.pow(1 + tasaMensual, plazo)) / (Math.pow(1 + tasaMensual, plazo) - 1);
+        } else {
+            cuota = monto / plazo;
+        }
+
+        let fechaPago = new Date(contract.fechaContrato);
+        // Start from next month
+        fechaPago.setMonth(fechaPago.getMonth() + 1);
+
+        for (let i = 1; i <= plazo; i++) {
+            const interes = saldo * tasaMensual;
+            let capital = cuota - interes;
+            
+            if (i === plazo || capital > saldo) {
+                capital = saldo;
+                cuota = capital + interes;
+            }
+            
+            const saldoFinal = saldo - capital;
+            
+            this.amortizationTable.push({
+                numero: i,
+                fecha: new Date(fechaPago),
+                saldoInicial: saldo,
+                cuota: cuota,
+                interes: interes,
+                capital: capital,
+                saldoFinal: saldoFinal < 0 ? 0 : saldoFinal // Avoid negative rounding errors
+            });
+            
+            saldo = saldoFinal;
+            fechaPago.setMonth(fechaPago.getMonth() + 1);
+        }
     }
 
     getInitials(name: string, surname: string): string {
@@ -130,7 +188,8 @@ export class ClientDossierComponent implements OnChanges {
             contratoId: this.contracts.length > 0 ? this.contracts[0].id : null,
             monto: 0,
             referencia: '',
-            concepto: 'Mensualidad'
+            concepto: 'Mensualidad',
+            metodoPago: 'Transferencia'
         };
         this.selectedFile = null;
         this.selectedFileName = null;
@@ -164,6 +223,7 @@ export class ClientDossierComponent implements OnChanges {
         formData.append('fechaPago', new Date().toISOString().split('T')[0]);
         formData.append('referencia', this.paymentData.referencia || 'En Caja');
         formData.append('concepto', this.paymentData.concepto);
+        formData.append('metodoPago', this.paymentData.metodoPago);
 
         if (this.selectedFile) {
             formData.append('file', this.selectedFile);

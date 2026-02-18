@@ -6,6 +6,18 @@
     <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
     <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
 
+    <!-- Filter Bar -->
+    <div class="card mb-3 shadow-sm border-0">
+        <div class="card-body">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text bg-white border-right-0"><i class="fas fa-search text-muted"></i></span>
+                </div>
+                <input type="text" class="form-control border-left-0" placeholder="Buscar por nombre, email o teléfono..." [(ngModel)]="searchTerm">
+            </div>
+        </div>
+    </div>
+
     <div class="card shadow-sm border-0">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -13,28 +25,37 @@
                     <thead class="bg-light">
                         <tr>
                             <th>Fecha</th>
-                            <th>Nombre</th>
+                            <th>Interés</th>
+                            <th>Prospecto</th>
                             <th>Contacto</th>
                             <th>Origen</th>
-                            <th>Estado</th>
+                            <th>Estatus</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let lead of leads">
-                            <td>{{ lead.fechaRegistro | date:'dd/MM/yyyy HH:mm' }}</td>
-                            <td><strong>{{ lead.nombre }}</strong></td>
+                        <tr *ngFor="let lead of filteredLeads">
+                            <td>{{ lead.fechaRegistro | date:'short' }}</td>
+                            <td>
+                                <span class="badge-status" [ngClass]="lead.interes === 'REPRESENTANTE' ? 'badge-status-active' : 'badge-status-info'">
+                                    {{ lead.interes || 'COTIZACION' }}
+                                </span>
+                            </td>
+                            <td>
+                                <strong>{{ lead.nombre }}</strong>
+                            </td>
                             <td>
                                 <div class="small"><i class="fas fa-envelope mr-1 text-muted"></i>{{ lead.email }}</div>
                                 <div class="small"><i class="fas fa-phone mr-1 text-muted"></i>{{ lead.telefono }}</div>
                             </td>
-                            <td><span class="badge badge-info">{{ lead.source }}</span></td>
+                            <td><span class="badge-status badge-status-info">{{ lead.source }}</span></td>
                             <td>
-                                <span class="badge" [ngClass]="{
-                                    'badge-primary': lead.status === 'NEW',
-                                    'badge-warning': lead.status === 'QUALIFIED',
-                                    'badge-secondary': lead.status === 'LOST'
-                                }">{{ lead.status }}</span>
+                                <span class="badge-status shadow-sm" [ngClass]="{
+                                    'badge-status-new': lead.status === 'NEW',
+                                    'badge-status-qualified': lead.status === 'QUALIFIED',
+                                    'badge-status-lost': lead.status === 'LOST',
+                                    'badge-status-won': lead.status === 'WON'
+                                }" style="min-width: 80px; text-align: center;">{{ lead.status }}</span>
                             </td>
                             <td>
                                 <button class="btn btn-sm btn-success rounded-pill" (click)="openConvertModal(lead)"

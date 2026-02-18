@@ -12,6 +12,16 @@ import { LoteDetail } from './lote-detail/lote-detail';
 import { FraccionamientoDetailComponent } from './fraccionamiento-detail/fraccionamiento-detail';
 import { CrmLeadsComponent } from './admin/crm/leads/crm-leads.component';
 import { CrmOpportunitiesComponent } from './admin/crm/opportunities/crm-opportunities.component';
+import { BoardRecepcionComponent } from './board-recepcion/board-recepcion.component';
+import { DocumentacionComponent } from './admin/documentacion/documentacion.component';
+import { MensajesComponent } from './mensajes/mensajes';
+import { CotizacionComponent } from './cotizacion/cotizacion';
+import { GenerarContratoComponent } from './generar-contrato/generar-contrato';
+import { BoardVendedorComponent } from './board-vendedor/board-vendedor.component';
+import { FraccionamientoListComponent } from './components/fraccionamientos/fraccionamiento-list/fraccionamiento-list.component';
+import { LoteListComponent } from './components/lotes/lote-list/lote-list.component';
+import { ReportesComponent } from './admin/reportes/reportes.component';
+import { CargaDatosComponent } from './admin/carga-datos/carga-datos.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
@@ -23,8 +33,18 @@ export const routes: Routes = [
     { path: 'user', component: BoardUser },
     { path: 'admin', component: BoardAdminComponent },
     { path: 'admin/clientes', component: BoardClientsComponent },
+    { path: 'admin/fraccionamientos', component: FraccionamientoListComponent },
+    { path: 'admin/lotes', component: LoteListComponent },
     { path: 'admin/users', component: AdminUsersComponent },
+    { path: 'admin/reportes', component: ReportesComponent },
+    { path: 'admin/carga-datos', component: CargaDatosComponent },
     { path: 'admin/crm/leads', component: CrmLeadsComponent },
     { path: 'admin/crm/opportunities', component: CrmOpportunitiesComponent },
+    { path: 'recepcion', component: BoardRecepcionComponent },
+    { path: 'admin/documentacion', component: DocumentacionComponent },
+    { path: 'mensajes', component: MensajesComponent },
+    { path: 'cotizar', component: CotizacionComponent },
+    { path: 'admin/generar-contrato', component: GenerarContratoComponent },
+    { path: 'panel-vendedor', component: BoardVendedorComponent },
     { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];

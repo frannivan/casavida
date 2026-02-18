@@ -6,6 +6,8 @@ import { CRMService } from '../services/crm.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { StorageService } from '../services/storage';
+
 @Component({
   selector: 'app-lote-detail',
   standalone: true,
@@ -17,6 +19,9 @@ export class LoteDetail implements OnInit {
   lote: any;
   isLoading = true;
   errorMessage = '';
+  isAdmin = false;
+  isUploading = false;
+  isEditing = false;
 
   // Quote Form
   showModal = false;
@@ -24,20 +29,38 @@ export class LoteDetail implements OnInit {
     nombre: '',
     email: '',
     telefono: '',
-    mensaje: ''
+    mensaje: '',
+    interes: 'COTIZACION'
   };
   quoteSuccess = '';
   quoteError = '';
+
+  // Payment Simulator
+  simEnganche: number = 0;
+  simPlazo: number = 12; // Meses
+  simTasaAnual: number = 18; // %
+  simMensualidad: number = 0;
+
+  simTotalFinanciar: number = 0;
+
+  showCalculation = false;
+  showQuoteForm = false;
 
   private loteService = inject(LoteService);
   private clienteService = inject(ClienteService);
   private crmService = inject(CRMService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private storageService = inject(StorageService);
 
   constructor() { }
 
   ngOnInit(): void {
+    const user = this.storageService.getUser();
+    if (user && user.roles && user.roles.includes('ROLE_ADMIN')) {
+      this.isAdmin = true;
+    }
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.getLote(Number(id));
@@ -52,20 +75,14 @@ export class LoteDetail implements OnInit {
       next: (data) => {
         this.lote = data;
         // Robustness & Demo: Force distinct images as requested by user to verify carousel
-        this.lote.galeriaImagenes = [
-          'https://placehold.co/600x400/555/FFF?text=Foto+1',
-          'https://placehold.co/600x400/2ecc71/FFF?text=Foto+2',
-          'https://placehold.co/600x400/3498db/FFF?text=Foto+3',
-          'https://placehold.co/600x400/e74c3c/FFF?text=Foto+4',
-          'https://placehold.co/600x400/f1c40f/FFF?text=Foto+5',
-          'https://placehold.co/600x400/9b59b6/FFF?text=Foto+6',
-          'https://placehold.co/600x400/34495e/FFF?text=Foto+7',
-          'https://placehold.co/600x400/1abc9c/FFF?text=Foto+8',
-          'https://placehold.co/600x400/e67e22/FFF?text=Foto+9',
-          'https://placehold.co/600x400/95a5a6/FFF?text=Foto+10'
-        ];
+        // Gallery matches Backend
+
 
         this.isLoading = false;
+
+        // Init Simulator Defaults
+        this.simEnganche = this.lote.precioTotal * 0.10; // 10% default
+        this.calculatePayment();
       },
       error: (err) => {
         this.errorMessage = 'Error al cargar el lote: ' + err.message;
@@ -130,6 +147,7 @@ export class LoteDetail implements OnInit {
       email: this.quoteData.email,
       telefono: this.quoteData.telefono,
       mensaje: this.quoteData.mensaje,
+      interes: this.quoteData.interes,
       source: 'LOTE_DETAIL: ' + this.lote.numeroLote
     };
 
@@ -137,7 +155,7 @@ export class LoteDetail implements OnInit {
       next: (res: any) => {
         this.quoteSuccess = '¡Solicitud enviada con éxito! Un asesor te contactará pronto.';
         this.quoteError = '';
-        this.quoteData = { nombre: '', email: '', telefono: '', mensaje: '' };
+        this.quoteData = { nombre: '', email: '', telefono: '', mensaje: '', interes: 'COTIZACION' };
       },
       error: (err: any) => {
         this.quoteError = err.error?.message || 'Error al enviar solicitud.';
@@ -151,5 +169,107 @@ export class LoteDetail implements OnInit {
       return url.replace('via.placeholder.com', 'placehold.co');
     }
     return url;
+  }
+
+  calculatePayment(): void {
+    if (!this.lote) return;
+
+    this.simTotalFinanciar = this.lote.precioTotal - this.simEnganche;
+
+    if (this.simTotalFinanciar <= 0) {
+      this.simMensualidad = 0;
+      return;
+    }
+
+    if (this.simTasaAnual === 0) {
+      this.simMensualidad = this.simTotalFinanciar / this.simPlazo;
+    } else {
+      const r = (this.simTasaAnual / 100) / 12;
+      const n = this.simPlazo;
+      this.simMensualidad = (this.simTotalFinanciar * r) / (1 - Math.pow(1 + r, -n));
+    }
+    this.showCalculation = true;
+  }
+
+  revealQuoteForm(): void {
+    this.showQuoteForm = true;
+    // Optional: scroll to form
+    setTimeout(() => {
+      const element = document.getElementById('quoteFormCard');
+      if (element) element.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }
+
+  requestQuoteWithSimulation(): void {
+    this.openQuoteModal();
+    const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+    this.quoteData.mensaje = `Hola, me interesa el Lote ${this.lote.numeroLote}. 
+Solicito cotización detallada con:
+- Enganche propuesto: ${formatter.format(this.simEnganche)}
+- Plazo deseado: ${this.simPlazo} meses`;
+  }
+
+  // --- Admin Gallery Logic ---
+
+  uploadGalleryImage(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.handleImageUpload(file, (url) => {
+        if (!this.lote.galeriaImagenes) {
+          this.lote.galeriaImagenes = [];
+        }
+        this.lote.galeriaImagenes.push(url);
+        this.saveLote('Imagen agregada a la galería.');
+      });
+    }
+  }
+
+  deleteGalleryImage(index: number): void {
+    if (confirm('¿Eliminar imagen de la galería?')) {
+      this.lote.galeriaImagenes.splice(index, 1);
+      this.saveLote('Imagen eliminada.');
+    }
+  }
+
+  setMainImage(url: string): void {
+    this.lote.imagenUrl = url;
+    this.saveLote('Imagen principal actualizada.');
+  }
+
+  private handleImageUpload(file: File, callback: (url: string) => void): void {
+    this.isUploading = true;
+    this.loteService.uploadImage(file).subscribe({ // Assuming LoteService has uploadImage exposed or inherited
+      next: (res: any) => {
+        callback(res.url || res.message);
+        this.isUploading = false;
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.isUploading = false;
+        const msg = err.error && err.error.message ? err.error.message : 'Error al subir imagen.';
+        alert(msg);
+      }
+    });
+  }
+
+  toggleEditMode(): void {
+    this.isEditing = !this.isEditing;
+  }
+
+  saveChanges(): void {
+    this.saveLote('Lote actualizado exitosamente.');
+    this.isEditing = false;
+  }
+
+  setCoverImage(url: string): void {
+    this.lote.imagenUrl = url;
+    this.saveLote('Imagen de portada actualizada.');
+  }
+
+  private saveLote(msg: string): void {
+    this.loteService.updateLote(this.lote.id, this.lote).subscribe({
+      next: () => alert(msg),
+      error: err => console.error(err)
+    });
   }
 }

@@ -146,101 +146,66 @@
     max-width: 95vw;
 }
 
-/* Explicit Gallery Row to ensure Flex behavior */
-.gallery-row {
+/* Hero Gallery Styles */
+.main-image-container {
+    height: 400px;
+    overflow: hidden;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    /* Center the group */
-    margin-right: -10px;
-    margin-left: -10px;
-}
-
-/* Gallery Controls */
-.carousel-control-prev,
-.carousel-control-next {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    z-index: 2000;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    width: 15%;
-    color: #fff;
-    text-align: center;
-    opacity: 0.5;
-    transition: opacity .15s ease;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    text-decoration: none;
-}
-
-.gallery-thumbnail {
-    cursor: pointer;
-    object-fit: cover;
-    aspect-ratio: 1/1 !important;
-    width: 100% !important;
-    transition: transform 0.2s;
-}
-
-.carousel-control-prev {
-    left: 0;
-}
-
-.carousel-control-next {
-    right: 0;
-}
-
-/* Responsive Gallery Columns controlled by CSS */
-.gallery-column {
     position: relative;
-    width: 100%;
-    padding-right: 2px;
-    padding-left: 2px;
-    /* Default (Mobile): 4 per row (Standard Small) */
-    flex: 0 0 25%;
-    max-width: 25%;
 }
 
-@media (min-width: 768px) {
-    .gallery-column {
-        /* Desktop: 6 per row */
-        flex: 0 0 16.666667%;
-        max-width: 16.666667%;
-    }
+.main-hero-image {
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
 }
 
-/* Ensure modal body centers image */
+.main-hero-image:hover {
+    transform: scale(1.02);
+}
+
+.hero-control {
+    width: 10% !important;
+}
+
+.thumbnails-bar {
+    gap: 8px;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.active-thumb .img-thumbnail {
+    border: 3px solid #007bff !important;
+    transform: translateY(-2px);
+}
+
+.thumb-btn:hover {
+    filter: brightness(0.9);
+}
+
+/* Modal Large Image */
+.gallery-modal-image {
+    max-height: 90vh; /* Use almost full viewport height */
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+}
+
 .modal-body.position-relative {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
-    /* Force black bg */
+    min-height: 80vh;
 }
 
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-    color: #fff;
-    text-decoration: none;
-    outline: 0;
-    opacity: .9;
+/* Animations */
+.animate__animated {
+    animation-duration: 0.5s;
 }
 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    background: no-repeat 50% / 100% 100%;
-}
-
-.carousel-control-prev-icon {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
-}
-
-.carousel-control-next-icon {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+@media (max-width: 768px) {
+    .main-image-container {
+        height: 250px;
+    }
 }

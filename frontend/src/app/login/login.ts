@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   form: any = {
     username: 'admin',
-    password: 'password'
+    password: 'password123'
   };
   isLoggedIn = false;
   isLoginFailed = false;

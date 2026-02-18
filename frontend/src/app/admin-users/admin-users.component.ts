@@ -7,93 +7,13 @@ import { AdminService } from '../services/admin';
     selector: 'app-admin-users',
     standalone: true,
     imports: [CommonModule, FormsModule],
-    template: `
-<div class="row">
-    <div class="col-12 d-flex justify-content-between align-items-center mb-4">
-        <h2>Gestión de Usuarios</h2>
-        <button class="btn btn-primary" (click)="openCreateModal()">
-            <i class="fas fa-user-plus mr-2"></i>Nuevo Usuario
-        </button>
-    </div>
-</div>
-
-<div class="card shadow">
-    <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-            <thead class="bg-light">
-                <tr>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Rol</th>
-                    <th class="text-right">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let user of users">
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>
-                        <span class="badge" [ngClass]="user.role === 'ADMIN' ? 'badge-danger' : 'badge-info'">
-                            {{ user.role }}
-                        </span>
-                    </td>
-                    <td class="text-right">
-                        <button class="btn btn-sm btn-outline-info mr-2" (click)="openEditModal(user)">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user.id)">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" [ngClass]="{'show d-block': showModal}" tabindex="-1" *ngIf="showModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">{{ isEditing ? 'Editar Usuario' : 'Nuevo Usuario' }}</h5>
-                <button type="button" class="close" (click)="closeModal()">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" class="form-control" [(ngModel)]="currentUser.username">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" class="form-control" [(ngModel)]="currentUser.email">
-                </div>
-                <div class="form-group">
-                    <label>Password {{ isEditing ? '(vacío para mantener)' : '' }}</label>
-                    <input type="password" class="form-control" [(ngModel)]="currentUser.password">
-                </div>
-                <div class="form-group">
-                    <label>Rol</label>
-                    <select class="form-control" [(ngModel)]="currentUser.role">
-                        <option value="">Seleccionar rol...</option>
-                        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-                <button type="button" class="btn btn-primary" (click)="saveUser()">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal-backdrop fade show" *ngIf="showModal"></div>
-`
+    templateUrl: './admin-users.component.html'
 })
 export class AdminUsersComponent implements OnInit {
     users: any[] = [];
+    filteredUsers: any[] = [];
+    searchTerm = '';
+    roleFilter = '';
     showModal = false;
     isEditing = false;
 
@@ -104,7 +24,7 @@ export class AdminUsersComponent implements OnInit {
         role: ''  // Default empty, per request
     };
 
-    roles = ['ADMIN', 'USER'];
+    roles = ['ADMIN', 'USER', 'VENDEDOR', 'RECEPCION'];
 
     private adminService = inject(AdminService);
     private cdr = inject(ChangeDetectorRef);
@@ -119,11 +39,32 @@ export class AdminUsersComponent implements OnInit {
         this.adminService.getUsers().subscribe({
             next: (data) => {
                 this.users = data;
+                this.filteredUsers = data;
                 this.cdr.detectChanges();
             },
             error: (err) => console.error(err)
         });
     }
+
+    filterUsers(): void {
+        this.filteredUsers = this.users.filter(user => {
+            const matchesSearch = !this.searchTerm || 
+                (user.username?.toLowerCase().includes(this.searchTerm.toLowerCase()) || false) ||
+                (user.email?.toLowerCase().includes(this.searchTerm.toLowerCase()) || false);
+            
+            const matchesRole = !this.roleFilter || 
+                user.role === this.roleFilter;
+            
+            return matchesSearch && matchesRole;
+        });
+    }
+
+    clearFilters(): void {
+        this.searchTerm = '';
+        this.roleFilter = '';
+        this.filteredUsers = this.users;
+    }
+
 
     openCreateModal(): void {
         this.isEditing = false;

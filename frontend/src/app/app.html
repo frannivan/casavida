@@ -1,12 +1,12 @@
 <div id="app">
-  <!-- Layout with Sidebar for Admin/Recepcion/Vendedor/Contabilidad/Directivo -->
-  <ng-container *ngIf="showAdminBoard || showRecepcionBoard || showVendedorBoard || showContabilidadBoard || showDirectivoBoard; else publicLayout">
+  <!-- Layout with Sidebar for Admin/Recepcion/Vendedor -->
+  <ng-container *ngIf="showAdminBoard || showRecepcionBoard || showVendedorBoard; else publicLayout">
     <div class="d-flex" id="wrapper">
       <!-- Sidebar -->
       <app-sidebar></app-sidebar>
 
       <!-- Page Content -->
-      <div id="page-content-wrapper" style="width: 100%;">
+      <div id="page-content-wrapper" style="margin-left: 250px; width: 100%;">
         <!-- Top Navbar (Premium Admin Look) -->
         <nav class="navbar navbar-expand navbar-light bg-white border-bottom shadow-sm py-2">
           <div class="container-fluid">
@@ -19,8 +19,6 @@
                   <i class="fas fa-user-shield" *ngIf="showAdminBoard"></i>
                   <i class="fas fa-user-tie" *ngIf="showVendedorBoard"></i>
                   <i class="fas fa-concierge-bell" *ngIf="showRecepcionBoard"></i>
-                  <i class="fas fa-file-invoice-dollar" *ngIf="showContabilidadBoard"></i>
-                  <i class="fas fa-chart-line" *ngIf="showDirectivoBoard"></i>
                   {{ username }} <span class="text-muted fw-normal ms-1">({{ userRoleDisplay }})</span>
                 </span>
               </li>

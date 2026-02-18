@@ -107,14 +107,18 @@ export class ChatbotComponent implements AfterViewChecked {
 
         if (option.includes('Comprar')) {
             responseText = 'Tenemos excelentes opciones de inversión. ¿Cómo prefieres que nos comuniquemos contigo?';
+            this.leadData.interes = 'COTIZACION';
             this.step = 'CONTACT_METHOD';
         } else if (option.includes('Vender')) {
             responseText = 'Claro, podemos ayudarte a promover tu terreno. ¿Cómo prefieres que te contactemos?';
+            this.leadData.interes = 'VENDER';
             this.step = 'CONTACT_METHOD';
         } else if (option.includes('Información')) {
             responseText = 'Nuestros fraccionamientos cuentan con todos los servicios. ¿Te gustaría que un asesor te envíe los folletos digitales?';
+            this.leadData.interes = 'COTIZACION';
             this.step = 'CONTACT_METHOD';
         } else {
+            this.leadData.interes = 'REPRESENTANTE';
             this.step = 'CONTACT_METHOD';
             responseText = 'Entendido. ¿Prefieres contacto por WhatsApp o Correo?';
         }

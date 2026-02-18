@@ -7,6 +7,37 @@
     </div>
 </div>
 
+<!-- Filter Section -->
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Buscar por Nombre o Email</label>
+                <input type="text" 
+                       class="form-control" 
+                       [(ngModel)]="searchTerm" 
+                       (input)="filterUsers()"
+                       placeholder="Escribe para filtrar...">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Filtrar por Rol</label>
+                <select class="form-select" [(ngModel)]="roleFilter" (change)="filterUsers()">
+                    <option value="">Todos los roles</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="VENDEDOR">Vendedor</option>
+                    <option value="RECEPCION">Recepción</option>
+                    <option value="USER">Usuario</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-secondary w-100" (click)="clearFilters()">
+                    <i class="fas fa-times me-1"></i>Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="card shadow">
     <div class="card-body p-0">
         <table class="table table-hover mb-0">
@@ -19,11 +50,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let user of users">
+                <tr *ngFor="let user of filteredUsers">
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                     <td>
-                        <span class="badge" [ngClass]="user.role === 'ADMIN' ? 'badge-danger' : 'badge-info'">
+                        <span class="badge" [ngClass]="{
+                            'bg-danger text-white': user.role === 'ADMIN',
+                            'bg-info text-dark': user.role !== 'ADMIN'
+                          }">
                             {{ user.role }}
                         </span>
                     </td>

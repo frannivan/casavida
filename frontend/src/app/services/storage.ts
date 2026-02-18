@@ -11,6 +11,10 @@ export class StorageService {
 
   clean(): void {
     window.sessionStorage.clear();
+    window.localStorage.clear();
+    document.cookie.split(";").forEach(function(c) {
+      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
   }
 
   public saveUser(user: any): void {

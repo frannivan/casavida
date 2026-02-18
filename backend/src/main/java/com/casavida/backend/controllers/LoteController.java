@@ -24,15 +24,6 @@ import com.casavida.backend.repository.LoteRepository;
 
 @RestController
 @RequestMapping("/api/lotes")
-/**
- * Controller for managing Lots (Lotes) in the inventory.
- * Provides endpoints for creating, updating, searching, and managing lot details including polygons and status.
- * 
- * <p>Enforces RBAC for inventory management (Admin/Directivo edit, others view).
- * 
- * @author CasaVida Team
- * @since 1.0
- */
 public class LoteController {
 
     public LoteController() {
@@ -47,15 +38,6 @@ public class LoteController {
     @Autowired
     LoteRepository loteRepository;
 
-    /**
-     * Public endpoint to search available lots.
-     * Used by public map or listing.
-     * 
-     * @param fraccionamientoId Filter by Fraccionamiento ID (optional)
-     * @param ubicacion Filter by location string (optional)
-     * @param sortDir Sort direction ("asc" or "desc" by price)
-     * @return List of available (or reserved/apartado) {@link Lote} entities
-     */
     @GetMapping("/public")
     public List<Lote> getAvailableLotes(
             @RequestParam(required = false) Long fraccionamientoId,
@@ -68,12 +50,6 @@ public class LoteController {
         return loteRepository.searchLotes(java.util.Arrays.asList(EStatusLote.DISPONIBLE, EStatusLote.APARTADO), fraccionamientoId, ubicacion, sort);
     }
 
-    /**
-     * Retrieves specific lot details (Public).
-     * 
-     * @param id The ID of the Lote
-     * @return ResponseEntity with {@link Lote} or 404 if not found
-     */
     @GetMapping("/public/{id}")
     public ResponseEntity<?> getLoteById(@PathVariable Long id) {
         Optional<Lote> lote = loteRepository.findById(id);
@@ -84,51 +60,27 @@ public class LoteController {
         }
     }
 
-    /**
-     * Retrieves all lots in the system (Internal).
-     * 
-     * @return List of all {@link Lote} entities
-     */
     @GetMapping("/all")
-    @PreAuthorize("hasPermission(null, 'INVENTARIO.VIEW')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION')")
     public List<Lote> getAllLotes() {
         return loteRepository.findAll();
     }
 
-    /**
-     * Retrieves all lots belonging to a specific Fraccionamiento.
-     * 
-     * @param id The ID of the Fraccionamiento
-     * @return List of {@link Lote} entities
-     */
     @GetMapping("/adm/by-fraccionamiento/{id}")
-    @PreAuthorize("hasPermission(null, 'INVENTARIO.VIEW')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION')")
     public List<Lote> getLotesByFraccionamiento(@PathVariable Long id) {
         return loteRepository.findByFraccionamientoId(id);
     }
 
-    /**
-     * Creates a new Lote in the inventory.
-     * 
-     * @param lote The {@link Lote} entity to create
-     * @return ResponseEntity with success message
-     */
     @PostMapping("/create")
-    @PreAuthorize("hasPermission(null, 'INVENTARIO.CREATE')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createLote(@RequestBody Lote lote) {
         loteRepository.save(lote);
         return ResponseEntity.ok(new MessageResponse("Lote creado exitosamente."));
     }
 
-    /**
-     * Updates an existing Lote's details.
-     * 
-     * @param id The ID of the Lote
-     * @param loteDetails {@link Lote} object with updated fields
-     * @return ResponseEntity with success message or 404 if not found
-     */
     @PutMapping("/{id}")
-    @PreAuthorize("hasPermission(null, 'INVENTARIO.EDIT')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateLote(@PathVariable Long id, @RequestBody Lote loteDetails) {
         return loteRepository.findById(id).map(lote -> {
             lote.setNumeroLote(loteDetails.getNumeroLote());
@@ -154,14 +106,8 @@ public class LoteController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Deletes a Lote from the inventory.
-     * 
-     * @param id The ID of the Lote
-     * @return ResponseEntity with success message or 404 if not found
-     */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasPermission(null, 'INVENTARIO.DELETE')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteLote(@PathVariable Long id) {
         if (loteRepository.existsById(id)) {
             loteRepository.deleteById(id);
@@ -171,16 +117,8 @@ public class LoteController {
         }
     }
 
-    /**
-     * Updates only the polygon coordinates of a Lote.
-     * Useful for map editors.
-     * 
-     * @param id The ID of the Lote
-     * @param coordinates The new coordinates string
-     * @return ResponseEntity with success message or 404 if not found
-     */
     @PutMapping("/adm/{id}/poligono")
-    @PreAuthorize("hasPermission(null, 'INVENTARIO.EDIT')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateLotePoligono(
             @PathVariable Long id,
             @RequestBody String coordinates) {
@@ -191,15 +129,8 @@ public class LoteController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Updates only the status of a Lote.
-     * 
-     * @param id The ID of the Lote
-     * @param body Map containing the new 'estatus'
-     * @return ResponseEntity with updated Lote or 404 if not found
-     */
     @PutMapping("/adm/{id}/estatus")
-    @PreAuthorize("hasPermission(null, 'INVENTARIO.EDIT')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateLoteEstatus(
             @PathVariable Long id,
             @RequestBody java.util.Map<String, String> body) {

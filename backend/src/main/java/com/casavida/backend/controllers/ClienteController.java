@@ -29,19 +29,19 @@ public class ClienteController {
     com.casavida.backend.repository.ContratoRepository contratoRepository;
 
     @GetMapping("/{id}/contratos")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION')")
     public List<com.casavida.backend.entity.Contrato> getContratosByCliente(@PathVariable Long id) {
         return contratoRepository.findByClienteId(id);
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION')")
     public List<Cliente> getAllClientes() {
         return clienteRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION')")
     public ResponseEntity<?> getClienteById(@PathVariable Long id) {
         return clienteRepository.findById(id)
                 .map(ResponseEntity::ok)
@@ -49,7 +49,7 @@ public class ClienteController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION')")
     public ResponseEntity<?> createCliente(@RequestBody Cliente cliente) {
         if (clienteRepository.existsByEmail(cliente.getEmail())) {
             return ResponseEntity

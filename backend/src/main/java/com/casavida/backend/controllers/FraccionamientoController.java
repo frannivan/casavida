@@ -64,6 +64,11 @@ public class FraccionamientoController {
             fraccionamiento.setDescripcion(details.getDescripcion());
             fraccionamiento.setLogoUrl(details.getLogoUrl());
             fraccionamiento.setCoordenadasGeo(details.getCoordenadasGeo());
+            fraccionamiento.setImagenPlanoUrl(details.getImagenPlanoUrl());
+            if (details.getGaleriaImagenes() != null) {
+                fraccionamiento.getGaleriaImagenes().clear();
+                fraccionamiento.getGaleriaImagenes().addAll(details.getGaleriaImagenes());
+            }
             fraccionamientoRepository.save(fraccionamiento);
             return org.springframework.http.ResponseEntity.ok(new com.casavida.backend.payload.response.MessageResponse(
                     "Fraccionamiento actualizado exitosamente."));
@@ -81,5 +86,61 @@ public class FraccionamientoController {
         } else {
             return org.springframework.http.ResponseEntity.notFound().build();
         }
+    }
+
+    @org.springframework.web.bind.annotation.PutMapping("/adm/{id}/plano-svg")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    public org.springframework.http.ResponseEntity<?> uploadPlanoSvg(
+            @org.springframework.web.bind.annotation.PathVariable Long id,
+            @org.springframework.web.bind.annotation.RequestBody String svgContent) {
+        return fraccionamientoRepository.findById(id).map(fraccionamiento -> {
+            // Basic SVG validation
+            if (svgContent == null || !svgContent.trim().startsWith("<svg")) {
+                return org.springframework.http.ResponseEntity.badRequest()
+                        .body(new com.casavida.backend.payload.response.MessageResponse("Contenido SVG inválido"));
+            }
+
+            fraccionamiento.setPlanoSvg(svgContent);
+            fraccionamientoRepository.save(fraccionamiento);
+            return org.springframework.http.ResponseEntity.ok(
+                    new com.casavida.backend.payload.response.MessageResponse("Plano SVG subido exitosamente"));
+        }).orElse(org.springframework.http.ResponseEntity.notFound().build());
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/adm/{id}/plano-svg")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    public org.springframework.http.ResponseEntity<?> deletePlanoSvg(
+            @org.springframework.web.bind.annotation.PathVariable Long id) {
+        return fraccionamientoRepository.findById(id).map(fraccionamiento -> {
+            fraccionamiento.setPlanoSvg(null);
+            fraccionamientoRepository.save(fraccionamiento);
+            return org.springframework.http.ResponseEntity.ok(
+                    new com.casavida.backend.payload.response.MessageResponse("Plano SVG eliminado"));
+        }).orElse(org.springframework.http.ResponseEntity.notFound().build());
+    }
+
+    @org.springframework.web.bind.annotation.PutMapping("/adm/{id}/poligono")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    public org.springframework.http.ResponseEntity<?> updatePoligonoDelimitador(
+            @org.springframework.web.bind.annotation.PathVariable Long id,
+            @org.springframework.web.bind.annotation.RequestBody String poligono) {
+        return fraccionamientoRepository.findById(id).map(fracc -> {
+            fracc.setPoligonoDelimitador(poligono);
+            fraccionamientoRepository.save(fracc);
+            return org.springframework.http.ResponseEntity.ok(
+                    new com.casavida.backend.payload.response.MessageResponse("Polígono actualizado"));
+        }).orElse(org.springframework.http.ResponseEntity.notFound().build());
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/adm/{id}/poligono")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    public org.springframework.http.ResponseEntity<?> deletePoligonoDelimitador(
+            @org.springframework.web.bind.annotation.PathVariable Long id) {
+        return fraccionamientoRepository.findById(id).map(fracc -> {
+            fracc.setPoligonoDelimitador(null);
+            fraccionamientoRepository.save(fracc);
+            return org.springframework.http.ResponseEntity.ok(
+                    new com.casavida.backend.payload.response.MessageResponse("Polígono eliminado"));
+        }).orElse(org.springframework.http.ResponseEntity.notFound().build());
     }
 }

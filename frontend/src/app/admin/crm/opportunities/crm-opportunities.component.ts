@@ -14,6 +14,17 @@ export class CrmOpportunitiesComponent implements OnInit {
     opportunities: any[] = [];
     successMsg = '';
     errorMsg = '';
+    searchTerm = '';
+
+    get filteredOpportunities() {
+        if (!this.searchTerm) return this.opportunities;
+        const s = this.searchTerm.toLowerCase();
+        return this.opportunities.filter(o => 
+            (o.lead?.nombre?.toLowerCase().includes(s) || false) || 
+            (o.lote?.numeroLote?.toString().includes(s) || false) ||
+            (o.lote?.manzana?.toLowerCase().includes(s) || false)
+        );
+    }
 
     private crmService = inject(CRMService);
 

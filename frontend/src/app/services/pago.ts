@@ -12,6 +12,10 @@ export interface Pago {
     referencia: string;
     concepto: string;
     hasComprobante?: boolean;
+    estatus?: string;
+    validado?: boolean;
+    fechaValidacion?: string;
+    validadoPor?: string;
 }
 
 @Injectable({
@@ -26,7 +30,15 @@ export class PagoService {
         return this.http.get<Pago[]>(API_URL + 'contrato/' + contratoId);
     }
 
+    getAllPagos(): Observable<Pago[]> {
+        return this.http.get<Pago[]>(API_URL + 'all');
+    }
+
     registrarPago(pago: any): Observable<any> {
         return this.http.post(API_URL + 'registrar', pago);
+    }
+
+    validatePago(id: number, status?: string): Observable<any> {
+        return this.http.post(API_URL + id + '/validate', { status });
     }
 }

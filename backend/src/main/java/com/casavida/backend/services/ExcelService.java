@@ -65,7 +65,7 @@ public class ExcelService {
 
             // Create headers
             Row headerRow = sheet.createRow(0);
-            String[] headers = {"ID", "Fecha", "Cliente", "Monto", "Concepto", "Referencia", "Método", "Contrato ID"};
+            String[] headers = {"ID", "Fecha", "Monto", "Concepto", "Referencia", "Método", "Contrato ID"};
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
@@ -83,18 +83,11 @@ public class ExcelService {
                     Row row = sheet.createRow(rowIdx++);
                     row.createCell(0).setCellValue(p.getId());
                     row.createCell(1).setCellValue(p.getFechaPago().toString());
-                    
-                    String clienteName = "N/A";
-                    if (p.getContrato() != null && p.getContrato().getCliente() != null) {
-                        clienteName = p.getContrato().getCliente().getNombre() + " " + p.getContrato().getCliente().getApellidos();
-                    }
-                    row.createCell(2).setCellValue(clienteName);
-                    
-                    row.createCell(3).setCellValue(p.getMonto().doubleValue());
-                    row.createCell(4).setCellValue(p.getConcepto());
-                    row.createCell(5).setCellValue(p.getReferencia());
-                    row.createCell(6).setCellValue(p.getMetodoPago());
-                    row.createCell(7).setCellValue(p.getContrato() != null ? p.getContrato().getId().toString() : "N/A");
+                    row.createCell(2).setCellValue(p.getMonto().doubleValue());
+                    row.createCell(3).setCellValue(p.getConcepto());
+                    row.createCell(4).setCellValue(p.getReferencia());
+                    row.createCell(5).setCellValue(p.getMetodoPago());
+                    row.createCell(6).setCellValue(p.getContrato() != null ? p.getContrato().getId().toString() : "N/A");
                 }
             }
 
@@ -131,57 +124,6 @@ public class ExcelService {
                 row.createCell(3).setCellValue(lote.getPrecioTotal().doubleValue());
                 row.createCell(4).setCellValue(lote.getAreaMetrosCuadrados());
                 row.createCell(5).setCellValue(String.valueOf(lote.getEstatus()));
-            }
-
-            workbook.write(out);
-            return new ByteArrayInputStream(out.toByteArray());
-        }
-    }
-    public ByteArrayInputStream generateContratosReport(List<com.casavida.backend.entity.Contrato> contratos) throws IOException {
-        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Sheet sheet = workbook.createSheet("Contratos");
-
-            // Header style
-            CellStyle headerStyle = workbook.createCellStyle();
-            Font headerFont = workbook.createFont();
-            headerFont.setBold(true);
-            headerStyle.setFont(headerFont);
-
-            Row headerRow = sheet.createRow(0);
-            String[] headers = {"Folio", "Fecha", "Cliente", "Lote", "Monto Total", "Enganche", "Vendedor"};
-            for (int i = 0; i < headers.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(headers[i]);
-                cell.setCellStyle(headerStyle);
-                sheet.setColumnWidth(i, 5000);
-            }
-
-            int rowIdx = 1;
-            for (com.casavida.backend.entity.Contrato c : contratos) {
-                Row row = sheet.createRow(rowIdx++);
-                row.createCell(0).setCellValue(c.getId());
-                row.createCell(1).setCellValue(c.getFechaContrato() != null ? c.getFechaContrato().toString() : "N/A");
-                
-                String clienteName = "N/A";
-                if (c.getCliente() != null) {
-                    clienteName = c.getCliente().getNombre() + " " + c.getCliente().getApellidos();
-                }
-                row.createCell(2).setCellValue(clienteName);
-                
-                String loteNum = "N/A";
-                if (c.getLote() != null) {
-                    loteNum = "Lote " + c.getLote().getNumeroLote() + " - Mz " + c.getLote().getManzana();
-                }
-                row.createCell(3).setCellValue(loteNum);
-                
-                row.createCell(4).setCellValue(c.getMontoTotal() != null ? c.getMontoTotal().doubleValue() : 0.0);
-                row.createCell(5).setCellValue(c.getEnganche() != null ? c.getEnganche().doubleValue() : 0.0);
-                
-                String vendedorName = "N/A";
-                if (c.getVendedor() != null) {
-                    vendedorName = c.getVendedor().getUsername();
-                }
-                row.createCell(6).setCellValue(vendedorName);
             }
 
             workbook.write(out);

@@ -41,7 +41,11 @@ export class VentaService {
     return this.http.get<any[]>(API_URL + 'contratos');
   }
 
+  getMisContratos(): Observable<any[]> {
+    return this.http.get<any[]>(API_URL + 'mis-contratos');
+  }
+
   downloadEstadoCuenta(contratoId: number): Observable<Blob> {
-    return this.http.get('/api/reportes/estado-cuenta/' + contratoId, { responseType: 'blob' });
+    return this.http.get('api/reportes/estado-cuenta/' + contratoId, { responseType: 'blob' });
   }
 }

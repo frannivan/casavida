@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ClienteService } from '../services/cliente';
 
 import { ClientDossierComponent } from './client-dossier/client-dossier.component';
@@ -35,6 +36,8 @@ export class BoardClientsComponent implements OnInit {
     showDossier = false;
     selectedClientForDossier: any = null;
 
+    private route = inject(ActivatedRoute);
+
     constructor(private clienteService: ClienteService) { }
 
     ngOnInit(): void {
@@ -43,9 +46,22 @@ export class BoardClientsComponent implements OnInit {
 
     loadClientes(): void {
         this.clienteService.getAllClientes().subscribe({
-            next: data => this.clientes = data,
+            next: data => {
+                this.clientes = data;
+                this.checkQueryParam();
+            },
             error: err => console.error('Error loading clients', err)
         });
+    }
+
+    checkQueryParam(): void {
+        const clientIdParam = this.route.snapshot.queryParamMap.get('clientId');
+        if (clientIdParam && this.clientes.length > 0) {
+            const client = this.clientes.find(c => c.id === Number(clientIdParam));
+            if (client) {
+                this.openDossier(client);
+            }
+        }
     }
 
     get filteredClientes() {

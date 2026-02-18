@@ -25,11 +25,14 @@ import com.casavida.backend.payload.response.MessageResponse;
 import com.casavida.backend.repository.ClienteRepository;
 import com.casavida.backend.repository.ContratoRepository;
 import com.casavida.backend.repository.LoteRepository;
+import com.casavida.backend.repository.UserRepository;
+import com.casavida.backend.entity.User;
 import com.casavida.backend.services.CreditService;
 import com.casavida.backend.services.CreditService.AmortizationRow;
 
 @RestController
 @RequestMapping("/api/ventas")
+@org.springframework.transaction.annotation.Transactional
 public class VentaController {
 
     @Autowired
@@ -43,6 +46,9 @@ public class VentaController {
 
     @Autowired
     ClienteRepository clienteRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     public static class CotizacionRequest {
         private BigDecimal montoTotal;
@@ -90,6 +96,7 @@ public class VentaController {
         private BigDecimal enganche;
         private int plazoMeses;
         private BigDecimal tasaAnual;
+        private Long vendedorId;
 
         public Long getClienteId() {
             return clienteId;
@@ -138,6 +145,14 @@ public class VentaController {
         public void setTasaAnual(BigDecimal tasaAnual) {
             this.tasaAnual = tasaAnual;
         }
+
+        public Long getVendedorId() {
+            return vendedorId;
+        }
+
+        public void setVendedorId(Long vendedorId) {
+            this.vendedorId = vendedorId;
+        }
     }
 
     @PostMapping("/cotizar")
@@ -154,7 +169,7 @@ public class VentaController {
     }
 
     @PostMapping("/contratar")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR') or hasRole('RECEPCION')")
     public ResponseEntity<?> crearContrato(@RequestBody ContratoRequest request) {
         Lote lote = loteRepository.findById(request.getLoteId())
                 .orElseThrow(() -> new RuntimeException("Error: Lote no encontrado."));
@@ -192,17 +207,52 @@ public class VentaController {
 
         contrato.setEstatus(EStatusContrato.ACTIVO);
 
+        // Asignar vendedor si se proporciona, o auto-asignar si el creador es VENDEDOR
+        if (request.getVendedorId() != null) {
+            userRepository.findById(request.getVendedorId()).ifPresent(vendedor -> {
+                contrato.setVendedor(vendedor);
+            });
+        } else {
+            // Check if current user is VENDEDOR
+            String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+            userRepository.findByUsername(username).ifPresent(currentUser -> {
+                if (currentUser.getRoles().stream().anyMatch(r -> r.getName() == com.casavida.backend.entity.ERole.ROLE_VENDEDOR)) {
+                    contrato.setVendedor(currentUser);
+                }
+            });
+        }
+
         contratoRepository.save(contrato);
 
         // Actualizar estatus del lote
         lote.setEstatus(EStatusLote.CONTRATADO);
         loteRepository.save(lote);
 
-        return ResponseEntity.ok(new MessageResponse("Contrato generado exitosamente. ID: " + contrato.getId()));
+        // Return Map with ID
+        java.util.Map<String, Object> response = new java.util.HashMap<>();
+        response.put("message", "Contrato generado exitosamente.");
+        response.put("id", contrato.getId());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/mis-contratos")
+    @PreAuthorize("hasRole('VENDEDOR') or hasRole('ADMIN')")
+    public List<Contrato> getMisContratos() {
+        // Get current authenticated user
+        String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Error: Usuario no encontrado."));
+
+        if (currentUser.getRoles().stream().anyMatch(r -> r.getName() == com.casavida.backend.entity.ERole.ROLE_ADMIN)) {
+            return contratoRepository.findAll();
+        } else {
+            // Filter by seller ID
+            return contratoRepository.findByVendedor(currentUser);
+        }
     }
 
     @GetMapping("/contratos")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('RECEPCION')")
     public List<Contrato> getAllContratos() {
         return contratoRepository.findAll();
     }

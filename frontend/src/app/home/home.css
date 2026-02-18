@@ -54,3 +54,13 @@
     color: #fff;
     background-color: #28a745;
 }
+
+/* Force Bootstrap Grid to work in Chrome */
+:host ::ng-deep .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+:host ::ng-deep .row > [class*='col-'] {
+    flex-shrink: 0 !important;
+}

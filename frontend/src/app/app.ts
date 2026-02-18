@@ -20,8 +20,6 @@ export class AppComponent {
   showModeratorBoard = false;
   showRecepcionBoard = false;
   showVendedorBoard = false;
-  showContabilidadBoard = false;
-  showDirectivoBoard = false;
   showUserBoard = false;
   username?: string;
 
@@ -59,8 +57,6 @@ export class AppComponent {
       this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
       this.showRecepcionBoard = this.roles.includes('ROLE_RECEPCION');
       this.showVendedorBoard = this.roles.includes('ROLE_VENDEDOR');
-      this.showContabilidadBoard = this.roles.includes('ROLE_CONTABILIDAD');
-      this.showDirectivoBoard = this.roles.includes('ROLE_DIRECTIVO');
       this.showUserBoard = this.roles.includes('ROLE_USER');
     }
   }
@@ -69,8 +65,6 @@ export class AppComponent {
     if (this.showAdminBoard) return 'Administrador';
     if (this.showRecepcionBoard) return 'Recepción';
     if (this.showVendedorBoard) return 'Vendedor';
-    if (this.showContabilidadBoard) return 'Contabilidad';
-    if (this.showDirectivoBoard) return 'Directivo';
     if (this.showUserBoard) return 'Cliente';
     return 'Usuario';
   }

@@ -1,0 +1,52 @@
+<div class="container-fluid py-4">
+  <div class="row">
+    <!-- Sidebar: Doc List -->
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="fas fa-folder-open"></i> Documentos</h5>
+        </div>
+        <div class="list-group list-group-flush">
+          <button 
+            *ngFor="let doc of docList" 
+            (click)="viewDoc(doc)"
+            [class.active]="selectedDoc === doc"
+            class="list-group-item list-group-item-action">
+            <i class="fas fa-file-alt me-2"></i>
+            {{ doc.replace('.md', '').replace(/_/g, ' ') }}
+          </button>
+          <div *ngIf="docList.length === 0" class="list-group-item text-muted">
+            No hay documentos disponibles
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content: Doc Viewer -->
+    <div class="col-md-9">
+      <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-book-open"></i> 
+            {{ selectedDoc ? selectedDoc.replace('.md', '').replace(/_/g, ' ') : 'Documentación' }}
+          </h5>
+          <button class="btn btn-light btn-sm" (click)="printDoc()" *ngIf="selectedDoc">
+            <i class="fas fa-print"></i> Imprimir
+          </button>
+        </div>
+        <div class="card-body doc-content" id="printable-area">
+          <div *ngIf="loading" class="text-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </div>
+          <div *ngIf="!loading && selectedDoc" [innerHTML]="docContent"></div>
+          <div *ngIf="!loading && !selectedDoc" class="text-muted text-center py-5">
+            <i class="fas fa-arrow-left fa-3x mb-3"></i>
+            <p>Selecciona un documento de la lista para comenzar</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

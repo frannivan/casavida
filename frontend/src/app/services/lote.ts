@@ -45,4 +45,10 @@ export class LoteService {
   deleteLote(id: number): Observable<any> {
     return this.http.delete(API_URL + id);
   }
+
+  uploadImage(file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    return this.http.post(environment.apiUrl + '/images/upload', formData);
+  }
 }

@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-import org.springframework.transaction.annotation.Transactional;
-
 @RestController
 @RequestMapping("/api/reportes")
 public class ReporteController {
@@ -56,8 +54,7 @@ public class ReporteController {
         com.casavida.backend.repository.FraccionamientoRepository fraccionamientoRepository;
 
         @GetMapping("/dashboard")
-        @PreAuthorize("hasPermission(null, 'REPORTES.VIEW')")
-        @Transactional(readOnly = true)
+        @PreAuthorize("hasRole('ADMIN') or hasRole('RECEPCION')")
         public ResponseEntity<?> getDashboardStats() {
                 try {
                         long totalLotes = loteRepository.count();
@@ -155,7 +152,7 @@ public class ReporteController {
         }
 
         @GetMapping("/estado-cuenta/{contratoId}")
-        @PreAuthorize("hasPermission(null, 'CONTRATOS.VIEW')")
+        @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
         public ResponseEntity<InputStreamResource> reporteEstadoCuenta(@PathVariable Long contratoId) {
                 Contrato contrato = contratoRepository.findById(contratoId)
                                 .orElseThrow(() -> new RuntimeException("Contrato no encontrado"));
@@ -279,7 +276,7 @@ public class ReporteController {
     com.casavida.backend.services.ExcelService excelService;
 
     @GetMapping("/usuarios")
-    @PreAuthorize("hasPermission(null, 'REPORTES.EXPORT')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getUsuariosReport(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
@@ -338,7 +335,7 @@ public class ReporteController {
     }
 
     @GetMapping("/pagos")
-    @PreAuthorize("hasPermission(null, 'REPORTES.EXPORT')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getPagosReport(
             @RequestParam(required = false) String type,
             @RequestParam(required = false) Long id,
@@ -420,7 +417,7 @@ public class ReporteController {
     }
 
     @GetMapping("/inventario")
-    @PreAuthorize("hasPermission(null, 'REPORTES.EXPORT')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getInventarioReport(
             @RequestParam(required = false, defaultValue = "json") String format) {
         
@@ -461,39 +458,5 @@ public class ReporteController {
         report.put("totalFraccionamientos", fraccionamientos.size());
         
         return ResponseEntity.ok(report);
-    }
-    @GetMapping("/contratos")
-    @PreAuthorize("hasPermission(null, 'REPORTES.EXPORT')")
-    public ResponseEntity<?> getContratosReport(
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
-            @RequestParam(required = false, defaultValue = "json") String format) {
-        
-        List<Contrato> contratos;
-        if (startDate != null && endDate != null) {
-            java.time.LocalDate start = java.time.LocalDate.parse(startDate);
-            java.time.LocalDate end = java.time.LocalDate.parse(endDate);
-            contratos = contratoRepository.findAll().stream()
-                .filter(c -> !c.getFechaContrato().isBefore(start) && !c.getFechaContrato().isAfter(end))
-                .collect(java.util.stream.Collectors.toList());
-        } else {
-            contratos = contratoRepository.findAll();
-        }
-
-        if ("excel".equalsIgnoreCase(format)) {
-            try {
-                ByteArrayInputStream bis = excelService.generateContratosReport(contratos);
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("Content-Disposition", "attachment; filename=reporte_contratos.xlsx");
-                return ResponseEntity.ok()
-                        .headers(headers)
-                        .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                        .body(new InputStreamResource(bis));
-            } catch (Exception e) {
-                return ResponseEntity.internalServerError().body("Error al generar Excel: " + e.getMessage());
-            }
-        }
-        
-        return ResponseEntity.ok(contratos);
     }
 }

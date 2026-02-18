@@ -40,11 +40,16 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
 
         return authProvider;
     }
@@ -52,11 +57,6 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -86,12 +86,14 @@ public class WebSecurityConfig {
                 .antMatchers("/api/fraccionamientos/public/**").permitAll()
                 .antMatchers("/api/clientes/public/**").permitAll()
                 .antMatchers("/api/crm/leads").permitAll()
-                .antMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                .antMatchers("/api/images/**").permitAll()
+                .antMatchers("/api/auth/debug/**").permitAll() // TEMPORARY DEBUG
+                .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/h2-console", "/h2-console/**").permitAll()
                 .anyRequest().authenticated();
 
-        http.headers().frameOptions().sameOrigin();
+        http.headers().frameOptions().disable();
 
-        http.authenticationProvider(authenticationProvider());
+        http.authenticationProvider(authenticationProvider(passwordEncoder()));
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 

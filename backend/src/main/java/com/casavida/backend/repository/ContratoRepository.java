@@ -8,11 +8,9 @@ import java.util.List;
 public interface ContratoRepository extends JpaRepository<Contrato, Long> {
     List<Contrato> findByEstatus(EStatusContrato estatus);
 
-    List<Contrato> findByClienteId(Long clienteId);
+    List<Contrato> findByClienteId(@org.springframework.web.bind.annotation.PathVariable("clienteId") Long clienteId);
 
     List<Contrato> findByLoteId(Long loteId);
 
     List<Contrato> findByVendedor(com.casavida.backend.entity.User vendedor);
-
-    List<Contrato> findByClienteEmail(String email);
 }
