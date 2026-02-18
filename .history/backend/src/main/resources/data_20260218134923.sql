@@ -1,20 +1,4 @@
 SET REFERENTIAL_INTEGRITY FALSE;
-
--- Guard for empty database: ensure tables exist before truncating
-CREATE TABLE IF NOT EXISTS user_roles (user_id BIGINT, role_id BIGINT);
-CREATE TABLE IF NOT EXISTS users (id BIGINT);
-CREATE TABLE IF NOT EXISTS roles (id BIGINT);
-CREATE TABLE IF NOT EXISTS lote_imagenes (id BIGINT);
-CREATE TABLE IF NOT EXISTS pagos (id BIGINT);
-CREATE TABLE IF NOT EXISTS contratos (id BIGINT);
-CREATE TABLE IF NOT EXISTS clientes (id BIGINT);
-CREATE TABLE IF NOT EXISTS lotes (id BIGINT);
-CREATE TABLE IF NOT EXISTS fraccionamientos (id BIGINT);
-CREATE TABLE IF NOT EXISTS role_permissions (role_id BIGINT, permission_id BIGINT);
-CREATE TABLE IF NOT EXISTS permissions (id BIGINT);
-CREATE TABLE IF NOT EXISTS modules (id BIGINT);
-CREATE TABLE IF NOT EXISTS actions (id BIGINT);
-
 TRUNCATE TABLE user_roles;
 TRUNCATE TABLE users;
 TRUNCATE TABLE roles;

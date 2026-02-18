@@ -1,0 +1,500 @@
+<div class="container">
+    <header class="jumbotron" *ngIf="showDashboard">
+        <h3>Panel de Administración</h3>
+    </header>
+
+    <div *ngIf="content">
+        <div class="alert alert-danger">{{content}}</div>
+    </div>
+
+    <!-- Stats Cards - Solo en dashboard -->
+    <div *ngIf="!stats && showDashboard" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Cargando estadísticas...</span>
+        </div>
+        <p>Cargando panel de control...</p>
+        <p class="text-danger" *ngIf="content">{{ content }}</p>
+    </div>
+
+    <div class="row mb-4" *ngIf="stats && showDashboard">
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3 h-100">
+                <div class="card-header font-weight-bold">Lotes Disponibles</div>
+                <div class="card-body">
+                    <h1 class="card-title text-center">{{ stats.lotesDisponibles }}</h1>
+                    <p class="card-text text-center"><small>De {{ stats.totalLotes }} lotes totales</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3 h-100" routerLink="/admin/crm/leads" style="cursor: pointer;">
+                <div class="card-header font-weight-bold">Nuevos Prospectos</div>
+                <div class="card-body">
+                    <h1 class="card-title text-center text-white">{{ stats.totalLeads }}</h1>
+                    <p class="card-text text-center"><small>Capturados vía Web/Chatbot</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3 h-100" routerLink="/admin/crm/opportunities"
+                style="cursor: pointer;">
+                <div class="card-header font-weight-bold">Oportunidades</div>
+                <div class="card-body">
+                    <h1 class="card-title text-center text-white">{{ stats.totalOpportunities }}</h1>
+                    <p class="card-text text-center"><small>Seguimiento de ventas</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions Section - Solo en dashboard -->
+    <div class="card mb-4" *ngIf="showDashboard">
+        <div class="card-body">
+            <h4>Gestión de Ventas y Pagos</h4>
+            <div class="row">
+                <div class="col-md-3">
+                    <button class="btn btn-outline-primary btn-block mb-2" routerLink="/admin/clientes">
+                        👤 Clientes
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-outline-info btn-block mb-2" routerLink="/admin/crm/leads">
+                        📧 Prospectos
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-outline-success btn-block mb-2" (click)="openContractModal()">
+                        📝 Contrato
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-outline-dark btn-block mb-2" (click)="openPaymentModal()">
+                        💳 Pago
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crear Nuevo Lote - Solo cuando se vean lotes -->
+    <div class="card" *ngIf="showLotes">
+        <div class="card-body">
+            <h4>Crear Nuevo Lote</h4>
+            <button class="btn btn-primary" (click)="isCreating = !isCreating">
+                {{ isCreating ? 'Cancelar' : 'Nuevo Lote' }}
+            </button>
+
+            <form *ngIf="isCreating" (ngSubmit)="onCreateLote()" class="mt-3">
+                <div class="form-group">
+                    <label>Número Lote</label>
+                    <input type="text" class="form-control" [(ngModel)]="newLote.numeroLote" name="numeroLote" required>
+                </div>
+                <!-- Fraccionamiento Selector -->
+                <div class="form-group">
+                    <label>Fraccionamiento</label>
+                    <select class="form-control" [(ngModel)]="newLote.fraccionamiento" name="fraccionamiento">
+                        <option [ngValue]="null">-- Ninguno (Lote Independiente) --</option>
+                        <option *ngFor="let f of fraccionamientos" [ngValue]="f">{{ f.nombre }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Manzana</label>
+                    <input type="text" class="form-control" [(ngModel)]="newLote.manzana" name="manzana" required>
+                </div>
+                <div class="form-group">
+                    <label>Precio Total</label>
+                    <input type="number" class="form-control" [(ngModel)]="newLote.precioTotal" name="precioTotal"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Area (m2)</label>
+                    <input type="number" step="0.01" class="form-control" [(ngModel)]="newLote.areaMetrosCuadrados"
+                        name="areaMetrosCuadrados" required>
+                </div>
+                <div class="form-group">
+                    <label>Coordenadas (Lat, Lng)</label>
+                    <input type="text" class="form-control mb-2" [(ngModel)]="newLote.coordenadasGeo"
+                        name="coordenadasGeo" placeholder="Ej: 21.1619, -86.8515" readonly>
+                    <!-- Map Picker -->
+                    <app-location-picker [initialCoords]="newLote.coordenadasGeo"
+                        (coordsSelected)="newLote.coordenadasGeo = $event">
+                    </app-location-picker>
+                </div>
+                <button class="btn btn-success">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Gestión Fraccionamientos -->
+    <div class="card mt-3 border-info" *ngIf="showFraccionamientos">
+        <div class="card-body">
+            <h4>Inventario de Fraccionamientos</h4>
+            <button class="btn btn-info mb-3" (click)="isCreatingFracc = !isCreatingFracc">
+                {{ isCreatingFracc ? 'Cancelar' : 'Nuevo Fraccionamiento' }}
+            </button>
+
+            <!-- Create Form -->
+            <form *ngIf="isCreatingFracc" (ngSubmit)="onCreateFracc()" class="mb-4 p-3 bg-light border rounded">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" [(ngModel)]="newFracc.nombre" name="nombre" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Ubicación (Texto)</label>
+                        <input type="text" class="form-control" [(ngModel)]="newFracc.ubicacion" name="ubicacion">
+                    </div>
+                </div>
+                <div class="form-group mt-2">
+                    <label>Descripción</label>
+                    <textarea class="form-control" [(ngModel)]="newFracc.descripcion" name="descripcion"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>URL Logo</label>
+                    <input type="text" class="form-control" [(ngModel)]="newFracc.logoUrl" name="logoUrl">
+                </div>
+                <div class="form-group">
+                    <label>Ubicación / Área (Mapa)</label>
+                    <app-location-picker [initialCoords]="newFracc.coordenadasGeo"
+                        (coordsSelected)="newFracc.coordenadasGeo = $event"></app-location-picker>
+                </div>
+                <button class="btn btn-success mt-2">Guardar Fraccionamiento</button>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Ubicación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of fraccionamientos">
+                        <td>{{ f.nombre }}</td>
+                        <td>{{ f.ubicacion }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info mr-2" (click)="viewFraccDetail(f)">Ver Detalle /
+                                Lotes</button>
+                            <button class="btn btn-sm btn-danger" (click)="deleteFracc(f.id)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Inventario de Lotes -->
+    <div class="card mt-3" *ngIf="showLotes">
+        <div class="card-body">
+            <h4>Inventario de Lotes</h4>
+            <table class="table table-striped table-hover mt-3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Lote</th>
+                        <th>Manzana</th>
+                        <th>Precio</th>
+                        <th>Área</th>
+                        <th>Fraccionamiento</th>
+                        <th>Estatus</th>
+                        <th>Cliente</th> <!-- New Column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let l of lotes" (click)="verHistorial(l)" style="cursor: pointer;">
+                        <td>{{ l.numeroLote }}</td>
+                        <td>{{ l.manzana }}</td>
+                        <td>{{ l.precioTotal | currency:'MXN' }}</td>
+                        <td>{{ l.areaMetrosCuadrados }} m²</td>
+                        <td>{{ l.fraccionamiento?.nombre || 'Independiente' }}</td>
+                        <td>
+                            <span class="badge" [ngClass]="{
+                                    'badge-success': l.estatus === 'DISPONIBLE',
+                                    'badge-danger': l.estatus === 'VENDIDO',
+                                    'badge-warning': l.estatus === 'APARTADO',
+                                    'badge-info': l.estatus === 'CONTRATADO'
+                                  }">{{ l.estatus }}</span>
+                        </td>
+                        <td>
+                            <!-- Show Client Name if mapped -->
+                            {{ loteContratoMap[l.id]?.cliente?.nombre }} {{ loteContratoMap[l.id]?.cliente?.apellidos }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Contract Modal -->
+    <div class="modal-backdrop fade show" *ngIf="showContractModal"></div>
+    <div class="modal fade show" tabindex="-1" role="dialog" [style.display]="showContractModal ? 'block' : 'none'"
+        *ngIf="showContractModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Generar Nuevo Contrato</h5>
+                    <button type="button" class="close" (click)="showContractModal = false">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div *ngIf="contractSuccessMsg" class="alert alert-success">{{ contractSuccessMsg }}</div>
+                    <div *ngIf="contractErrorMsg" class="alert alert-danger">{{ contractErrorMsg }}</div>
+
+                    <form (ngSubmit)="submitContract()">
+                        <div class="form-group">
+                            <label>Cliente</label>
+                            <select class="form-control" [(ngModel)]="contractData.clienteId" name="clienteId" required>
+                                <option [ngValue]="null">-- Seleccionar Cliente --</option>
+                                <option *ngFor="let c of clientes" [ngValue]="c.id">
+                                    {{ c.nombre }} {{ c.apellidos }} ({{ c.email }})
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Lote Disponible</label>
+                            <select class="form-control" [(ngModel)]="loteSelectedForContract" name="loteId"
+                                (change)="onLoteSelectForContract(loteSelectedForContract)" required>
+                                <option [ngValue]="null">-- Seleccionar Lote --</option>
+                                <ng-container *ngFor="let l of lotes">
+                                    <option *ngIf="l.estatus === 'DISPONIBLE'" [ngValue]="l">
+                                        {{ l.fraccionamiento?.nombre || 'Indep.' }} - Lote {{ l.numeroLote }} ({{
+                                        l.precioTotal | currency:'MXN' }})
+                                    </option>
+                                </ng-container>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Enganche Sugerido (10%)</label>
+                                    <input type="number" class="form-control" [(ngModel)]="contractData.enganche"
+                                        name="enganche">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Plazo (Meses)</label>
+                                    <input type="number" class="form-control" [(ngModel)]="contractData.plazoMeses"
+                                        name="plazo">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tasa Anual (%)</label>
+                            <input type="number" class="form-control" [(ngModel)]="contractData.tasaAnual" name="tasa">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Crear Contrato</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-backdrop fade show" *ngIf="showPaymentModal"></div>
+    <div class="modal fade show" tabindex="-1" role="dialog" [style.display]="showPaymentModal ? 'block' : 'none'"
+        *ngIf="showPaymentModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar Pago</h5>
+                    <button type="button" class="close" (click)="showPaymentModal = false">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div *ngIf="paymentSuccessMsg" class="alert alert-success">{{ paymentSuccessMsg }}</div>
+                    <div *ngIf="paymentErrorMsg" class="alert alert-danger">{{ paymentErrorMsg }}</div>
+
+                    <form (ngSubmit)="submitPayment()">
+                        <!-- Step 1: Select Client -->
+                        <div class="form-group">
+                            <label>Cliente</label>
+                            <select class="form-control" [(ngModel)]="paymentData.clienteId" name="clienteId"
+                                (change)="onPaymentClientSelect()" required>
+                                <option [ngValue]="null">-- Seleccionar Cliente --</option>
+                                <option *ngFor="let c of clientes" [ngValue]="c.id">
+                                    {{ c.nombre }} {{ c.apellidos }} ({{ c.email }})
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Step 2: Select Contract -->
+                        <div class="form-group" *ngIf="paymentData.clienteId">
+                            <label>Contrato</label>
+                            <select class="form-control" [(ngModel)]="paymentData.contratoId" name="contratoId"
+                                required>
+                                <option [ngValue]="null">-- Seleccionar Contrato --</option>
+                                <option *ngFor="let c of contratosCliente" [ngValue]="c.id">
+                                    Lote {{ c.lote?.numeroLote }} ({{ c.lote?.fraccionamiento?.nombre }}) - {{
+                                    c.montoTotal | currency:'MXN' }}
+                                </option>
+                            </select>
+                            <small *ngIf="contratosCliente.length === 0" class="text-danger">Este cliente no tiene
+                                contratos activos.</small>
+                        </div>
+
+                        <!-- Readonly Info Selection -->
+                        <div class="alert alert-info" *ngIf="paymentData.contratoId">
+                            <strong>Cliente:</strong> {{ getClientNameForPayment() }}<br>
+                            <strong>Lote:</strong> {{ getLoteInfoForPayment() }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Monto</label>
+                            <input type="number" class="form-control" [(ngModel)]="paymentData.monto" name="monto"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Referencia</label>
+                            <input type="text" class="form-control" [(ngModel)]="paymentData.referencia"
+                                name="referencia" placeholder="Cheque / Transferencia">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Concepto</label>
+                            <input type="text" class="form-control" [(ngModel)]="paymentData.concepto" name="concepto"
+                                placeholder="Ej: Mensualidad 1">
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-block">Registrar Pago</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal-backdrop fade show" *ngIf="showHistoryModal"></div>
+    <div class="modal fade show" tabindex="-1" role="dialog" [style.display]="showHistoryModal ? 'block' : 'none'"
+        *ngIf="showHistoryModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Historial de Pagos y Contrato</h5>
+                    <button type="button" class="close" (click)="showHistoryModal = false">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" *ngIf="historyContract">
+                    <!-- Contract & Client Details -->
+                    <div class="alert alert-secondary">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Cliente:</strong> {{ historyContract.cliente?.nombre }} {{
+                                historyContract.cliente?.apellidos }}<br>
+                                <strong>Teléfono:</strong> {{ historyContract.cliente?.telefono }}
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <strong>Lote:</strong> {{ historyContract.lote?.numeroLote }} ({{
+                                historyContract.lote?.fraccionamiento?.nombre }})<br>
+                                <strong>Precio Total:</strong> {{ historyContract.montoTotal | currency:'MXN' }}<br>
+                                <strong>Mensualidad:</strong> {{ historyContract.mensualidad | currency:'MXN' }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payments Table -->
+                    <h5 class="mt-4">Pagos Realizados</h5>
+                    <div *ngIf="pagosActuales.length === 0" class="text-muted">No hay pagos registrados aún.</div>
+                    <table class="table table-striped" *ngIf="pagosActuales.length > 0">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Concepto</th>
+                                <th>Referencia</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let p of pagosActuales">
+                                <td>{{ p.fechaPago | date:'shortDate' }}</td>
+                                <td>{{ p.concepto }}</td>
+                                <td>{{ p.referencia }}</td>
+                                <td>{{ p.monto | currency:'MXN' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" (click)="downloadReport()">
+                        <i class="fa fa-file-pdf"></i> Descargar PDF
+                    </button>
+                    <button type="button" class="btn btn-secondary" (click)="showHistoryModal = false">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fraccionamiento Detail Modal -->
+<div class="modal-backdrop fade show" *ngIf="showFraccDetailModal"></div>
+<div class="modal fade show" tabindex="-1" role="dialog" [style.display]="showFraccDetailModal ? 'block' : 'none'"
+    *ngIf="showFraccDetailModal">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ selectedFracc?.nombre }}</h5>
+                <button type="button" class="close" (click)="showFraccDetailModal = false">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img [src]="selectedFracc?.logoUrl || 'assets/no-image.png'" class="img-fluid rounded mb-3"
+                            style="max-height: 150px;">
+                        <p><strong>Ubicación:</strong> {{ selectedFracc?.ubicacion }}</p>
+                        <p><strong>Descripción:</strong> {{ selectedFracc?.descripcion }}</p>
+                        <div *ngIf="selectedFracc?.coordenadasGeo" class="alert alert-info py-2">
+                            <small *ngIf="!selectedFracc.coordenadasGeo.startsWith('[')">📍 {{
+                                selectedFracc.coordenadasGeo }}</small>
+                            <small *ngIf="selectedFracc.coordenadasGeo.startsWith('[')">🔷 Área de Polígono
+                                Definida</small>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h5>Lotes en este Fraccionamiento ({{ fraccLotes.length }})</h5>
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Lote</th>
+                                    <th>Manzana</th>
+                                    <th>Precio</th>
+                                    <th>Área</th>
+                                    <th>Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let fl of fraccLotes">
+                                    <td>{{ fl.numeroLote }}</td>
+                                    <td>{{ fl.manzana }}</td>
+                                    <td>{{ fl.precioTotal | currency:'MXN' }}</td>
+                                    <td>{{ fl.areaMetrosCuadrados }} m²</td>
+                                    <td>
+                                        <span class="badge" [ngClass]="{
+                                                'badge-success': fl.estatus === 'DISPONIBLE',
+                                                'badge-danger': fl.estatus === 'VENDIDO',
+                                                'badge-warning': fl.estatus === 'APARTADO',
+                                                'badge-info': fl.estatus === 'CONTRATADO'
+                                              }">{{ fl.estatus }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showFraccDetailModal = false">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+```

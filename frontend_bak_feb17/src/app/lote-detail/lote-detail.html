@@ -1,0 +1,205 @@
+<div class="container mt-5">
+
+    <div *ngIf="isLoading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Cargando...</span>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && lote" class="card shadow-lg">
+        <div class="row no-gutters">
+            <!-- Gallery Section (Left / First) -->
+            <div class="col-md-7 bg-light rounded-left p-0">
+                <div class="p-3">
+                    <small class="text-muted d-block mb-2">Imágenes: {{ lote.galeriaImagenes?.length || 0 }}</small>
+                    <div *ngIf="lote.galeriaImagenes && lote.galeriaImagenes.length > 0; else singleImage">
+                        <div class="row gallery-row justify-content-center">
+                            <div class="gallery-column mb-2" *ngFor="let img of lote.galeriaImagenes; let i = index">
+                                <img [src]="img" class="img-thumbnail gallery-thumbnail shadow-sm"
+                                    (click)="openGallery(i)" alt="Thumbnail {{i}}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fallback -->
+                    <ng-template #singleImage>
+                        <div class="text-center">
+                            <img [src]="getDisplayUrl(lote.imagenUrl)" class="img-fluid rounded shadow-sm"
+                                (click)="openGallery(0)" alt="Imagen del Lote"
+                                style="max-height: 500px; cursor: pointer; object-fit: cover;">
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+
+            <!-- Text/Details Section (Right) -->
+            <div class="col-md-5">
+                <div class="card-body p-4 text-center d-flex flex-column justify-content-center h-100">
+                    <!-- Status Badge -->
+                    <div class="mb-2">
+                        <span class="badge badge-pill px-3 py-2 shadow-sm"
+                            [ngClass]="{'badge-success': lote.estatus === 'DISPONIBLE', 'badge-danger': lote.estatus === 'VENDIDO', 'badge-warning': lote.estatus === 'APARTADO'}"
+                            style="font-size: 0.85rem; letter-spacing: 1px;">
+                            {{ lote.estatus }}
+                        </span>
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="h2 font-weight-bold text-dark mb-1">Lote {{ lote.numeroLote }}</h1>
+                    <p class="text-muted text-uppercase font-weight-bold mb-3"
+                        style="letter-spacing: 1.5px; font-size: 0.9rem;">
+                        {{ lote.manzana }}
+                    </p>
+
+                    <!-- Location -->
+                    <div class="d-inline-block bg-light rounded-pill px-3 py-2 mb-3 align-self-center mx-auto"
+                        *ngIf="lote.fraccionamiento">
+                        <i class="fas fa-map-marker-alt text-danger mr-1 small"></i>
+                        <span class="text-dark font-weight-bold small">
+                            {{ lote.fraccionamiento.nombre }}
+                        </span>
+                        <span class="mx-1 text-muted small">|</span>
+                        <span class="text-muted small">{{ lote.fraccionamiento.ubicacion }}</span>
+                    </div>
+
+                    <hr class="my-3 w-75 mx-auto" style="border-top: 1px solid rgba(0,0,0,0.1);">
+
+                    <!-- Featured Info Box -->
+                    <div class="row mb-3 justify-content-center">
+                        <div class="col-6 mb-2 mb-md-0 px-2">
+                            <div class="p-2 rounded border h-100 shadow-sm bg-white">
+                                <small class="text-muted text-uppercase font-weight-bold d-block"
+                                    style="font-size: 0.7rem;">Precio</small>
+                                <h4 class="text-success font-weight-bold mb-0" style="font-size: 1.2rem;">{{
+                                    lote.precioTotal | currency:'MXN' }}</h4>
+                            </div>
+                        </div>
+                        <div class="col-6 px-2">
+                            <div class="p-2 rounded border h-100 shadow-sm bg-white">
+                                <small class="text-muted text-uppercase font-weight-bold d-block"
+                                    style="font-size: 0.7rem;">Superficie</small>
+                                <h4 class="text-dark font-weight-bold mb-0" style="font-size: 1.2rem;">
+                                    {{ lote.areaMetrosCuadrados }} m²
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-4 description-box overflow-auto" style="max-height: 150px;">
+                        <p class="text-secondary small" style="line-height: 1.6;">
+                            {{ lote.descripcion || 'Sin descripción disponible para este lote.' }}
+                        </p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-center mt-auto">
+                        <button (click)="goBack()" class="btn btn-sm btn-outline-secondary px-3 rounded-pill mr-2">
+                            <i class="fas fa-arrow-left mr-1"></i> Volver
+                        </button>
+                        <button (click)="openQuoteModal()"
+                            class="btn btn-primary px-4 rounded-pill shadow-sm hover-lift"
+                            *ngIf="lote.estatus === 'DISPONIBLE'">
+                            <i class="fas fa-calculator mr-1"></i> Cotizar
+                        </button>
+                        <button class="btn btn-secondary px-4 rounded-pill disabled"
+                            *ngIf="lote.estatus !== 'DISPONIBLE'" disabled>
+                            No Disponible
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+            {{ errorMessage }}
+            <button (click)="goBack()" class="btn btn-sm btn-outline-danger ml-2">Volver</button>
+        </div>
+
+        <!-- Custom Modal Overlay -->
+        <div class="modal-backdrop fade show" *ngIf="showModal"></div>
+        <div class="modal fade show" tabindex="-1" role="dialog" [style.display]="showModal ? 'block' : 'none'"
+            *ngIf="showModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cotizar Lote</h5>
+                        <button type="button" class="close" (click)="closeQuoteModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div *ngIf="quoteSuccess" class="alert alert-success">
+                            {{ quoteSuccess }}
+                        </div>
+                        <div *ngIf="quoteError" class="alert alert-danger">
+                            {{ quoteError }}
+                        </div>
+
+                        <form *ngIf="!quoteSuccess">
+                            <div class="form-group">
+                                <label>Nombre Completo</label>
+                                <input type="text" class="form-control" [(ngModel)]="quoteData.nombre" name="nombre"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" [(ngModel)]="quoteData.email" name="email"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Teléfono</label>
+                                <input type="tel" class="form-control" [(ngModel)]="quoteData.telefono" name="telefono"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>Mensaje</label>
+                                <textarea class="form-control" rows="3" [(ngModel)]="quoteData.mensaje"
+                                    name="mensaje"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="closeQuoteModal()">Cerrar</button>
+                        <button type="button" class="btn btn-primary" (click)="submitQuote()"
+                            *ngIf="!quoteSuccess">Enviar
+                            Solicitud</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Modal -->
+    <div class="modal-backdrop fade show" *ngIf="showGalleryModal"></div>
+    <div class="modal show" tabindex="-1" role="dialog" [style.display]="showGalleryModal ? 'block' : 'none'"
+        *ngIf="showGalleryModal">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content bg-dark border-0">
+                <div class="modal-header border-0">
+                    <button type="button" class="close text-white" (click)="closeGalleryModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center p-0 position-relative">
+                    <img [src]="lote.galeriaImagenes[selectedImageIndex]" class="img-fluid gallery-modal-image"
+                        (click)="nextImage()">
+
+                    <button class="carousel-control-prev" type="button" (click)="prevImage()"
+                        *ngIf="lote.galeriaImagenes.length > 1">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"
+                            style="background-color: rgba(0,0,0,0.5); border-radius: 50%;"></span>
+                        <span class="sr-only">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" (click)="nextImage()"
+                        *ngIf="lote.galeriaImagenes.length > 1">
+                        <span class="carousel-control-next-icon" aria-hidden="true"
+                            style="background-color: rgba(0,0,0,0.5); border-radius: 50%;"></span>
+                        <span class="sr-only">Next</span>
+                    </button>
+                </div>
+                <div class="modal-footer border-0 justify-content-center text-white">
+                    {{ selectedImageIndex + 1 }} / {{ lote.galeriaImagenes.length }}
+                </div>
+            </div>
+        </div>
+    </div>

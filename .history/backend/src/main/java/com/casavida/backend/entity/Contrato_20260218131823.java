@@ -41,7 +41,6 @@ public class Contrato {
     private User vendedor;
 
     @OneToMany(mappedBy = "contrato", cascade = CascadeType.ALL)
-    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Pago> pagos;
 
     public Contrato() {

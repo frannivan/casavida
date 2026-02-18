@@ -1,0 +1,271 @@
+<div class="modal fade" id="clientDossierModal" tabindex="-1" role="dialog" [ngClass]="{'show': show}"
+  [style.display]="show ? 'block' : 'none'">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title font-weight-bold">Expediente del Cliente</h5>
+        <button type="button" class="close text-white" aria-label="Close" (click)="close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body pt-0" *ngIf="cliente">
+
+        <!-- Profile Banner -->
+        <div class="d-flex align-items-center mb-4 mt-3">
+          <div class="avatar-circle mr-3">
+            {{ getInitials(cliente.nombre, cliente.apellidos) }}
+          </div>
+          <div>
+            <h2 class="mb-0 text-gold">{{ cliente.nombre }} {{ cliente.apellidos }}</h2>
+            <p class="text-muted mb-0"><i class="fa fa-envelope mr-1"></i> {{ cliente.email }} | <i
+                class="fa fa-phone mr-1"></i> {{ cliente.telefono }}</p>
+            <small class="text-muted">Cliente desde: {{ cliente.fechaRegistro | date:'longDate' }}</small>
+          </div>
+          <div class="ml-auto">
+            <button class="btn btn-outline-light btn-sm mr-2" (click)="printHistory()">
+              <i class="fa fa-print"></i> Imprimir Historial
+            </button>
+            <button class="btn btn-success btn-sm mr-2" (click)="openPaymentForm()">
+              <i class="fa fa-money"></i> Registrar Pago
+            </button>
+            <button class="btn btn-gold btn-sm" (click)="editClient()">
+              <i class="fa fa-edit"></i> Editar Datos
+            </button>
+          </div>
+        </div>
+
+        <!-- Payment Form Overlay -->
+        <div *ngIf="showPaymentForm" class="payment-overlay p-4 rounded mb-4"
+          style="background: rgba(0,0,0,0.2); border: 1px solid #FFD700;">
+          <h5 class="text-gold mb-3"><i class="fa fa-money mr-2"></i>Registrar Nuevo Pago</h5>
+
+          <div *ngIf="paymentSuccessMsg" class="alert alert-success">{{ paymentSuccessMsg }}</div>
+          <div *ngIf="paymentErrorMsg" class="alert alert-danger">{{ paymentErrorMsg }}</div>
+
+          <form (ngSubmit)="submitPayment()">
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <label>Contrato / Terreno</label>
+                <select class="form-control" [(ngModel)]="paymentData.contratoId" name="contratoId" required>
+                  <option [ngValue]="null">Selecciona...</option>
+                  <option *ngFor="let c of contracts" [ngValue]="c.id">
+                    Lote {{ c.lote?.numeroLote }} ({{ c.lote?.fraccionamiento?.nombre }})
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label>Monto</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                  </div>
+                  <input type="number" class="form-control" [(ngModel)]="paymentData.monto" name="monto" required
+                    min="1">
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <label>Concepto</label>
+                <input type="text" class="form-control" [(ngModel)]="paymentData.concepto" name="concepto"
+                  placeholder="Mensualidad, Enganche...">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label>Referencia</label>
+                <input type="text" class="form-control" [(ngModel)]="paymentData.referencia" name="referencia"
+                  placeholder="Efecivo, Transferencia...">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <label>Comprobante de Pago</label>
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="customFile" (change)="onFileSelected($event)">
+                  <label class="custom-file-label" for="customFile">{{ selectedFileName || 'Seleccionar Archivo'
+                    }}</label>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="button" class="btn btn-secondary mr-2" (click)="closePaymentForm()"
+                [disabled]="isSubmittingPayment">Cancelar</button>
+              <button type="submit" class="btn btn-success" [disabled]="isSubmittingPayment">
+                <span *ngIf="isSubmittingPayment" class="spinner-border spinner-border-sm mr-1"></span>
+                Registrar Pago
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="dossier-stat-card">
+              <div class="dossier-stat-value">{{ contracts.length }}</div>
+              <div class="dossier-stat-label">Terrenos Adquiridos</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="dossier-stat-card">
+              <div class="dossier-stat-value">{{ totalInvested | currency:'MXN' }}</div>
+              <div class="dossier-stat-label">Inversión Total</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="dossier-stat-card">
+              <div class="dossier-stat-value">{{ totalPaid | currency:'MXN' }}</div>
+              <div class="dossier-stat-label">Pagado</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="dossier-stat-card border-left-danger">
+              <div class="dossier-stat-value text-danger">{{ (totalInvested - totalPaid) | currency:'MXN' }}</div>
+              <div class="dossier-stat-label text-danger">Saldo Restante</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="mb-5">
+          <label class="text-muted small text-uppercase">Progreso de Pagos Global</label>
+          <div class="progress" style="height: 10px; background-color: rgba(255,255,255,0.1);">
+            <div class="progress-bar bg-gradient-gold" role="progressbar" [style.width.%]="getGlobalProgress()"
+              aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs border-bottom-0 mb-3" id="dossierTabs" role="tablist" style="cursor: pointer;">
+          <li class="nav-item">
+            <a class="nav-link text-white" [class.active]="activeTab === 'properties'"
+              (click)="activeTab = 'properties'">
+              <i class="fa fa-home mr-1"></i> Terrenos ({{contracts.length}})
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" [class.active]="activeTab === 'payments'" (click)="activeTab = 'payments'">
+              <i class="fa fa-history mr-1"></i> Historial de Pagos
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="dossierTabContent">
+
+          <!-- Properties Tab -->
+          <div class="tab-pane fade" [class.show]="activeTab === 'properties'"
+            [class.active]="activeTab === 'properties'" *ngIf="activeTab === 'properties'">
+            <div class="row">
+              <div class="col-md-6 mb-4" *ngFor="let contract of contracts">
+                <div class="card card-lux h-100 text-dark">
+                  <div class="row no-gutters">
+                    <div class="col-md-5">
+                      <img [src]="contract.lote?.imagenUrl || 'assets/placeholder-land.jpg'" class="card-img h-100"
+                        style="object-fit: cover;" alt="Lote">
+                    </div>
+                    <div class="col-md-7">
+                      <div class="card-body p-3">
+                        <h5 class="card-title font-weight-bold mb-1">Lote {{ contract.lote?.numeroLote }}</h5>
+                        <p class="text-muted small mb-2">{{ contract.lote?.fraccionamiento?.nombre }}</p>
+
+                        <div class="d-flex justify-content-between mb-2">
+                          <span class="badge badge-success p-2">{{ contract.estatus }}</span>
+                          <span class="font-weight-bold text-primary">{{ contract.montoTotal | currency:'MXN' }}</span>
+                        </div>
+
+                        <p class="card-text small mb-1"><strong>Manzana:</strong> {{ contract.lote?.manzana }}</p>
+                        <p class="card-text small"><strong>Fecha contrato:</strong> {{ contract.fechaContrato |
+                          date:'mediumDate' }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 text-center text-muted mt-3" *ngIf="contracts.length === 0">
+                <p>Este cliente no tiene terrenos adquiridos aún.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payments Tab -->
+          <div class="tab-pane fade" [class.show]="activeTab === 'payments'" [class.active]="activeTab === 'payments'"
+            *ngIf="activeTab === 'payments'">
+            <div class="table-responsive bg-white rounded text-dark p-3">
+              <table class="table table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Lote</th>
+                    <th>Concepto</th>
+                    <th>Referencia</th>
+                    <th class="text-right">Monto</th>
+                    <th class="text-center">Recibo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let pago of allPayments">
+                    <td>{{ pago.fechaPago | date:'mediumDate' }}</td>
+                    <td><span class="badge badge-light">Lote {{ pago.loteRef }}</span></td>
+                    <td>{{ pago.concepto }}</td>
+                    <td><small class="text-muted">{{ pago.referencia }}</small></td>
+                    <td class="text-right font-weight-bold">{{ pago.monto | currency:'MXN' }}</td>
+                    <td class="text-center">
+                      <a *ngIf="pago.hasComprobante" [href]="'/api/pagos/' + pago.id + '/comprobante'" target="_blank"
+                        class="btn btn-sm btn-link" title="Ver Comprobante">
+                        <i class="fa fa-file-image-o text-info"></i>
+                      </a>
+                      <span *ngIf="!pago.hasComprobante" class="text-muted">-</span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="allPayments.length === 0">
+                    <td colspan="6" class="text-center py-4 text-muted">No hay pagos registrados.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="show"></div>
+
+<!-- Print Layout (Hidden unless printing) -->
+<div id="print-section" class="d-none d-print-block bg-white text-dark p-4">
+  <div class="text-center mb-5">
+    <h1>Historial de Pagos</h1>
+    <h3>{{ cliente?.nombre }} {{ cliente?.apellidos }}</h3>
+    <p>Generado el: {{ today | date:'medium' }}</p>
+  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Lote</th>
+        <th>Concepto</th>
+        <th>Referencia</th>
+        <th class="text-right">Monto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pago of allPayments">
+        <td>{{ pago.fechaPago | date:'shortDate' }}</td>
+        <td>{{ pago.loteRef }}</td>
+        <td>{{ pago.concepto }}</td>
+        <td>{{ pago.referencia }}</td>
+        <td class="text-right">{{ pago.monto | currency:'MXN' }}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4" class="text-right font-weight-bold">Total Pagado:</td>
+        <td class="text-right font-weight-bold">{{ totalPaid | currency:'MXN' }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

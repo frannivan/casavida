@@ -1,0 +1,110 @@
+bbe1e6b HEAD@{Tue Feb 17 21:50:51 2026}: checkout: moving from main to main
+bbe1e6b HEAD@{Tue Feb 17 21:44:22 2026}: pull origin main: Fast-forward
+655035f HEAD@{Tue Feb 17 21:36:57 2026}: pull origin main: Fast-forward
+6fefbb7 HEAD@{Tue Feb 17 21:20:19 2026}: pull origin main: Fast-forward
+9b168b7 HEAD@{Tue Feb 17 21:05:49 2026}: pull origin main: Fast-forward
+417a0f7 HEAD@{Tue Feb 17 21:05:36 2026}: checkout: moving from main to main
+417a0f7 HEAD@{Tue Feb 17 20:56:00 2026}: pull origin main: Fast-forward
+578a191 HEAD@{Tue Feb 17 20:39:14 2026}: pull origin main: Fast-forward
+98ecc8e HEAD@{Tue Feb 17 19:58:04 2026}: pull origin main: Fast-forward
+45c55c3 HEAD@{Tue Feb 17 19:20:49 2026}: pull origin main: Fast-forward
+8254471 HEAD@{Tue Feb 17 19:20:44 2026}: reset: moving to origin/main
+8254471 HEAD@{Tue Feb 17 18:59:25 2026}: reset: moving to origin/main
+e7169fa HEAD@{Tue Feb 17 18:21:54 2026}: commit: cambios locales en UserRepository
+6805a7a HEAD@{Tue Feb 17 18:02:42 2026}: checkout: moving from main to main
+6805a7a HEAD@{Tue Feb 17 17:19:17 2026}: pull origin main: Fast-forward
+6a668e5 HEAD@{Tue Feb 17 15:16:05 2026}: reset: moving to 6a668e50a828199608b10424cf2a2ad922e6acd8
+2788682 HEAD@{Tue Feb 17 15:15:57 2026}: checkout: moving from version-6a66 to main
+6a668e5 HEAD@{Tue Feb 17 15:15:48 2026}: checkout: moving from main to version-6a66
+2788682 HEAD@{Tue Feb 17 15:13:36 2026}: reset: moving to origin/main
+2788682 HEAD@{Tue Feb 17 15:13:19 2026}: checkout: moving from backup-actual to main
+2103675 HEAD@{Tue Feb 17 15:13:10 2026}: commit: Backup completo antes de regresar a main
+58a5208 HEAD@{Tue Feb 17 15:10:30 2026}: checkout: moving from stable-restore to backup-actual
+58a5208 HEAD@{Tue Feb 17 14:09:12 2026}: reset: moving to 58a5208
+ae72f00 HEAD@{Tue Feb 17 14:05:06 2026}: reset: moving to ae72f00
+0ae29b0 HEAD@{Tue Feb 17 14:04:04 2026}: reset: moving to 0ae29b0
+58a5208 HEAD@{Tue Feb 17 13:39:21 2026}: reset: moving to 58a5208
+4d56c74 HEAD@{Tue Feb 17 13:03:13 2026}: commit: Restaurar versión estable (6a668e50) con Sidebar actual
+6a668e5 HEAD@{Tue Feb 17 13:03:11 2026}: checkout: moving from 6a668e50a828199608b10424cf2a2ad922e6acd8 to stable-restore
+6a668e5 HEAD@{Tue Feb 17 13:01:57 2026}: reset: moving to 6a668e50a828199608b10424cf2a2ad922e6acd8
+c337ea5 HEAD@{Tue Feb 17 12:50:11 2026}: checkout: moving from rollback-branch to c337ea55c90b410ee45a668e1ceb9c61b4721e43
+58a5208 HEAD@{Tue Feb 17 12:50:08 2026}: reset: moving to HEAD
+58a5208 HEAD@{Tue Feb 17 12:38:40 2026}: checkout: moving from rollback-branch to rollback-branch
+58a5208 HEAD@{Tue Feb 17 12:35:29 2026}: checkout: moving from b8ba6b6ca6645ed206aa83f4b048e0d013e81c30 to rollback-branch
+b8ba6b6 HEAD@{Tue Feb 17 12:32:28 2026}: commit: Backup antes de rollback
+0ae29b0 HEAD@{Tue Feb 17 12:28:59 2026}: checkout: moving from 58a5208cedcaee2795c4f54a5cecd62e31b31c8e to 0ae29b0
+58a5208 HEAD@{Tue Feb 17 12:05:11 2026}: checkout: moving from main to 58a5208cedcaee2795c4f54a5cecd62e31b31c8e
+2788682 HEAD@{Tue Feb 17 12:01:21 2026}: checkout: moving from main to main
+2788682 HEAD@{Tue Feb 17 11:56:56 2026}: checkout: moving from restauracion-final to main
+0ae29b0 HEAD@{Tue Feb 17 11:52:06 2026}: reset: moving to HEAD
+0ae29b0 HEAD@{Tue Feb 17 11:52:06 2026}: checkout: moving from rollback-del-menu to restauracion-final
+2788682 HEAD@{Tue Feb 17 11:52:06 2026}: reset: moving to 27886825aad4b904911444c03b6895aa2a44aede
+2788682 HEAD@{Tue Feb 17 11:51:48 2026}: checkout: moving from main to rollback-del-menu
+2788682 HEAD@{Tue Feb 17 11:51:48 2026}: checkout: moving from restauracion-casavida to main
+58a5208 HEAD@{Tue Feb 17 11:49:54 2026}: reset: moving to HEAD
+58a5208 HEAD@{Tue Feb 17 11:49:54 2026}: checkout: moving from main to restauracion-casavida
+2788682 HEAD@{Tue Feb 17 11:48:12 2026}: reset: moving to HEAD
+2788682 HEAD@{Tue Feb 17 11:39:17 2026}: reset: moving to 2788682
+58a5208 HEAD@{Tue Feb 17 11:06:30 2026}: reset: moving to 58a5208cedcaee2795c4f54a5cecd62e31b31c8e
+58a5208 HEAD@{Mon Feb 16 22:10:52 2026}: reset: moving to HEAD
+58a5208 HEAD@{Mon Feb 16 21:56:53 2026}: reset: moving to HEAD
+58a5208 HEAD@{Mon Feb 16 21:16:56 2026}: reset: moving to 58a5208
+2788682 HEAD@{Mon Feb 16 19:55:46 2026}: commit: Enable bean definition overriding to fix security config conflict
+e8d395f HEAD@{Mon Feb 16 19:52:08 2026}: commit: Add MethodSecurityConfig and CustomPermissionEvaluator for RBAC support
+6910064 HEAD@{Mon Feb 16 19:42:36 2026}: commit: Fix LoteController type error
+6e78a64 HEAD@{Mon Feb 16 19:41:19 2026}: commit: Add all missing DTOs for services
+db94a0e HEAD@{Mon Feb 16 19:40:20 2026}: commit: Sync all entities, services, and repositories for dashboard fix deployment
+9c69020 HEAD@{Mon Feb 16 19:39:17 2026}: commit: Add Component entity and ensure POI dependency in pom.xml
+61f1ae0 HEAD@{Mon Feb 16 19:38:12 2026}: commit: Add Module and Action entities for RBAC system
+6a668e5 HEAD@{Mon Feb 16 19:36:42 2026}: commit: Add missing Permission entity and PermissionRepository
+2e2353d HEAD@{Mon Feb 16 19:35:44 2026}: commit: Add missing PermissionService interface
+c337ea5 HEAD@{Mon Feb 16 19:28:30 2026}: commit: Fix: Add @Transactional annotations and correct data.sql for dashboard 500 error
+58a5208 HEAD@{Mon Feb 16 09:47:14 2026}: commit: fix: menu restoration and layout improvements
+0ae29b0 HEAD@{Sat Jan 31 14:54:12 2026}: commit: fix: update admin password hash and deployment config
+ae72f00 HEAD@{Fri Jan 30 17:07:21 2026}: commit: Deploy updates: Maven wrapper and build config adjustments
+f6f9e62 HEAD@{Sat Jan 3 23:12:02 2026}: commit: Fix: Update prod environment URL to point to Railway
+e6949af HEAD@{Sat Jan 3 23:00:48 2026}: commit: Fix: Relax CORS and enable Swagger documentation
+ebd29ba HEAD@{Sat Jan 3 22:54:51 2026}: commit: Fix: Resolve ambiguous mapping by renaming root endpoint and removing conflicting controllers
+c5d8b5c HEAD@{Sat Jan 3 22:33:08 2026}: commit: fix: allow H2 database fallback by detecting prefix in DatabaseConfig
+05ef908 HEAD@{Sat Jan 3 22:07:43 2026}: commit: chore: enable database and root endpoint for render deployment
+1f8e5ed HEAD@{Sat Jan 3 21:31:49 2026}: commit: debug: isolate startup by disabling DB and removing root mapping conflict
+83a294b HEAD@{Sat Jan 3 21:26:50 2026}: commit: fix: rename health endpoint to status to bypass koyeb cache zombie
+2e2e620 HEAD@{Sat Jan 3 21:15:39 2026}: commit: chore: remove openapi to improve startup time
+c1eb5cb HEAD@{Sat Jan 3 21:11:15 2026}: commit: chore: optimize jvm memory settings for small containers
+252ba8e HEAD@{Sat Jan 3 20:57:40 2026}: commit: fix: prepare dockerfile for generic cloud deployment
+c661240 HEAD@{Sat Jan 3 20:57:21 2026}: commit: fix: revert to standard production config for render migration
+1da01ba HEAD@{Sat Jan 3 20:41:12 2026}: commit: debug: exclude SecurityAutoConfiguration correctly
+3939573 HEAD@{Sat Jan 3 20:27:37 2026}: commit: debug: disable all security filters and method security
+032ff32 HEAD@{Sat Jan 3 20:03:34 2026}: commit: debug: disable DataInitializer to checking startup timing
+ecb8f78 HEAD@{Sat Jan 3 19:48:53 2026}: commit: chore: remove tracked target folder and add .gitignore
+f9f511c HEAD@{Sat Jan 3 19:32:25 2026}: commit: fix: hardcode port 8080 and update diagnostic message
+d424be0 HEAD@{Sat Jan 3 19:28:43 2026}: commit: fix: standardize on port 8080 for koyeb compatibility
+d9665e9 HEAD@{Sat Jan 3 12:08:31 2026}: commit: debug: move diagnostics to root and open security wide
+bb98b65 HEAD@{Sat Jan 3 01:45:35 2026}: commit: fix: align ports and health checks to 8000
+08512f9 HEAD@{Sat Jan 3 01:42:42 2026}: commit: fix: increase jvm stack size and simplify scanning
+3570308 HEAD@{Sat Jan 3 01:37:24 2026}: commit: fix: add root controller and set postgresql dialect
+ad361b5 HEAD@{Sat Jan 3 01:32:23 2026}: commit: fix: revert auto-config inclusion and simplify CORS config
+6031549 HEAD@{Sat Jan 3 01:28:30 2026}: commit: fix: ultra-robust cors wildcard and diagnostic ping endpoints
+217afdc HEAD@{Sat Jan 3 00:53:06 2026}: commit: debug: add instantiation logs and final cors priority fix
+018e1e4 HEAD@{Sat Jan 3 00:52:30 2026}: commit: fix: ultra-high priority cors filter and permissive security for diagnostics
+4c76eb4 HEAD@{Sat Jan 3 00:48:32 2026}: commit: fix: add diagnostic health endpoint and robust global cors filter
+cb4f4a2 HEAD@{Sat Jan 3 00:11:11 2026}: commit: fix: robust url cleaning and remove redundant crossorigin annotations
+b8a291d HEAD@{Sat Jan 3 00:07:37 2026}: commit: fix: implement global CORS configuration for Vercel and local dev
+333ece0 HEAD@{Fri Jan 2 23:26:27 2026}: commit: feat: update production apiUrl for Koyeb
+9c3c712 HEAD@{Fri Jan 2 23:21:15 2026}: commit: fix: remove accidentally included markdown characters
+816fdc2 HEAD@{Fri Jan 2 23:17:48 2026}: commit: fix: exclude datasource auto-configuration and rename env var
+dcf2e4f HEAD@{Fri Jan 2 23:10:11 2026}: commit: fix: manual parsing of postgres url to prevent port error
+618f917 HEAD@{Fri Jan 2 23:03:42 2026}: commit: fix: bypass spring boot auto-datasource configuration
+c59d5cf HEAD@{Fri Jan 2 23:03:19 2026}: commit: fix: upgrade postgres driver and force manual loading
+886c4e3 HEAD@{Fri Jan 2 22:56:50 2026}: commit: fix: extreme robust url parsing with hex debug
+58ca82b HEAD@{Fri Jan 2 22:49:52 2026}: commit: fix: robust database url parsing and logging
+d94f99e HEAD@{Fri Jan 2 22:27:51 2026}: commit: fix: automatic jdbc prefix for database url
+9f02681 HEAD@{Fri Jan 2 22:01:17 2026}: commit: koyeb config
+7637d42 HEAD@{Fri Jan 2 18:05:39 2026}: commit: error fix 404
+22d2930 HEAD@{Fri Jan 2 17:29:22 2026}: commit: se agrega la url del despliegue del backend
+c9d92a5 HEAD@{Fri Jan 2 17:24:41 2026}: commit: Swagger config
+7d1a5ca HEAD@{Fri Jan 2 15:35:27 2026}: commit: Fly.oi configuracion UAT
+17e1e82 HEAD@{Fri Jan 2 15:10:12 2026}: commit: Fly.oi configuracion
+03f2c3b HEAD@{Fri Jan 2 00:45:38 2026}: commit: Vercel config
+0420686 HEAD@{Mon Dec 22 01:47:56 2025}: Branch: renamed refs/heads/main to refs/heads/main
+0420686 HEAD@{Mon Dec 22 01:45:36 2025}: commit (initial): Initial commit for deployment
