@@ -23,10 +23,10 @@ import { Component } from '@angular/core';
   template: `<div class="container py-4">
     <h2><i class="fas fa-city me-2"></i>Fraccionamientos</h2>
     <p class="text-muted">Gestión de fraccionamientos y desarrollos.</p>
-    <div class="alert alert-info">
-      <i class="fas fa-info-circle me-2"></i>Esta funcionalidad está en desarrollo.
-    </div>
-  </div>`
+    <hr>
+    <app-board-admin></app-board-admin>
+  </div>`,
+  imports: [BoardAdminComponent]
 })
 export class FraccionamientosComponent {}
 
@@ -36,10 +36,10 @@ export class FraccionamientosComponent {}
   template: `<div class="container py-4">
     <h2><i class="fas fa-th me-2"></i>Inventario de Lotes</h2>
     <p class="text-muted">Gestión completa del inventario de lotes.</p>
-    <div class="alert alert-info">
-      <i class="fas fa-info-circle me-2"></i>Esta funcionalidad está en desarrollo.
-    </div>
-  </div>`
+    <hr>
+    <app-board-admin></app-board-admin>
+  </div>`,
+  imports: [BoardAdminComponent]
 })
 export class LotesInventarioComponent {}
 
@@ -49,10 +49,10 @@ export class LotesInventarioComponent {}
   template: `<div class="container py-4">
     <h2><i class="fas fa-chart-bar me-2"></i>Reportes</h2>
     <p class="text-muted">Reportes financieros y operativos.</p>
-    <div class="alert alert-info">
-      <i class="fas fa-info-circle me-2"></i>Esta funcionalidad está en desarrollo.
-    </div>
-  </div>`
+    <hr>
+    <app-board-admin></app-board-admin>
+  </div>`,
+  imports: [BoardAdminComponent]
 })
 export class ReportesComponent {}
 
@@ -89,6 +89,7 @@ export class DocumentacionComponent {}
   template: `<div class="container py-4">
     <h2><i class="fas fa-credit-card me-2"></i>Panel de Recepción</h2>
     <p class="text-muted">Validación de pagos y gestión de contratos.</p>
+    <hr>
     <app-board-admin [view]="'payments'"></app-board-admin>
   </div>`,
   imports: [BoardAdminComponent]
@@ -101,6 +102,7 @@ export class RecepcionComponent {}
   template: `<div class="container py-4">
     <h2><i class="fas fa-columns me-2"></i>Panel de Vendedor</h2>
     <p class="text-muted">Gestión de prospectos y oportunidades.</p>
+    <hr>
     <app-board-admin></app-board-admin>
   </div>`,
   imports: [BoardAdminComponent]
@@ -113,6 +115,7 @@ export class PanelVendedorComponent {}
   template: `<div class="container py-4">
     <h2><i class="fas fa-file-invoice-dollar me-2"></i>Panel de Contabilidad</h2>
     <p class="text-muted">Gestión de pagos y reportes financieros.</p>
+    <hr>
     <app-board-admin [view]="'payments'"></app-board-admin>
   </div>`,
   imports: [BoardAdminComponent]
@@ -125,6 +128,7 @@ export class ContabilidadComponent {}
   template: `<div class="container py-4">
     <h2><i class="fas fa-chart-line me-2"></i>Panel Directivo</h2>
     <p class="text-muted">KPIs e inteligencia de negocio.</p>
+    <hr>
     <app-board-admin></app-board-admin>
   </div>`,
   imports: [BoardAdminComponent]
@@ -137,6 +141,7 @@ export class DirectivoComponent {}
   template: `<div class="container py-4">
     <h2><i class="fas fa-calculator me-2"></i>Generar Cotización</h2>
     <p class="text-muted">Simulador financiero para clientes.</p>
+    <hr>
     <app-board-admin></app-board-admin>
   </div>`,
   imports: [BoardAdminComponent]
@@ -150,6 +155,7 @@ export class CotizarComponent {}
   template: `<div class="container py-4">
     <h2><i class="fas fa-file-signature me-2"></i>Generar Contrato</h2>
     <p class="text-muted">Creación de nuevos contratos de venta.</p>
+    <hr>
     <app-board-admin [view]="'contracts'"></app-board-admin>
   </div>`,
   imports: [BoardAdminComponent]
@@ -162,6 +168,7 @@ export class GenerarContratoComponent {}
   template: `<div class="container py-4">
     <h2><i class="fas fa-user-tag me-2"></i>Prospectos</h2>
     <p class="text-muted">Gestión de leads y prospectos.</p>
+    <hr>
     <app-crm-leads></app-crm-leads>
   </div>`,
   imports: [CrmLeadsComponent]
@@ -187,7 +194,7 @@ export const routes: Routes = [
     { path: 'admin/crm/leads', component: CrmLeadsComponent },
     { path: 'admin/crm/opportunities', component: CrmOpportunitiesComponent },
     
-    // Rutas de Inventario
+    // Rutas de Inventario - Ahora usan BoardAdmin con funcionalidad real
     { path: 'admin/fraccionamientos', component: FraccionamientosComponent },
     { path: 'admin/lotes', component: LotesInventarioComponent },
     
@@ -200,7 +207,7 @@ export const routes: Routes = [
     { path: 'admin/generar-contrato', component: GenerarContratoComponent },
     { path: 'admin/leads', component: LeadsShortComponent },
     
-    // Rutas para otros roles
+    // Rutas para otros roles - Ahora usan BoardAdmin con funcionalidad real
     { path: 'recepcion', component: RecepcionComponent },
     { path: 'panel-vendedor', component: PanelVendedorComponent },
     { path: 'contabilidad', component: ContabilidadComponent },
