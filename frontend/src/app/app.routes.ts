@@ -84,6 +84,7 @@ export class ContabilidadComponent {}
 export class DirectivoComponent {}
 
 import { CotizadorComponent } from './cotizador/cotizador.component';
+import { FraccionamientoEditComponent } from './fraccionamiento-edit/fraccionamiento-edit.component';
 
 @Component({
   selector: 'app-generar-contrato',
@@ -115,6 +116,7 @@ export const routes: Routes = [
     // Rutas públicas
     { path: 'home', component: HomeComponent },
     { path: 'lote/:id', component: LoteDetail },
+    { path: 'fraccionamiento/:id/edit', component: FraccionamientoEditComponent },
     { path: 'fraccionamiento/:id', component: FraccionamientoDetailComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },

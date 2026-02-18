@@ -1,0 +1,288 @@
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <button class="btn btn-outline-secondary" (click)="goBack()">
+      <i class="fas fa-arrow-left me-2"></i>Volver
+    </button>
+    
+    <div *ngIf="isAdmin" class="text-end">
+      <button class="btn btn-primary me-2" (click)="goToAdmin()">
+        <i class="fas fa-cog me-2"></i>Panel Admin
+      </button>
+      <button class="btn btn-warning" (click)="toggleEditMode()">
+        <i class="fas fa-edit me-2"></i>{{ editMode ? 'Cancelar' : 'Editar' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3">Cargando fraccionamiento...</p>
+  </div>
+
+  <!-- Vista/Edición del Fraccionamiento -->
+  <div *ngIf="!isLoading && fraccionamiento">
+    
+    <!-- Modo Vista -->
+    <div *ngIf="!editMode" class="card mb-4">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img [src]="getDisplayUrl(fraccionamiento.logoUrl)" class="img-fluid rounded-start w-100" 
+               style="height: 300px; object-fit: cover;">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h1 class="card-title">{{ fraccionamiento.nombre }}</h1>
+            <p class="card-text">
+              <i class="fas fa-map-marker-alt text-danger me-2"></i>
+              {{ fraccionamiento.ubicacion }}
+            </p>
+            <p class="card-text">{{ fraccionamiento.descripcion }}</p>
+            
+            <div class="mt-3">
+              <span class="badge bg-primary me-2">{{ lotes.length }} Lotes</span>
+              <span class="badge bg-success">
+                {{ lotes.filter(l => l.estatus === 'DISPONIBLE').length }} Disponibles
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modo Edición -->
+    <div *ngIf="editMode" class="card mb-4 border-warning">
+      <div class="card-header bg-warning">
+        <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Editar Fraccionamiento</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <label>Nombre</label>
+              <input type="text" class="form-control" [(ngModel)]="editForm.nombre">
+            </div>
+            
+            <div class="form-group mb-3">
+              <label>Ubicación</label>
+              <input type="text" class="form-control" [(ngModel)]="editForm.ubicacion">
+            </div>
+            
+            <div class="form-group mb-3">
+              <label>URL del Logo</label>
+              <input type="text" class="form-control" [(ngModel)]="editForm.logoUrl">
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="form-group mb-3">
+              <label>Descripción</label>
+              <textarea class="form-control" [(ngModel)]="editForm.descripcion" rows="5"></textarea>
+            </div>
+            
+            <div class="form-group mb-3">
+              <label>Área/Polígono en Mapa</label>
+              <app-location-picker 
+                [initialCoords]="editForm.coordenadasGeo"
+                (coordsSelected)="editForm.coordenadasGeo = $event"></app-location-picker>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-end">
+          <button class="btn btn-secondary me-2" (click)="toggleEditMode()">Cancelar</button>
+          <button class="btn btn-success" (click)="saveFraccionamiento()">
+            <i class="fas fa-save me-2"></i>Guardar Cambios
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lotes del Fraccionamiento -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3><i class="fas fa-th me-2"></i>Lotes</h3>
+      <button *ngIf="isAdmin && !editLoteMode" class="btn btn-success" (click)="openNewLote()">
+        <i class="fas fa-plus me-2"></i>Nuevo Lote
+      </button>
+    </div>
+
+    <!-- Formulario Nuevo/Editar Lote -->
+    <div *ngIf="editLoteMode" class="card mb-4 border-info">
+      <div class="card-header bg-info text-white">
+        <h5 class="mb-0">{{ selectedLote ? 'Editar' : 'Nuevo' }} Lote</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group mb-3">
+              <label>Número de Lote</label>
+              <input type="text" class="form-control" [(ngModel)]="newLoteForm.numeroLote">
+            </div>
+            
+            <div class="form-group mb-3">
+              <label>Manzana</label>
+              <input type="text" class="form-control" [(ngModel)]="newLoteForm.manzana">
+            </div>
+            
+            <div class="form-group mb-3">
+              <label>Estatus</label>
+              <select class="form-control" [(ngModel)]="newLoteForm.estatus">
+                <option value="DISPONIBLE">Disponible</option>
+                <option value="APARTADO">Apartado</option>
+                <option value="VENDIDO">Vendido</option>
+                <option value="CONTRATADO">Contratado</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="col-md-4">
+            <div class="form-group mb-3">
+              <label>Precio</label>
+              <input type="number" class="form-control" [(ngModel)]="newLoteForm.precioTotal">
+            </div>
+            
+            <div class="form-group mb-3">
+              <label>Área (m²)</label>
+              <input type="number" class="form-control" [(ngModel)]="newLoteForm.areaMetrosCuadrados">
+            </div>
+            
+            <div class="form-group mb-3">
+              <label>Imagen Principal URL</label>
+              <input type="text" class="form-control" [(ngModel)]="newLoteForm.imagenUrl">
+            </div>
+          </div>
+          
+          <div class="col-md-4">
+            <div class="form-group mb-3">
+              <label>Ubicación en Mapa</label>
+              <app-location-picker
+                [initialCoords]="newLoteForm.coordenadasGeo"
+                (coordsSelected)="newLoteForm.coordenadasGeo = $event"></app-location-picker>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Galería de Fotos -->
+        <hr>
+        <h6><i class="fas fa-images me-2"></i>Galería de Fotos</h6>
+        
+        <div class="row mb-3">
+          <div class="col-md-8">
+            <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="newFotoUrl" 
+                     placeholder="URL de la imagen">
+              <button class="btn btn-outline-primary" (click)="addFotoToLote()">
+                <i class="fas fa-plus"></i> Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-2 mb-2" *ngFor="let foto of newLoteForm.galeriaImagenes; let i = index">
+            <div class="position-relative">
+              <img [src]="getDisplayUrl(foto)" class="img-thumbnail" style="height: 100px; width: 100%; object-fit: cover;">
+              <button class="btn btn-sm btn-danger position-absolute top-0 end-0" 
+                      (click)="removeFoto(i)" style="padding: 2px 6px;">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-end mt-3">
+          <button class="btn btn-secondary me-2" (click)="editLoteMode = false">Cancelar</button>
+          <button class="btn btn-success" (click)="saveLote()">
+            <i class="fas fa-save me-2"></i>Guardar Lote
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid de Lotes -->
+    <div class="row">
+      <div class="col-md-4 mb-4" *ngFor="let lote of lotes">
+        <div class="card h-100">
+          <!-- Imagen del lote -->
+          <div style="position: relative; cursor: pointer;" (click)="openGaleria(lote)">
+            <img [src]="getDisplayUrl(lote.imagenUrl || (lote.galeriaImagenes?.length > 0 ? lote.galeriaImagenes[0] : ''))" 
+                 class="card-img-top" style="height: 200px; object-fit: cover;">
+            
+            <div *ngIf="lote.galeriaImagenes?.length > 0" class="position-absolute bottom-0 end-0 m-2">
+              <span class="badge bg-dark"><i class="fas fa-images me-1"></i>{{ lote.galeriaImagenes.length }}</span>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <h5 class="card-title">Lote {{ lote.numeroLote }}</h5>
+              <span class="badge" [class.bg-success]="lote.estatus === 'DISPONIBLE'" 
+                    [class.bg-warning]="lote.estatus === 'APARTADO'"
+                    [class.bg-danger]="lote.estatus === 'VENDIDO'"
+                    [class.bg-info]="lote.estatus === 'CONTRATADO'">
+                {{ lote.estatus }}
+              </span>
+            </div>
+            
+            <p class="card-text"><strong>Manzana:</strong> {{ lote.manzana }}</p>
+            <p class="card-text"><strong>Área:</strong> {{ lote.areaMetrosCuadrados }} m²</p>
+            <p class="card-text"><strong>Precio:</strong> {{ lote.precioTotal | currency:'MXN' }}</p>
+            
+            <!-- Botones Admin -->
+            <div *ngIf="isAdmin" class="btn-group w-100 mt-3">
+              <button class="btn btn-sm btn-outline-primary" (click)="editLote(lote)">
+                <i class="fas fa-edit"></i> Editar
+              </button>
+              <button class="btn btn-sm btn-outline-info" (click)="openGaleria(lote)">
+                <i class="fas fa-images"></i> Fotos
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteLote(lote)">
+                <i class="fas fa-trash"></i> Eliminar
+              </button>
+            </div>
+            
+            <!-- Botón Usuario Normal -->
+            <button *ngIf="!isAdmin" class="btn btn-primary w-100 mt-3" [routerLink]="['/lote', lote.id]">
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Galería -->
+<div *ngIf="showGaleriaModal" class="modal d-block" style="background: rgba(0,0,0,0.9); z-index: 1050;">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title text-white">Galería - Lote {{ selectedLote?.numeroLote }}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeGaleria()"></button>
+      </div>
+      
+      <div class="modal-body text-center">
+        <div *ngIf="selectedLote?.galeriaImagenes?.length > 0">
+          <img [src]="selectedLote.galeriaImagenes[selectedImageIndex]" 
+               class="img-fluid rounded" style="max-height: 70vh;">
+          
+          <p class="text-white mt-2">{{ selectedImageIndex + 1 }} / {{ selectedLote.galeriaImagenes.length }}</p>
+          
+          <div class="btn-group">
+            <button class="btn btn-outline-light" (click)="prevImage()">
+              <i class="fas fa-chevron-left"></i> Anterior
+            </button>
+            <button class="btn btn-outline-light" (click)="nextImage()">
+              Siguiente <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="!selectedLote?.galeriaImagenes || selectedLote.galeriaImagenes.length === 0" class="text-white">
+          <p>No hay fotos en la galería</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
