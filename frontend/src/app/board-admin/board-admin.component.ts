@@ -20,9 +20,15 @@ import { RouterLink } from '@angular/router';
     styleUrl: './board-admin.component.css'
 })
 export class BoardAdminComponent implements OnInit {
-    @Input() view: string | null = null;  // Input para vistas específicas (payments, contracts, etc.)
+    @Input() view: string | null = null;  // 'fraccionamientos', 'lotes', 'payments', 'contracts', etc.
     
-    activeTab: string = 'dashboard';  // Tab activa por defecto
+    // Helper getters para el template
+    get showDashboard(): boolean { return !this.view || this.view === 'dashboard'; }
+    get showFraccionamientos(): boolean { return !this.view || this.view === 'fraccionamientos'; }
+    get showLotes(): boolean { return !this.view || this.view === 'lotes'; }
+    get showPayments(): boolean { return !this.view || this.view === 'payments'; }
+    get showContracts(): boolean { return !this.view || this.view === 'contracts'; }
+    get showReportes(): boolean { return this.view === 'reportes'; }
 
     getClientNameForPayment(): string {
         const client = this.clientes.find(c => c.id === this.paymentData.clienteId);
@@ -119,7 +125,13 @@ export class BoardAdminComponent implements OnInit {
             if (viewParam) {
                 this.view = viewParam;
             }
-            this.setActiveTabFromView();
+            
+            // Auto-open modals based on view
+            if (this.view === 'payments') {
+                this.showPaymentModal = true;
+            } else if (this.view === 'contracts') {
+                this.showContractModal = true;
+            }
         });
 
         this.loadStats();
@@ -127,20 +139,6 @@ export class BoardAdminComponent implements OnInit {
         this.loadLotes();
         this.loadClientes();
         this.loadAllContratos();
-    }
-
-    setActiveTabFromView(): void {
-        switch(this.view) {
-            case 'payments':
-                this.activeTab = 'payments';
-                this.showPaymentModal = true;
-                break;
-            case 'contracts':
-                this.activeTab = 'contracts';
-                break;
-            default:
-                this.activeTab = 'dashboard';
-        }
     }
 
     loadStats(): void {

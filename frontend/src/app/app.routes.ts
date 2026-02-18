@@ -23,12 +23,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-fraccionamientos',
   standalone: true,
-  template: `<div class="container py-4">
-    <h2><i class="fas fa-city me-2"></i>Fraccionamientos</h2>
-    <p class="text-muted">Gestión de fraccionamientos y desarrollos.</p>
-    <hr>
-    <app-board-admin></app-board-admin>
-  </div>`,
+  template: `
+    <app-board-admin [view]="'fraccionamientos'"></app-board-admin>
+  `,
   imports: [BoardAdminComponent]
 })
 export class FraccionamientosComponent {}
@@ -36,12 +33,9 @@ export class FraccionamientosComponent {}
 @Component({
   selector: 'app-lotes-inventario',
   standalone: true,
-  template: `<div class="container py-4">
-    <h2><i class="fas fa-th me-2"></i>Inventario de Lotes</h2>
-    <p class="text-muted">Gestión completa del inventario de lotes.</p>
-    <hr>
-    <app-board-admin></app-board-admin>
-  </div>`,
+  template: `
+    <app-board-admin [view]="'lotes'"></app-board-admin>
+  `,
   imports: [BoardAdminComponent]
 })
 export class LotesInventarioComponent {}
@@ -49,12 +43,9 @@ export class LotesInventarioComponent {}
 @Component({
   selector: 'app-reportes',
   standalone: true,
-  template: `<div class="container py-4">
-    <h2><i class="fas fa-chart-bar me-2"></i>Reportes</h2>
-    <p class="text-muted">Reportes financieros y operativos.</p>
-    <hr>
-    <app-board-admin></app-board-admin>
-  </div>`,
+  template: `
+    <app-board-admin [view]="'reportes'"></app-board-admin>
+  `,
   imports: [BoardAdminComponent]
 })
 export class ReportesComponent {}
