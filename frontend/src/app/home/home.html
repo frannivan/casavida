@@ -1,7 +1,16 @@
 <div class="container">
-    <header class="jumbotron">
-        <h1 class="display-4">Bienvenido a CasaVida</h1>
-        <p class="lead">Encuentra el terreno ideal para tu futuro hogar.</p>
+    <header class="jumbotron d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="display-4">Bienvenido a CasaVida</h1>
+            <p class="lead">Encuentra el terreno ideal para tu futuro hogar.</p>
+        </div>
+        
+        <!-- Admin Buttons -->
+        <div *ngIf="isAdmin" class="text-end">
+            <button class="btn btn-primary mb-2 d-block" (click)="goToAdmin()">
+                <i class="fas fa-cog me-2"></i>Panel Admin
+            </button>
+        </div>
     </header>
 
     <!-- Filters -->
@@ -47,22 +56,46 @@
 
     <!-- Fraccionamientos List -->
     <div *ngIf="!isLoading && fraccionamientos.length > 0" class="my-4">
-        <h3>Nuestros Desarrollos</h3>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Nuestros Desarrollos</h3>
+            <button *ngIf="isAdmin" class="btn btn-success btn-sm" (click)="openCreateFracc()">
+                <i class="fas fa-plus me-2"></i>Nuevo Fraccionamiento
+            </button>
+        </div>
+        
         <div class="row">
             <div class="col-md-4 mb-3" *ngFor="let f of fraccionamientos">
-                <div class="card h-100 shadow-sm" style="cursor: pointer;" [routerLink]="['/fraccionamiento', f.id]">
-                    <img [src]="getDisplayUrl(f.logoUrl)" class="card-img-top"
-                        style="height: 150px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ f.nombre }}</h5>
-                        <p class="card-text text-muted small"><i class="fas fa-map-marker-alt text-danger"></i> {{
-                            f.ubicacion }}</p>
+                <div class="card h-100 shadow-sm">
+                    <div style="cursor: pointer;" [routerLink]="['/fraccionamiento', f.id]">
+                        <img [src]="getDisplayUrl(f.logoUrl)" class="card-img-top"
+                            style="height: 150px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ f.nombre }}</h5>
+                            <p class="card-text text-muted small"><i class="fas fa-map-marker-alt text-danger"></i> {{ f.ubicacion }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Admin Actions -->
+                    <div *ngIf="isAdmin" class="card-footer bg-light">
+                        <button class="btn btn-sm btn-outline-primary me-2" (click)="editFracc(f); $event.stopPropagation();">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" (click)="deleteFracc(f); $event.stopPropagation();">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+        
         <hr>
-        <h3>Lotes Disponibles</h3>
+        
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Lotes Disponibles</h3>
+            <button *ngIf="isAdmin" class="btn btn-success btn-sm" (click)="openCreateLote()">
+                <i class="fas fa-plus me-2"></i>Nuevo Lote
+            </button>
+        </div>
     </div>
 
     <div class="grid-container" *ngIf="!isLoading">
@@ -70,21 +103,126 @@
             <img [src]="getDisplayUrl(lote.galeriaImagenes && lote.galeriaImagenes.length > 0 ? lote.galeriaImagenes[0] : lote.imagenUrl)"
                 alt="Lote Image" class="lote-img">
             <div class="card-body">
-                <small class="text-muted font-weight-bold" *ngIf="lote.fraccionamiento">{{ lote.fraccionamiento.nombre
-                    }}</small>
+                <small class="text-muted font-weight-bold" *ngIf="lote.fraccionamiento">{{ lote.fraccionamiento.nombre }}</small>
                 <h3 class="card-title mt-1">Lote: {{ lote.numeroLote }}</h3>
                 <p class="badge-status badge-status-active">{{ lote.estatus }}</p>
-                <p class="mb-1" *ngIf="lote.fraccionamiento"><i class="fas fa-map-marker-alt text-danger"></i> {{
-                    lote.fraccionamiento.ubicacion }}</p>
+                <p class="mb-1" *ngIf="lote.fraccionamiento"><i class="fas fa-map-marker-alt text-danger"></i> {{ lote.fraccionamiento.ubicacion }}</p>
                 <p><strong>Manzana:</strong> {{ lote.manzana }}</p>
                 <p><strong>Área:</strong> {{ lote.areaMetrosCuadrados }} m²</p>
                 <p><strong>Precio:</strong> {{ lote.precioTotal | currency:'MXN' }}</p>
-                <button class="btn btn-primary btn-block" [routerLink]="['/lote', lote.id]">Ver Detalles</button>
+                
+                <button class="btn btn-primary btn-block mb-2" [routerLink]="['/lote', lote.id]">Ver Detalles</button>
+                
+                <!-- Admin Actions -->
+                <div *ngIf="isAdmin" class="btn-group w-100">
+                    <button class="btn btn-sm btn-outline-primary" (click)="editLote(lote)">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteLote(lote)">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <div *ngIf="!isLoading && lotes.length === 0" class="alert alert-warning">
         No hay lotes disponibles en este momento.
+    </div>
+</div>
+
+<!-- Modal Crear/Editar Fraccionamiento -->
+<div *ngIf="showFraccModal" class="modal d-block" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ editingFracc ? 'Editar' : 'Nuevo' }} Fraccionamiento</h5>
+                <button type="button" class="btn-close" (click)="showFraccModal = false"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group mb-3">
+                    <label>Nombre</label>
+                    <input type="text" class="form-control" [(ngModel)]="newFracc.nombre">
+                </div>
+                <div class="form-group mb-3">
+                    <label>Ubicación</label>
+                    <input type="text" class="form-control" [(ngModel)]="newFracc.ubicacion">
+                </div>
+                <div class="form-group mb-3">
+                    <label>Descripción</label>
+                    <textarea class="form-control" [(ngModel)]="newFracc.descripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group mb-3">
+                    <label>URL del Logo</label>
+                    <input type="text" class="form-control" [(ngModel)]="newFracc.logoUrl">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showFraccModal = false">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="saveFracc()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear/Editar Lote -->
+<div *ngIf="showLoteModal" class="modal d-block" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ editingLote ? 'Editar' : 'Nuevo' }} Lote</h5>
+                <button type="button" class="btn-close" (click)="showLoteModal = false"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Número de Lote</label>
+                            <input type="text" class="form-control" [(ngModel)]="newLote.numeroLote">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Manzana</label>
+                            <input type="text" class="form-control" [(ngModel)]="newLote.manzana">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label>Fraccionamiento</label>
+                    <select class="form-control" [(ngModel)]="newLote.fraccionamiento">
+                        <option [ngValue]="null">-- Seleccionar --</option>
+                        <option *ngFor="let f of fraccionamientos" [ngValue]="f">{{ f.nombre }}</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Precio Total</label>
+                            <input type="number" class="form-control" [(ngModel)]="newLote.precioTotal">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>Área (m²)</label>
+                            <input type="number" class="form-control" [(ngModel)]="newLote.areaMetrosCuadrados">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label>Estatus</label>
+                    <select class="form-control" [(ngModel)]="newLote.estatus">
+                        <option value="DISPONIBLE">Disponible</option>
+                        <option value="APARTADO">Apartado</option>
+                        <option value="VENDIDO">Vendido</option>
+                        <option value="CONTRATADO">Contratado</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showLoteModal = false">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="saveLote()">Guardar</button>
+            </div>
+        </div>
     </div>
 </div>

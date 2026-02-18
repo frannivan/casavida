@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LoteService } from '../services/lote';
 import { FraccionamientoService } from '../services/fraccionamiento';
+import { StorageService } from '../services/storage';
 
 import { MapComponent } from '../map/map';
 
@@ -15,10 +16,39 @@ import { MapComponent } from '../map/map';
   styleUrl: './home.css'
 })
 export class HomeComponent implements OnInit {
+  private router = inject(Router);
+  private storageService = inject(StorageService);
+  
   lotes: any[] = [];
   fraccionamientos: any[] = [];
   ubicaciones: string[] = [];
   isLoading = true;
+  
+  // Verificar si es admin
+  isAdmin = false;
+  
+  // Modal de creación/edición
+  showFraccModal = false;
+  showLoteModal = false;
+  editingFracc: any = null;
+  editingLote: any = null;
+  
+  // Formularios
+  newFracc: any = {
+    nombre: '',
+    ubicacion: '',
+    descripcion: '',
+    logoUrl: ''
+  };
+  
+  newLote: any = {
+    numeroLote: '',
+    manzana: '',
+    precioTotal: 0,
+    areaMetrosCuadrados: 0,
+    fraccionamiento: null,
+    estatus: 'DISPONIBLE'
+  };
 
   // Filter Models
   searchFraccionamiento = '';
@@ -31,8 +61,16 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.checkAdminRole();
     this.loadFraccionamientos();
     this.search();
+  }
+  
+  checkAdminRole(): void {
+    const user = this.storageService.getUser();
+    if (user && user.roles) {
+      this.isAdmin = user.roles.includes('ROLE_ADMIN');
+    }
   }
 
   loadFraccionamientos(): void {
@@ -74,5 +112,113 @@ export class HomeComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+  
+  // ================== ADMIN FUNCTIONS ==================
+  
+  // Crear nuevo fraccionamiento
+  openCreateFracc(): void {
+    this.editingFracc = null;
+    this.newFracc = { nombre: '', ubicacion: '', descripcion: '', logoUrl: '' };
+    this.showFraccModal = true;
+  }
+  
+  // Editar fraccionamiento
+  editFracc(fracc: any): void {
+    this.editingFracc = fracc;
+    this.newFracc = { ...fracc };
+    this.showFraccModal = true;
+  }
+  
+  // Guardar fraccionamiento
+  saveFracc(): void {
+    if (this.editingFracc) {
+      // Actualizar
+      this.fraccionamientoService.update(this.editingFracc.id, this.newFracc).subscribe({
+        next: () => {
+          this.showFraccModal = false;
+          this.loadFraccionamientos();
+        },
+        error: err => console.error('Error actualizando fraccionamiento:', err)
+      });
+    } else {
+      // Crear nuevo
+      this.fraccionamientoService.create(this.newFracc).subscribe({
+        next: () => {
+          this.showFraccModal = false;
+          this.loadFraccionamientos();
+        },
+        error: err => console.error('Error creando fraccionamiento:', err)
+      });
+    }
+  }
+  
+  // Eliminar fraccionamiento
+  deleteFracc(fracc: any): void {
+    if (confirm(`¿Estás seguro de eliminar el fraccionamiento "${fracc.nombre}"?`)) {
+      this.fraccionamientoService.delete(fracc.id).subscribe({
+        next: () => this.loadFraccionamientos(),
+        error: err => console.error('Error eliminando fraccionamiento:', err)
+      });
+    }
+  }
+  
+  // Crear nuevo lote
+  openCreateLote(): void {
+    this.editingLote = null;
+    this.newLote = {
+      numeroLote: '',
+      manzana: '',
+      precioTotal: 0,
+      areaMetrosCuadrados: 0,
+      fraccionamiento: null,
+      estatus: 'DISPONIBLE'
+    };
+    this.showLoteModal = true;
+  }
+  
+  // Editar lote
+  editLote(lote: any): void {
+    this.editingLote = lote;
+    this.newLote = { ...lote };
+    this.showLoteModal = true;
+  }
+  
+  // Guardar lote
+  saveLote(): void {
+    if (this.editingLote) {
+      // Actualizar
+      this.loteService.update(this.editingLote.id, this.newLote).subscribe({
+        next: () => {
+          this.showLoteModal = false;
+          this.search();
+        },
+        error: err => console.error('Error actualizando lote:', err)
+      });
+    } else {
+      // Crear nuevo
+      this.loteService.create(this.newLote).subscribe({
+        next: () => {
+          this.showLoteModal = false;
+          this.search();
+        },
+        error: err => console.error('Error creando lote:', err)
+      });
+    }
+  }
+  
+  // Eliminar lote
+  deleteLote(lote: any): void {
+    if (confirm(`¿Estás seguro de eliminar el lote "${lote.numeroLote}"?`)) {
+      this.loteService.delete(lote.id).subscribe({
+        next: () => this.search(),
+        error: err => console.error('Error eliminando lote:', err)
+      });
+    }
+  }
+  
+  // Navegar a admin
+  goToAdmin(): void {
+    this.router.navigate(['/admin']);
   }
 }
