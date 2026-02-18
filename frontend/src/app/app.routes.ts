@@ -40,15 +40,7 @@ export class FraccionamientosComponent {}
 })
 export class LotesInventarioComponent {}
 
-@Component({
-  selector: 'app-reportes',
-  standalone: true,
-  template: `
-    <app-board-admin [view]="'reportes'"></app-board-admin>
-  `,
-  imports: [BoardAdminComponent]
-})
-export class ReportesComponent {}
+import { ReportesComponent } from './reportes/reportes.component';
 
 import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
 

@@ -1,8 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { UploadService } from '../services/reporte';
 
 @Component({
   selector: 'app-carga-masiva',
@@ -31,8 +30,10 @@ import { environment } from '../../environments/environment';
           <div *ngIf="tipoCarga" class="alert alert-info">
             <h5>{{ getTipoCargaNombre() }}</h5>
             <p>{{ getTipoCargaDescripcion() }}</p>
-            <button class="btn btn-outline-primary btn-sm" (click)="descargarPlantilla()">
-              <i class="fas fa-download me-2"></i>Descargar Plantilla Excel
+            <button class="btn btn-outline-primary btn-sm" (click)="descargarPlantilla()" [disabled]="downloadingTemplate">
+              <span *ngIf="downloadingTemplate" class="spinner-border spinner-border-sm me-2"></span>
+              <i *ngIf="!downloadingTemplate" class="fas fa-download me-2"></i>
+              {{ downloadingTemplate ? 'Descargando...' : 'Descargar Plantilla Excel' }}
             </button>
           </div>
 
@@ -52,16 +53,19 @@ import { environment } from '../../environments/environment';
           <!-- Resultado -->
           <div *ngIf="resultado" class="mt-4" [class]="resultado.success ? 'alert alert-success' : 'alert alert-danger'">
             <h5>{{ resultado.success ? '✅ Carga Exitosa' : '❌ Error en Carga' }}</h5>
-            <p>{{ resultado.message }}</p>
-            <div *ngIf="resultado.details">
-              <ul>
-                <li *ngFor="let detail of resultado.details">{{ detail }}</li>
+            <p><strong>Total procesados:</strong> {{ resultado.totalProcesados }}</p>
+            <p><strong>Exitosos:</strong> {{ resultado.exitosos }} | <strong>Errores:</strong> {{ resultado.errores }}</p>
+            
+            <div *ngIf="resultado.detallesErrores?.length > 0">
+              <h6>Detalles de errores:</h6>
+              <ul class="small">
+                <li *ngFor="let error of resultado.detallesErrores">{{ error }}</li>
               </ul>
             </div>
           </div>
 
           <!-- Historial de cargas -->
-          <div class="mt-5">
+          <div class="mt-5" *ngIf="historialCargas.length > 0">
             <h5>Historial de Cargas</h5>
             <div class="table-responsive">
               <table class="table table-sm table-striped">
@@ -94,20 +98,23 @@ import { environment } from '../../environments/environment';
   `
 })
 export class CargaMasivaComponent implements OnInit {
-  private http = inject(HttpClient);
+  private uploadService = inject(UploadService);
   
   tipoCarga = '';
   selectedFile: File | null = null;
   uploading = false;
+  downloadingTemplate = false;
   resultado: any = null;
   
-  historialCargas = [
-    { fecha: '2024-02-15 10:30', tipo: 'Lotes', registros: 25, exitoso: true },
-    { fecha: '2024-02-10 14:20', tipo: 'Clientes', registros: 10, exitoso: true },
-    { fecha: '2024-02-05 09:15', tipo: 'Contratos', registros: 5, exitoso: false }
-  ];
+  historialCargas: any[] = [];
   
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Cargar historial desde localStorage si existe
+    const saved = localStorage.getItem('cargaHistorial');
+    if (saved) {
+      this.historialCargas = JSON.parse(saved);
+    }
+  }
   
   onTipoCargaChange(): void {
     this.selectedFile = null;
@@ -135,42 +142,62 @@ export class CargaMasivaComponent implements OnInit {
   }
   
   descargarPlantilla(): void {
-    // Generar plantilla Excel según el tipo
-    const plantillas: any = {
-      'lotes': ['numero_lote', 'manzana', 'precio', 'area_m2', 'fraccionamiento_id', 'coordenadas'],
-      'clientes': ['nombre', 'apellidos', 'email', 'telefono', 'direccion', 'rfc'],
-      'contratos': ['cliente_id', 'lote_id', 'monto_total', 'enganche', 'plazo_meses', 'tasa_anual'],
-      'pagos': ['contrato_id', 'fecha_pago', 'monto', 'concepto', 'referencia', 'metodo_pago']
-    };
+    if (!this.tipoCarga) return;
     
-    const headers = plantillas[this.tipoCarga];
-    const csvContent = headers.join(',') + '\n';
+    this.downloadingTemplate = true;
     
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `plantilla_${this.tipoCarga}.csv`;
-    a.click();
+    this.uploadService.downloadTemplate(this.tipoCarga).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `plantilla_${this.tipoCarga}.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.downloadingTemplate = false;
+      },
+      error: (err) => {
+        console.error('Error descargando plantilla:', err);
+        this.downloadingTemplate = false;
+      }
+    });
   }
   
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0];
+    this.resultado = null;
   }
   
   subirArchivo(): void {
-    if (!this.selectedFile) return;
+    if (!this.selectedFile || !this.tipoCarga) return;
     
     this.uploading = true;
     
-    // Simular upload - aquí iría la llamada real al backend
-    setTimeout(() => {
-      this.resultado = {
-        success: true,
-        message: `Se procesaron 25 registros de ${this.getTipoCargaNombre()} exitosamente.`,
-        details: ['10 registros nuevos', '15 registros actualizados', '0 errores']
-      };
-      this.uploading = false;
-    }, 2000);
+    this.uploadService.uploadFile(this.tipoCarga, this.selectedFile).subscribe({
+      next: (data) => {
+        this.resultado = data;
+        
+        // Agregar al historial
+        this.historialCargas.unshift({
+          fecha: new Date().toLocaleString(),
+          tipo: this.getTipoCargaNombre(),
+          registros: data.exitosos,
+          exitoso: data.errores === 0
+        });
+        
+        // Guardar en localStorage (últimos 10)
+        localStorage.setItem('cargaHistorial', JSON.stringify(this.historialCargas.slice(0, 10)));
+        
+        this.uploading = false;
+      },
+      error: (err) => {
+        console.error('Error subiendo archivo:', err);
+        this.resultado = {
+          success: false,
+          message: 'Error al procesar el archivo: ' + (err.error?.message || err.message)
+        };
+        this.uploading = false;
+      }
+    });
   }
 }
