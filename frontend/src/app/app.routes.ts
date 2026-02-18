@@ -50,18 +50,7 @@ export class LotesInventarioComponent {}
 })
 export class ReportesComponent {}
 
-@Component({
-  selector: 'app-carga-datos',
-  standalone: true,
-  template: `<div class="container py-4">
-    <h2><i class="fas fa-file-upload me-2"></i>Carga Masiva de Datos</h2>
-    <p class="text-muted">Importación masiva vía Excel/CSV.</p>
-    <div class="alert alert-info">
-      <i class="fas fa-info-circle me-2"></i>Esta funcionalidad está en desarrollo.
-    </div>
-  </div>`
-})
-export class CargaDatosComponent {}
+import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
 
 @Component({
   selector: 'app-documentacion',
@@ -155,7 +144,7 @@ export const routes: Routes = [
     
     // Rutas de Herramientas
     { path: 'admin/reportes', component: ReportesComponent },
-    { path: 'admin/carga-datos', component: CargaDatosComponent },
+    { path: 'admin/carga-datos', component: CargaMasivaComponent },
     { path: 'admin/documentacion', component: DocumentacionComponent },
     
     // Rutas adicionales para Recepción y otros roles
