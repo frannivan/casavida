@@ -102,18 +102,7 @@ export class ContabilidadComponent {}
 })
 export class DirectivoComponent {}
 
-@Component({
-  selector: 'app-cotizar',
-  standalone: true,
-  template: `<div class="container py-4">
-    <h2><i class="fas fa-calculator me-2"></i>Generar Cotización</h2>
-    <p class="text-muted">Simulador financiero para clientes.</p>
-    <hr>
-    <app-board-admin></app-board-admin>
-  </div>`,
-  imports: [BoardAdminComponent]
-})
-export class CotizarComponent {}
+import { CotizadorComponent } from './cotizador/cotizador.component';
 
 @Component({
   selector: 'app-generar-contrato',
@@ -178,7 +167,7 @@ export const routes: Routes = [
     { path: 'panel-vendedor', component: VendedorPanelComponent },
     { path: 'contabilidad', component: ContabilidadComponent },
     { path: 'directivo', component: DirectivoComponent },
-    { path: 'cotizar', component: CotizarComponent },
+    { path: 'cotizar', component: CotizadorComponent },
     
     // Redirect default
     { path: '', redirectTo: 'home', pathMatch: 'full' }
