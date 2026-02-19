@@ -29,11 +29,17 @@ public class AdminService {
     private PasswordEncoder passwordEncoder;
 
     public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream().map(user -> {
-            String roleName = user.getRoles().stream()
-                    .findFirst()
-                    .map(role -> role.getName().name().replace("ROLE_", ""))
-                    .orElse("USER");
+        List<User> users = userRepository.findAll();
+        if (users == null) return List.of();
+
+        return users.stream().map(user -> {
+            String roleName = "USER";
+            if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+                Role role = user.getRoles().iterator().next();
+                if (role != null && role.getName() != null) {
+                    roleName = role.getName().name().replace("ROLE_", "");
+                }
+            }
             return new UserDTO(user.getId(), user.getUsername(), user.getEmail(), roleName);
         }).collect(Collectors.toList());
     }
