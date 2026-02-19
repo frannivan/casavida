@@ -19,46 +19,29 @@ public class AdminController {
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getAllUsers() {
-        try {
-            return ResponseEntity.ok(adminService.getAllUsers());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(new com.casavida.backend.payload.response.MessageResponse("Backend Error: " + e.getClass().getName() + ": " + e.getMessage()));
-        }
+    public List<UserDTO> getAllUsers() {
+        return adminService.getAllUsers();
     }
 
     @PostMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createUser(@RequestBody UserDTO request) {
-        try {
-            adminService.createUser(request);
-            return ResponseEntity.ok("User created successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        adminService.createUser(request);
+        return ResponseEntity.ok(new com.casavida.backend.payload.response.MessageResponse("Usuario creado exitosamente"));
     }
 
     @PutMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDTO request) {
-        try {
-            adminService.updateUser(id, request);
-            return ResponseEntity.ok("User updated successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        adminService.updateUser(id, request);
+        return ResponseEntity.ok(new com.casavida.backend.payload.response.MessageResponse("Usuario actualizado exitosamente"));
     }
 
     @DeleteMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        try {
-            adminService.deleteUser(id);
-            return ResponseEntity.ok("User deleted successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error deleting user");
-        }
+        adminService.deleteUser(id);
+        return ResponseEntity.ok(new com.casavida.backend.payload.response.MessageResponse("Usuario eliminado exitosamente"));
     }
 
 }

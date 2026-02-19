@@ -16,6 +16,8 @@ export class AdminUsersComponent implements OnInit {
     roleFilter = '';
     showModal = false;
     isEditing = false;
+    errorMessage = '';
+    isLoading = false;
 
     currentUser: any = {
         username: '',
@@ -36,13 +38,27 @@ export class AdminUsersComponent implements OnInit {
     }
 
     loadUsers(): void {
+        this.isLoading = true;
+        this.errorMessage = '';
         this.adminService.getUsers().subscribe({
             next: (data) => {
-                this.users = data;
-                this.filteredUsers = data;
+                console.log('API Users Response:', data);
+                if (!data) {
+                    this.errorMessage = 'La API retornó una respuesta vacía (null/undefined).';
+                } else if (Array.isArray(data) && data.length === 0) {
+                     console.warn('API returned empty array of users.');
+                }
+                this.users = data || [];
+                this.filteredUsers = this.users;
+                this.isLoading = false;
                 this.cdr.detectChanges();
             },
-            error: (err) => console.error(err)
+            error: (err) => {
+                console.error('Error loading users:', err);
+                this.errorMessage = err.error?.message || 'Error en la comunicación con el servidor. Por favor, intenta más tarde.';
+                this.isLoading = false;
+                this.cdr.detectChanges();
+            }
         });
     }
 
