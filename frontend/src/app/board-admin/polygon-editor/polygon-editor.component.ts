@@ -200,7 +200,8 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
                 minZoom: -3,
                 maxZoom: 3,
                 zoomSnap: 0.1,
-                attributionControl: false
+                attributionControl: false,
+                zoomControl: false
             });
 
             this.planoImageOverlay = L.imageOverlay(finalUrl, this.planoImageBounds).addTo(this.map);

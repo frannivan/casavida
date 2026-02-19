@@ -55,27 +55,48 @@
                         <i class="fas fa-arrow-left"></i> Regresar
                     </button>
 
-                    <!-- PLAN VIEW (Image + SVG) -->
-                    <div *ngIf="fraccionamiento?.imagenPlanoUrl; else fallbackMap" class="position-relative w-100 h-100"
-                        style="user-select: none;">
-                        <img [src]="fraccionamiento.imagenPlanoUrl" class="img-fluid w-100" style="pointer-events: none;"
+                    <!-- PLAN VIEW (Image + SVG Overlay) -->
+                    <div *ngIf="fraccionamiento?.imagenPlanoUrl; else fallbackMap" class="position-relative w-100"
+                        style="user-select: none; overflow: hidden;" #planContainer>
+                        
+                        <!-- The Image -->
+                        <img [src]="getImageUrl(fraccionamiento.imagenPlanoUrl)" class="img-fluid w-100" 
+                            style="pointer-events: none; display: block;" 
+                            (load)="onPlanImageLoad($event)"
                             #planImage>
 
-                        <!-- Overlay for Interactions -->
-                        <div class="position-absolute w-100 h-100" style="top: 0; left: 0; z-index: 10;"
-                            >
-                            <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                                <!-- Existing Polygons -->
-                                <polygon *ngFor="let lote of lotes" [attr.points]="getPolygonPoints(lote)"
-                                    [attr.fill]="getLoteColor(lote.estatus)" stroke="white" stroke-width="0.2"
-                                    style="cursor: pointer; transition: fill 0.3s;"
-                                    [style.opacity]="0.4"
-                                    (click)="!isEditing ? navigateToLote(lote.id) : null">
-                                    <title>Lote {{ lote.numeroLote }} - {{ lote.estatus }} - {{ lote.precioTotal |
-                                        currency:'MXN' }}</title>
+                        <!-- The SVG Overlay -->
+                        <!-- viewBox will be set to "0 0 width height" of the natural image size -->
+                        <div class="position-absolute" style="top: 0; left: 0; width: 100%; height: 100%; z-index: 10;">
+                            <svg [attr.viewBox]="svgViewBox" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                <!-- Polygons -->
+                                <polygon *ngFor="let lote of lotes" 
+                                    [attr.points]="getPolygonPoints(lote)"
+                                    [attr.fill]="getLoteColor(lote.estatus)" 
+                                    stroke="white" 
+                                    stroke-width="2"
+                                    class="lote-polygon"
+                                    style="cursor: pointer; transition: all 0.2s; fill-opacity: 0.4;"
+                                    (click)="onLoteClick(lote)"
+                                    (mouseenter)="hoverLote = lote"
+                                    (mouseleave)="hoverLote = null">
+                                    <title>Lote {{ lote.numeroLote }} - {{ lote.estatus }}</title>
                                 </polygon>
-
                             </svg>
+                        </div>
+
+                        <!-- Hover Tooltip/Info -->
+                        <div *ngIf="hoverLote" class="position-absolute bg-dark text-white p-2 rounded shadow opacity-90" 
+                             style="bottom: 10px; right: 10px; z-index: 20; pointer-events: none; transition: opacity 0.2s;">
+                             <strong>Lote {{ hoverLote.numeroLote || hoverLote.numero }}</strong><br>
+                             Manzana: {{ hoverLote.manzana }}<br>
+                             Area: {{ hoverLote.areaMetrosCuadrados }} m²<br>
+                             Precio: {{ hoverLote.precioTotal | currency:'MXN' }}<br>
+                             <span class="badge" [ngClass]="{
+                                'badge-success': hoverLote.estatus === 'DISPONIBLE',
+                                'badge-danger': hoverLote.estatus === 'VENDIDO',
+                                'badge-warning': hoverLote.estatus === 'APARTADO'
+                            }">{{ hoverLote.estatus }}</span>
                         </div>
                     </div>
 

@@ -46,6 +46,10 @@ export class FraccionamientoDetailComponent implements OnInit {
     private injector = inject(Injector);
     private router = inject(Router);
 
+    // Image Plan & SVG Overlay
+    public svgViewBox = '0 0 100 100'; // Default, will be updated on image load
+    public hoverLote: any = null;
+
     ngOnInit(): void {
         const user = this.storageService.getUser();
         if (user && user.roles && user.roles.includes('ROLE_ADMIN')) {
@@ -425,5 +429,43 @@ export class FraccionamientoDetailComponent implements OnInit {
 
     navigateToLote(id: number): void {
         this.router.navigate(['/lote', id]);
+    }
+
+    // === IMAGE PLAN HELPERS ===
+
+    getImageUrl(imgUrl: string): string {
+        if (!imgUrl) return '';
+        let fullUrl = imgUrl;
+        
+        // Handle logic similar to PolygonEditor to avoid double prefixes
+        if (!fullUrl.startsWith('http')) {
+             if (fullUrl.includes('/api/images/')) {
+                 if (!fullUrl.startsWith('/casavida') && environment.apiUrl.includes('/casavida')) {
+                     fullUrl = '/casavida' + (fullUrl.startsWith('/') ? '' : '/') + fullUrl;
+                 }
+             } else {
+                 fullUrl = `${environment.apiUrl}/images/${imgUrl}`;
+             }
+        }
+        
+        fullUrl = fullUrl.replace(/([^:]\/)\/+/g, "$1");
+        // Cache bust
+        return fullUrl + '?cb=' + new Date().getTime(); 
+    }
+
+    onPlanImageLoad(event: any): void {
+        const img = event.target;
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+        console.log(`Plan Image Loaded: ${w}x${h}`);
+        // Set viewBox to match image dimensions so polygon coordinates (which are pixels) map 1:1
+        this.svgViewBox = `0 0 ${w} ${h}`;
+    }
+
+    onLoteClick(lote: any): void {
+        if (this.isEditing) return;
+        if (lote && lote.estatus !== 'VENDIDO') { // Allow clicking sold ones? Maybe just to see details, but usually invalid.
+             this.navigateToLote(lote.id);
+        }
     }
 }
