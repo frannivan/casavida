@@ -48,6 +48,7 @@ export class FraccionamientoDetailComponent implements OnInit {
 
     // Image Plan & SVG Overlay
     public svgViewBox = '0 0 100 100'; // Default, will be updated on image load
+    public imageHeight = 0; // Needed to flip Y coordinates (Leaflet vs SVG)
     public hoverLote: any = null;
 
     ngOnInit(): void {
@@ -386,12 +387,23 @@ export class FraccionamientoDetailComponent implements OnInit {
                 
                 return points.map((p: any) => {
                     if (Array.isArray(p)) {
-                        // New format [[y, x], ...] or [[lat, lng], ...]
-                        // In SVG, we usually expect x,y. If it's a pixel coordinate from Leaflet, 
-                        // lat maps to y and lng maps to x.
-                        return `${p[1]},${p[0]}`; 
+                        // New format [[lat, lng], ...] from Leaflet CRS.Simple
+                        // Leaflet: (0,0) is Bottom-Left. Y increases UP.
+                        // SVG: (0,0) is Top-Left. Y increases DOWN.
+                        // So SVG_Y = ImageHeight - Leaflet_Y
+                        
+                        // p[0] is lat (y), p[1] is lng (x)
+                        const y = p[0];
+                        const x = p[1];
+                        
+                        // If we haven't loaded the image height yet, we can't calculate perfectly,
+                        // but usually this runs after load.
+                        const svgY = this.imageHeight ? (this.imageHeight - y) : y;
+                        
+                        return `${x},${svgY}`; 
                     } else if (p && typeof p === 'object' && 'x' in p && 'y' in p) {
-                        // Old format [{x, y}, ...]
+                        // Old format [{x, y}, ...] - Assume these are already SVG-friendly?
+                        // Or maybe they were from a different system. Let's leave as is for now.
                         return `${p.x},${p.y}`;
                     }
                     return '';
@@ -460,6 +472,7 @@ export class FraccionamientoDetailComponent implements OnInit {
         console.log(`Plan Image Loaded: ${w}x${h}`);
         // Set viewBox to match image dimensions so polygon coordinates (which are pixels) map 1:1
         this.svgViewBox = `0 0 ${w} ${h}`;
+        this.imageHeight = h;
     }
 
     onLoteClick(lote: any): void {
