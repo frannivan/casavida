@@ -72,6 +72,11 @@ public class LoteController {
         return loteRepository.findByFraccionamientoId(id);
     }
 
+    @GetMapping("/public/by-fraccionamiento/{id}")
+    public List<Lote> getPublicLotesByFraccionamiento(@PathVariable Long id) {
+        return loteRepository.findByFraccionamientoId(id);
+    }
+
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createLote(@RequestBody Lote lote) {

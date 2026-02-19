@@ -26,6 +26,10 @@ export class LoteService {
     return this.http.get(API_URL + 'public/' + id);
   }
 
+  getPublicLotesByFraccionamiento(fraccionamientoId: number): Observable<any> {
+    return this.http.get(API_URL + 'public/by-fraccionamiento/' + fraccionamientoId);
+  }
+
   getAllLotes(): Observable<any> {
     return this.http.get(API_URL + 'all');
   }

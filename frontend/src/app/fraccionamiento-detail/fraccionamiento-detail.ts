@@ -84,7 +84,7 @@ export class FraccionamientoDetailComponent implements OnInit {
     }
 
     loadLotes(id: number): void {
-        this.loteService.getPublicLotes(id, undefined).subscribe({
+        this.loteService.getPublicLotesByFraccionamiento(id).subscribe({
             next: data => {
                 this.lotes = data;
                 // Re-apply colors if SVG is already rendered
