@@ -1,0 +1,25 @@
+❯ Building...
+✔ Building...
+Initial chunk files   | Names         |  Raw size | Estimated transfer size
+main-DSTINYII.js      | main          | 867.69 kB |               197.31 kB
+polyfills-6ISPNSXF.js | polyfills     |  35.68 kB |                11.57 kB
+styles-SL63L4O5.css   | styles        |   7.42 kB |                 2.04 kB
+
+                      | Initial total | 910.79 kB |               210.92 kB
+
+Application bundle generation complete. [35.991 seconds] - 2026-02-19T16:51:15.624Z
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mbundle initial exceeded maximum budget. Budget 500.00 kB was not met by 410.79 kB with a total of 910.79 kB.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1msrc/app/lux-styles.css exceeded maximum budget. Budget 4.00 kB was not met by 475 bytes with a total of 4.47 kB.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mModule 'leaflet' used by 'src/app/fraccionamiento-detail/fraccionamiento-detail.ts' is not ESM[0m
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: [4mhttps://angular.dev/tools/cli/build#configuring-commonjs-dependencies[0m
+
+
+Output location: /Users/franivan/Documents/ProyectosWeb/CasaVida/frontend/dist
+
