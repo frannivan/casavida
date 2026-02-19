@@ -378,10 +378,24 @@ export class FraccionamientoDetailComponent implements OnInit {
             const pointsStr = lote.planoCoordinates;
             if (typeof pointsStr === 'string' && pointsStr.startsWith('[')) {
                 const points = JSON.parse(pointsStr);
-                return points.map((p: any) => `${p.x},${p.y}`).join(' ');
+                if (!Array.isArray(points)) return '';
+                
+                return points.map((p: any) => {
+                    if (Array.isArray(p)) {
+                        // New format [[y, x], ...] or [[lat, lng], ...]
+                        // In SVG, we usually expect x,y. If it's a pixel coordinate from Leaflet, 
+                        // lat maps to y and lng maps to x.
+                        return `${p[1]},${p[0]}`; 
+                    } else if (p && typeof p === 'object' && 'x' in p && 'y' in p) {
+                        // Old format [{x, y}, ...]
+                        return `${p.x},${p.y}`;
+                    }
+                    return '';
+                }).filter(p => p !== '').join(' ');
             }
             return '';
         } catch (e) {
+            console.error('Error parsing polygon points:', e);
             return '';
         }
     }

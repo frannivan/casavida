@@ -161,7 +161,13 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         }
 
         // Resolve the image URL
-        const fullUrl = imgUrl.startsWith('http') ? imgUrl : `${environment.apiUrl}/images/${imgUrl}`;
+        let fullUrl = imgUrl;
+        if (!fullUrl.startsWith('http') && !fullUrl.startsWith('/')) {
+            fullUrl = `${environment.apiUrl}/images/${imgUrl}`;
+        } else if (fullUrl.startsWith('/') && !fullUrl.startsWith(environment.apiUrl) && !fullUrl.startsWith('/casavida')) {
+            // If it starts with / but not with the base path, it might be a partial path from a different environment
+            fullUrl = `${environment.apiUrl}/images${fullUrl}`;
+        }
 
         // Load image to get natural dimensions
         const img = new Image();
