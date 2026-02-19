@@ -156,27 +156,41 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
         const imgUrl = this.selectedFraccionamiento?.imagenPlanoUrl;
         if (!imgUrl) {
+            console.warn('Plano image URL is missing for this fraccionamiento');
             this.planoImageLoaded = false;
             return;
         }
 
         // Resolve the image URL
         let fullUrl = imgUrl;
-        if (!fullUrl.startsWith('http') && !fullUrl.startsWith('/')) {
-            fullUrl = `${environment.apiUrl}/images/${imgUrl}`;
-        } else if (fullUrl.startsWith('/') && !fullUrl.startsWith(environment.apiUrl) && !fullUrl.startsWith('/casavida')) {
-            // If it starts with / but not with the base path, it might be a partial path from a different environment
-            fullUrl = `${environment.apiUrl}/images${fullUrl}`;
+        if (!fullUrl.startsWith('http')) {
+             if (fullUrl.includes('/api/images/')) {
+                 // Already has the full path part we need, but make sure it has the base /casavida if needed
+                 if (!fullUrl.startsWith('/casavida') && environment.apiUrl.includes('/casavida')) {
+                     fullUrl = '/casavida' + (fullUrl.startsWith('/') ? '' : '/') + fullUrl;
+                 }
+             } else {
+                 // Component-only filename, append the full prefix
+                 fullUrl = `${environment.apiUrl}/images/${imgUrl}`;
+             }
         }
+        
+        // Clean up double slashes just in case
+        fullUrl = fullUrl.replace(/([^:]\/)\/+/g, "$1");
+
+        // Add a cache buster timestamp to ensure the browser fetches the latest image
+        const cacheBuster = `?cb=${new Date().getTime()}`;
+        const finalUrl = fullUrl + (fullUrl.includes('?') ? '&' : '') + cacheBuster;
+
+        console.log(`DEBUG: initPlanoMap starting load from: ${finalUrl}`);
 
         // Load image to get natural dimensions
         const img = new Image();
-        // REMOVED: img.crossOrigin = 'anonymous'; // This can cause issues with some servers/CORS
         img.onload = () => {
             const w = img.naturalWidth;
             const h = img.naturalHeight;
 
-            console.log(`Plano Image Load: ${w}x${h} from ${fullUrl}`);
+            console.log(`DEBUG: Plano Image Loaded: ${w}x${h}`);
 
             // CRS.Simple: y goes up, so we use [0,0] bottom-left to [h, w] top-right
             this.planoImageBounds = L.latLngBounds([0, 0], [h, w]);
@@ -189,12 +203,13 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
                 attributionControl: false
             });
 
-            this.planoImageOverlay = L.imageOverlay(fullUrl, this.planoImageBounds).addTo(this.map);
+            this.planoImageOverlay = L.imageOverlay(finalUrl, this.planoImageBounds).addTo(this.map);
             this.map.fitBounds(this.planoImageBounds);
 
             // Re-calc size after a short delay to ensure container is fully rendered/visible
             setTimeout(() => {
                 if (this.map) {
+                    console.log("DEBUG: Invalidating map size for rendering fix");
                     this.map.invalidateSize();
                 }
             }, 500);
@@ -203,6 +218,7 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             this.drawLayer.addTo(this.map);
 
             this.map.on('click', (e: L.LeafletMouseEvent) => {
+                console.log("DEBUG: Map click at", e.latlng);
                 this.handlePlanoClick(e.latlng);
             });
 
@@ -211,11 +227,13 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             this.cdr.detectChanges();
         };
         img.onerror = () => {
-            console.error('Error loading plano image:', fullUrl);
+            console.error('CRITICAL: Error loading plano image:', finalUrl);
             this.planoImageLoaded = false;
+            // Fallback: try to initialize the map anyway with a generic size so they can at least Click?
+            // No, Leaflet CRS.Simple really needs bounds. 
             this.cdr.detectChanges();
         };
-        img.src = fullUrl;
+        img.src = finalUrl;
     }
 
     handlePlanoClick(latlng: L.LatLng): void {
