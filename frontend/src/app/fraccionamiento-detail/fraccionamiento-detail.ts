@@ -9,6 +9,7 @@ import { LoteService } from '../services/lote';
 import { MapComponent } from '../map/map';
 import { StorageService } from '../services/storage';
 import { PolygonEditorComponent } from '../board-admin/polygon-editor/polygon-editor.component';
+import { environment } from '../../environments/environment';
 import * as L from 'leaflet';
 
 @Component({
@@ -204,7 +205,7 @@ export class FraccionamientoDetailComponent implements OnInit {
 
             // Upload to backend
             this.http.put(
-                `/casavida/api/fraccionamientos/adm/${this.fraccionamiento.id}/plano-svg`,
+                `${environment.apiUrl}/fraccionamientos/adm/${this.fraccionamiento.id}/plano-svg`,
                 svgContent,
                 { headers: { 'Content-Type': 'text/plain' }, responseType: 'text' }
             ).subscribe({
@@ -228,7 +229,7 @@ export class FraccionamientoDetailComponent implements OnInit {
         if (!confirm('¿Estás seguro de eliminar el plano SVG?')) return;
 
         this.http.delete(
-            `/casavida/api/fraccionamientos/adm/${this.fraccionamiento.id}/plano-svg`,
+            `${environment.apiUrl}/fraccionamientos/adm/${this.fraccionamiento.id}/plano-svg`,
             { responseType: 'text' }
         ).subscribe({
             next: () => {

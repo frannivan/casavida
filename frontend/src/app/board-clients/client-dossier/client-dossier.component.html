@@ -257,7 +257,7 @@
                       <td><code class="text-muted small px-2 py-1 bg-light rounded" style="border: 1px solid #e2e8f0;">{{ pago.referencia || 'N/A' }}</code></td>
                       <td class="text-right font-weight-800 text-primary">{{ pago.monto | currency:'MXN' }}</td>
                       <td class="text-center">
-                        <a *ngIf="pago.hasComprobante" [href]="'/casavida/api/pagos/' + pago.id + '/comprobante'" target="_blank"
+                        <a *ngIf="pago.hasComprobante" [href]="'/api/pagos/' + pago.id + '/comprobante'" target="_blank"
                           class="btn btn-sm btn-outline-primary border shadow-sm rounded-circle d-inline-flex align-items-center justify-content-center" 
                           style="width: 32px; height: 32px;" title="Descargar Comprobante">
                           <i class="fa fa-download"></i>

@@ -30,10 +30,10 @@
             <!-- Admin Toolbar -->
             <div class="p-3 bg-light border-bottom" *ngIf="isAdmin">
                 <div class="btn-group">
-                    <button class="btn btn-warning btn-sm" (click)="toggleEditMode()" [class.active]="isEditing">
+                    <button class="btn btn-warning btn-sm" (click)="$event.stopPropagation(); toggleEditMode()" [class.active]="isEditing">
                         <i class="fas fa-edit"></i> {{ isEditing ? 'Cerrar Gestión' : 'Gestionar Imágenes' }}
                     </button>
-                    <button class="btn btn-primary btn-sm" (click)="togglePolygonEditor()" [class.active]="showPolygonEditor">
+                    <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); togglePolygonEditor()" [class.active]="showPolygonEditor">
                         <i class="fas fa-draw-polygon"></i> {{ showPolygonEditor ? 'Cerrar Editor' : 'Editor de Polígonos' }}
                     </button>
                 </div>
