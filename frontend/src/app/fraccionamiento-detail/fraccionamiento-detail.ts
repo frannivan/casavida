@@ -47,9 +47,11 @@ export class FraccionamientoDetailComponent implements OnInit {
     private router = inject(Router);
 
     // Image Plan & SVG Overlay
-    public svgViewBox = '0 0 100 100'; // Default, will be updated on image load
-    public imageHeight = 0; // Needed to flip Y coordinates (Leaflet vs SVG)
-    public hoverLote: any = null;
+    // Image Plan (Leaflet)
+    private planMap: any = null;
+    private planImageOverlay: any = null;
+    private planPolygonLayer: any = null;
+    private planImageBounds: any = null;
 
     ngOnInit(): void {
         const user = this.storageService.getUser();
@@ -73,10 +75,15 @@ export class FraccionamientoDetailComponent implements OnInit {
                 this.fraccionamiento = data;
                 this.isLoading = false;
 
-                // Initialize SVG after data loads
+                // Initialize Map after data loads
                 afterNextRender(() => {
+                    // SVG Plan
                     if (this.fraccionamiento?.planoSvg) {
                         this.renderInteractivePlano();
+                    }
+                    // Image Plan
+                    if (this.fraccionamiento?.imagenPlanoUrl) {
+                        this.initPlanMap();
                     }
                 }, { injector: this.injector });
             },
@@ -251,6 +258,12 @@ export class FraccionamientoDetailComponent implements OnInit {
 
     toggleEditMode(): void {
         this.isEditing = !this.isEditing;
+        // Invalidate map size to handle layout changes
+        setTimeout(() => {
+            if (this.planMap) {
+                this.planMap.invalidateSize();
+            }
+        }, 300);
     }
 
     uploadGlobalImage(event: any, field: string, msg: string) {
@@ -445,11 +458,115 @@ export class FraccionamientoDetailComponent implements OnInit {
 
     // === IMAGE PLAN HELPERS ===
 
+    // === LEAFLET MAP HANDLING (PLAN VIEW) ===
+
+    initPlanMap(): void {
+        if (!this.fraccionamiento?.imagenPlanoUrl || document.getElementById('map-plan') === null) return;
+
+        // Clean up previous map instance if any
+        if (this.planMap) {
+            this.planMap.remove();
+            this.planMap = null;
+        }
+
+        const imgUrl = this.getImageUrl(this.fraccionamiento.imagenPlanoUrl);
+        
+        // Load image to get dimensions
+        const img = new Image();
+        img.onload = () => {
+             const w = img.naturalWidth;
+             const h = img.naturalHeight;
+             
+             this.planImageBounds = L.latLngBounds([0, 0], [h, w]);
+
+             this.planMap = L.map('map-plan', {
+                 crs: L.CRS.Simple,
+                 minZoom: -2,
+                 maxZoom: 2,
+                 zoomSnap: 0.1,
+                 attributionControl: false,
+                 zoomControl: true // User requested zoom is OK for public view now
+             });
+
+             this.planImageOverlay = L.imageOverlay(imgUrl, this.planImageBounds).addTo(this.planMap);
+             this.planMap.fitBounds(this.planImageBounds);
+
+             this.planPolygonLayer = L.layerGroup().addTo(this.planMap);
+             
+             this.renderPlanPolygons();
+             
+             // Handle resize
+             setTimeout(() => { this.planMap.invalidateSize(); }, 500);
+        };
+        img.onerror = () => {
+            console.error('Error loading public plan image:', imgUrl);
+        };
+        img.src = imgUrl;
+    }
+
+    renderPlanPolygons(): void {
+        if (!this.planPolygonLayer) return;
+        this.planPolygonLayer.clearLayers();
+
+        this.lotes.forEach(lote => {
+            if (lote.planoCoordinates) {
+                try {
+                    const points = JSON.parse(lote.planoCoordinates);
+                    if (Array.isArray(points) && points.length > 0) {
+                         // Determine color based on status
+                         let fillColor = '#6c757d'; // Default Grey
+                         let color = '#fff';
+                         
+                         switch (lote.estatus) {
+                            case 'DISPONIBLE': fillColor = '#28a745'; break; // Green
+                            case 'APARTADO': fillColor = '#ffc107'; break; // Yellow/Orange
+                            case 'VENDIDO': fillColor = '#dc3545'; break; // Red
+                        }
+
+                        // Create Polygon
+                        const polygon = L.polygon(points, {
+                            color: color,
+                            weight: 1,
+                            fillColor: fillColor,
+                            fillOpacity: 0.4
+                        });
+
+                        // Interactions
+                        polygon.on('click', () => {
+                             if (!this.isEditing && lote.estatus !== 'VENDIDO') {
+                                 this.navigateToLote(lote.id);
+                             }
+                        });
+
+                        // Hover: Highlighting + Tooltip
+                        polygon.bindTooltip(`
+                            <div class="text-center">
+                                <strong>Lote ${lote.numeroLote || lote.numero}</strong><br>
+                                ${lote.areaMetrosCuadrados} m²<br>
+                                $${lote.precioTotal}<br>
+                                ${lote.estatus}
+                            </div>
+                        `, { sticky: true, direction: 'top' });
+
+                        polygon.on('mouseover', () => {
+                            polygon.setStyle({ fillOpacity: 0.7, weight: 2 });
+                        });
+                        polygon.on('mouseout', () => {
+                            polygon.setStyle({ fillOpacity: 0.4, weight: 1 });
+                        });
+
+                        polygon.addTo(this.planPolygonLayer);
+                    }
+                } catch (e) { console.error('Error parsing coords for lote', lote.id, e); }
+            }
+        });
+    }
+
+    // Keep getImageUrl as it's used by initPlanMap
     getImageUrl(imgUrl: string): string {
         if (!imgUrl) return '';
         let fullUrl = imgUrl;
         
-        // Handle logic similar to PolygonEditor to avoid double prefixes
         if (!fullUrl.startsWith('http')) {
              if (fullUrl.includes('/api/images/')) {
                  if (!fullUrl.startsWith('/casavida') && environment.apiUrl.includes('/casavida')) {
@@ -459,26 +576,18 @@ export class FraccionamientoDetailComponent implements OnInit {
                  fullUrl = `${environment.apiUrl}/images/${imgUrl}`;
              }
         }
-        
         fullUrl = fullUrl.replace(/([^:]\/)\/+/g, "$1");
-        // Cache bust
         return fullUrl + '?cb=' + new Date().getTime(); 
     }
-
-    onPlanImageLoad(event: any): void {
-        const img = event.target;
-        const w = img.naturalWidth;
-        const h = img.naturalHeight;
-        console.log(`Plan Image Loaded: ${w}x${h}`);
-        // Set viewBox to match image dimensions so polygon coordinates (which are pixels) map 1:1
-        this.svgViewBox = `0 0 ${w} ${h}`;
-        this.imageHeight = h;
-    }
-
-    onLoteClick(lote: any): void {
-        if (this.isEditing) return;
-        if (lote && lote.estatus !== 'VENDIDO') { // Allow clicking sold ones? Maybe just to see details, but usually invalid.
-             this.navigateToLote(lote.id);
-        }
-    }
+    
+    // Remove old SVG helpers we don't need anymore if I replaced the methods above
+    // Wait, onPlanImageLoad, onLoteClick, getPolygonPoints are still in the class?
+    // I should effectively "remove" them or leave them unused. 
+    // The previous replacement chunk was "onLoteClick". 
+    // I will replace "onLoteClick" with empty or just leave it. 
+    // Actually, I can just replace the whole block at the end.
+    
+    onPlanImageLoad(event: any): void {} // Unused
+    onLoteClick(lote: any): void {} // Unused
+    getPolygonPoints(lote: any): string { return ''; } // Unused
 }
