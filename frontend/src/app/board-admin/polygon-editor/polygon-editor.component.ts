@@ -43,6 +43,7 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // Plano (Image overlay) mode
     planoImageLoaded = false;
+    isUploadingPlano = false;
     private planoImageOverlay: L.ImageOverlay | undefined;
     private planoImageBounds: L.LatLngBounds | undefined;
 
@@ -320,6 +321,45 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         if (this.map && this.activeTab === 'plano') {
             this.displayPlanoPolygons();
         }
+    }
+
+    uploadPlanoImage(event: any): void {
+        const file = event.target.files[0];
+        if (!file || !this.selectedFraccionamiento) return;
+
+        this.isUploadingPlano = true;
+        const formData = new FormData();
+        formData.append('file', file);
+
+        this.http.post<any>(`${environment.apiUrl}/images/upload`, formData).subscribe({
+            next: (res) => {
+                const imageUrl = res.url || res.message;
+                this.selectedFraccionamiento.imagenPlanoUrl = imageUrl;
+
+                // Save to fraccionamiento
+                this.http.put(
+                    `${environment.apiUrl}/fraccionamientos/adm/${this.selectedFraccionamiento.id}`,
+                    this.selectedFraccionamiento
+                ).subscribe({
+                    next: () => {
+                        this.isUploadingPlano = false;
+                        alert('Imagen del plano subida correctamente');
+                        // Reinitialize the plano map with the new image
+                        this.resetMap();
+                    },
+                    error: (err) => {
+                        console.error('Error saving fraccionamiento:', err);
+                        this.isUploadingPlano = false;
+                        alert('Imagen subida pero error al guardar en el fraccionamiento.');
+                    }
+                });
+            },
+            error: (err) => {
+                console.error('Error uploading image:', err);
+                this.isUploadingPlano = false;
+                alert('Error al subir la imagen.');
+            }
+        });
     }
 
     handleMapClick(latlng: L.LatLng): void {
