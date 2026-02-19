@@ -1,12 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule, DecimalPipe, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { VentaService } from '../services/venta';
 import { StorageService } from '../services/storage';
 
 @Component({
   selector: 'app-board-vendedor',
   standalone: true,
-  imports: [CommonModule, DecimalPipe, CurrencyPipe],
+  imports: [CommonModule],
   templateUrl: './board-vendedor.component.html'
 })
 export class BoardVendedorComponent implements OnInit {

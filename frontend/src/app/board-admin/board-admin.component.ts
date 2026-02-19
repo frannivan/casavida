@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { LoteService } from '../services/lote';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LocationPickerComponent } from '../components/location-picker/location-picker';
+
 import { FraccionamientoService } from '../services/fraccionamiento';
 import { ReporteService } from '../services/reporte';
 import { VentaService } from '../services/venta';
@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
     selector: 'app-board-admin',
     standalone: true,
-    imports: [CommonModule, FormsModule, LocationPickerComponent, RouterLink, PolygonEditorComponent, FraccionamientoListComponent, LoteListComponent],
+    imports: [CommonModule, FormsModule, RouterLink, PolygonEditorComponent, FraccionamientoListComponent, LoteListComponent],
     templateUrl: './board-admin.component.html',
     styleUrl: './board-admin.component.css'
 })
