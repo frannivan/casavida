@@ -60,4 +60,17 @@ public class AdminController {
             return ResponseEntity.badRequest().body("Error deleting user");
         }
     }
+
+    @javax.persistence.PersistenceContext
+    private javax.persistence.EntityManager entityManager;
+
+    @GetMapping("/db-roles")
+    public ResponseEntity<?> getDbRoles() {
+        try {
+            javax.persistence.Query query = entityManager.createNativeQuery("SELECT DISTINCT name FROM roles");
+            return ResponseEntity.ok(query.getResultList());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
 }
