@@ -18,7 +18,7 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     @Input() fraccionamientoId: number | null = null;
 
     // State
-    activeTab: 'fraccionamiento' | 'lotes' = 'fraccionamiento';
+    activeTab: 'fraccionamiento' | 'lotes' | 'plano' = 'fraccionamiento';
 
     // Data
     fraccionamientos: any[] = [];
@@ -40,6 +40,11 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     currentPoints: L.LatLng[] = [];
     tempPolyline: L.Polyline | undefined;
     tempPolygon: L.Polygon | undefined;
+
+    // Plano (Image overlay) mode
+    planoImageLoaded = false;
+    private planoImageOverlay: L.ImageOverlay | undefined;
+    private planoImageBounds: L.LatLngBounds | undefined;
 
     constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
 
@@ -84,12 +89,12 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         setTimeout(() => window.location.reload(), 100);
     }
 
-    onTabChange(tab: 'fraccionamiento' | 'lotes'): void {
+    onTabChange(tab: 'fraccionamiento' | 'lotes' | 'plano'): void {
         console.log("DEBUG: onTabChange called with:", tab);
         this.activeTab = tab;
         this.resetMap();
         
-        if (tab === 'lotes' && this.selectedFraccionamientoId && this.lotes.length === 0) {
+        if ((tab === 'lotes' || tab === 'plano') && this.selectedFraccionamientoId && this.lotes.length === 0) {
             this.loadLotesForFraccionamiento();
         }
     }
@@ -111,6 +116,11 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     initMap(): void {
+        if (this.activeTab === 'plano') {
+            this.initPlanoMap();
+            return;
+        }
+
         const mapId = this.activeTab === 'fraccionamiento' ? 'map-fraccionamiento' : 'map-lotes';
         const element = document.getElementById(mapId);
         
@@ -136,6 +146,179 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         if (this.selectedFraccionamiento) {
             this.centerMapOnFraccionamiento();
             this.displayExistingPolygons();
+        }
+    }
+
+    initPlanoMap(): void {
+        const element = document.getElementById('map-plano');
+        if (!element) return;
+
+        const imgUrl = this.selectedFraccionamiento?.imagenPlanoUrl;
+        if (!imgUrl) {
+            this.planoImageLoaded = false;
+            return;
+        }
+
+        // Resolve the image URL
+        const fullUrl = imgUrl.startsWith('http') ? imgUrl : `${environment.apiUrl}/images/${imgUrl}`;
+
+        // Load image to get natural dimensions
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            const w = img.naturalWidth;
+            const h = img.naturalHeight;
+
+            // CRS.Simple: y goes up, so we use [0,0] bottom-left to [h, w] top-right
+            this.planoImageBounds = L.latLngBounds([0, 0], [h, w]);
+
+            this.map = L.map('map-plano', {
+                crs: L.CRS.Simple,
+                minZoom: -3,
+                maxZoom: 3,
+                zoomSnap: 0.25,
+                attributionControl: false
+            });
+
+            this.planoImageOverlay = L.imageOverlay(fullUrl, this.planoImageBounds).addTo(this.map);
+            this.map.fitBounds(this.planoImageBounds);
+
+            this.polygonLayer.addTo(this.map);
+            this.drawLayer.addTo(this.map);
+
+            this.map.on('click', (e: L.LeafletMouseEvent) => {
+                this.handlePlanoClick(e.latlng);
+            });
+
+            this.planoImageLoaded = true;
+            this.displayPlanoPolygons();
+            this.cdr.detectChanges();
+        };
+        img.onerror = () => {
+            console.error('Error loading plano image:', fullUrl);
+            this.planoImageLoaded = false;
+            this.cdr.detectChanges();
+        };
+        img.src = fullUrl;
+    }
+
+    handlePlanoClick(latlng: L.LatLng): void {
+        if (!this.selectedLote) {
+            alert('Primero selecciona un Lote para editar.');
+            return;
+        }
+        if (this.selectedLote?.planoCoordinates && this.currentPoints.length === 0) {
+            console.log('Click ignored: Existing lote polygon. Use Nuevo Polígono.');
+            return;
+        }
+
+        this.currentPoints = [...this.currentPoints, latlng];
+        this.updateDrawLayers();
+        this.cdr.detectChanges();
+    }
+
+    displayPlanoPolygons(): void {
+        if (!this.map) return;
+        this.polygonLayer.clearLayers();
+
+        this.lotes.forEach(lote => {
+            if (lote.planoCoordinates) {
+                try {
+                    const points = JSON.parse(lote.planoCoordinates);
+                    if (Array.isArray(points) && points.length > 0 && Array.isArray(points[0])) {
+                        const isSelected = this.selectedLote && this.selectedLote.id === lote.id;
+                        const color = this.getPlanoLoteColor(lote.estatus);
+                        const poly = L.polygon(points as L.LatLngExpression[], {
+                            color: isSelected ? '#fff' : color,
+                            fillColor: color,
+                            fillOpacity: isSelected ? 0.5 : 0.3,
+                            weight: isSelected ? 3 : 1
+                        }).addTo(this.polygonLayer);
+                        poly.bindTooltip(`${lote.numeroLote || lote.numero} (${lote.estatus})`, { sticky: true });
+                    }
+                } catch (e) { }
+            }
+        });
+    }
+
+    getPlanoLoteColor(status: string): string {
+        switch (status) {
+            case 'DISPONIBLE': return '#28a745';
+            case 'APARTADO': return '#007bff';
+            case 'VENDIDO': return '#8B4513';
+            case 'CONTRATADO': return '#ffc107';
+            default: return '#999';
+        }
+    }
+
+    savePlanoLotePolygon(): void {
+        if (!this.selectedLote) {
+            alert('❌ No hay un lote seleccionado.');
+            return;
+        }
+        if (this.currentPoints.length < 3) {
+            alert('❌ Se requieren al menos 3 puntos. Tienes: ' + this.currentPoints.length);
+            return;
+        }
+        if (!confirm('¿Guardar polígono del lote ' + (this.selectedLote.numeroLote || this.selectedLote.numero) + ' sobre el plano?')) return;
+
+        // Save as [[y, x], ...] (Leaflet CRS.Simple uses [lat, lng] which maps to [y, x] in image coords)
+        const pointsArray = this.currentPoints.map(p => [p.lat, p.lng]);
+        const polygonJson = JSON.stringify(pointsArray);
+
+        this.http.put(
+            `${environment.apiUrl}/lotes/adm/${this.selectedLote.id}/poligono`,
+            polygonJson,
+            { headers: { 'Content-Type': 'text/plain' } }
+        ).subscribe({
+            next: () => {
+                alert('Polígono sobre plano guardado exitosamente');
+                this.selectedLote.planoCoordinates = polygonJson;
+                this.currentPoints = [];
+                this.updateDrawLayers();
+                this.displayPlanoPolygons();
+                this.cdr.detectChanges();
+            },
+            error: (err) => {
+                console.error('Error saving plano polygon:', err);
+                alert('Error al guardar el polígono.');
+            }
+        });
+    }
+
+    startNewPlanoLoteDrawing(): void {
+        this.selectedLote.planoCoordinates = null;
+        this.currentPoints = [];
+        this.updateDrawLayers();
+        this.displayPlanoPolygons();
+        this.cdr.detectChanges();
+    }
+
+    deletePlanoLotePolygon(): void {
+        if (!this.selectedLote) return;
+        if (!confirm('¿Eliminar el polígono de este lote del plano?')) return;
+
+        this.http.put(
+            `${environment.apiUrl}/lotes/adm/${this.selectedLote.id}/poligono`,
+            '',
+            { headers: { 'Content-Type': 'text/plain' } }
+        ).subscribe(() => {
+            alert('Polígono eliminado del plano');
+            this.selectedLote.planoCoordinates = null;
+            this.displayPlanoPolygons();
+        });
+    }
+
+    onPlanoFraccionamientoChange(): void {
+        this.loadFraccionamientoData();
+    }
+
+    onPlanoLoteChange(): void {
+        this.currentPoints = [];
+        this.drawLayer.clearLayers();
+        this.selectedLote = this.lotes.find(l => l.id == this.selectedLoteId);
+        if (this.map && this.activeTab === 'plano') {
+            this.displayPlanoPolygons();
         }
     }
 
