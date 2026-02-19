@@ -390,44 +390,7 @@ export class FraccionamientoDetailComponent implements OnInit {
         this.isEditing = false;
     }
 
-    getPolygonPoints(lote: any): string {
-        if (!lote || !lote.planoCoordinates) return '';
-        try {
-            const pointsStr = lote.planoCoordinates;
-            if (typeof pointsStr === 'string' && pointsStr.startsWith('[')) {
-                const points = JSON.parse(pointsStr);
-                if (!Array.isArray(points)) return '';
-                
-                return points.map((p: any) => {
-                    if (Array.isArray(p)) {
-                        // New format [[lat, lng], ...] from Leaflet CRS.Simple
-                        // Leaflet: (0,0) is Bottom-Left. Y increases UP.
-                        // SVG: (0,0) is Top-Left. Y increases DOWN.
-                        // So SVG_Y = ImageHeight - Leaflet_Y
-                        
-                        // p[0] is lat (y), p[1] is lng (x)
-                        const y = p[0];
-                        const x = p[1];
-                        
-                        // If we haven't loaded the image height yet, we can't calculate perfectly,
-                        // but usually this runs after load.
-                        const svgY = this.imageHeight ? (this.imageHeight - y) : y;
-                        
-                        return `${x},${svgY}`; 
-                    } else if (p && typeof p === 'object' && 'x' in p && 'y' in p) {
-                        // Old format [{x, y}, ...] - Assume these are already SVG-friendly?
-                        // Or maybe they were from a different system. Let's leave as is for now.
-                        return `${p.x},${p.y}`;
-                    }
-                    return '';
-                }).filter(p => p !== '').join(' ');
-            }
-            return '';
-        } catch (e) {
-            console.error('Error parsing polygon points:', e);
-            return '';
-        }
-    }
+
 
     // === LIGHTBOX / CAROUSEL ===
     showLightbox = false;
@@ -580,14 +543,4 @@ export class FraccionamientoDetailComponent implements OnInit {
         return fullUrl + '?cb=' + new Date().getTime(); 
     }
     
-    // Remove old SVG helpers we don't need anymore if I replaced the methods above
-    // Wait, onPlanImageLoad, onLoteClick, getPolygonPoints are still in the class?
-    // I should effectively "remove" them or leave them unused. 
-    // The previous replacement chunk was "onLoteClick". 
-    // I will replace "onLoteClick" with empty or just leave it. 
-    // Actually, I can just replace the whole block at the end.
-    
-    onPlanImageLoad(event: any): void {} // Unused
-    onLoteClick(lote: any): void {} // Unused
-    getPolygonPoints(lote: any): string { return ''; } // Unused
 }
