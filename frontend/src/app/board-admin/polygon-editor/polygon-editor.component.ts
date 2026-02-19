@@ -165,10 +165,12 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
         // Load image to get natural dimensions
         const img = new Image();
-        img.crossOrigin = 'anonymous';
+        // REMOVED: img.crossOrigin = 'anonymous'; // This can cause issues with some servers/CORS
         img.onload = () => {
             const w = img.naturalWidth;
             const h = img.naturalHeight;
+
+            console.log(`Plano Image Load: ${w}x${h} from ${fullUrl}`);
 
             // CRS.Simple: y goes up, so we use [0,0] bottom-left to [h, w] top-right
             this.planoImageBounds = L.latLngBounds([0, 0], [h, w]);
@@ -177,12 +179,19 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
                 crs: L.CRS.Simple,
                 minZoom: -3,
                 maxZoom: 3,
-                zoomSnap: 0.25,
+                zoomSnap: 0.1,
                 attributionControl: false
             });
 
             this.planoImageOverlay = L.imageOverlay(fullUrl, this.planoImageBounds).addTo(this.map);
             this.map.fitBounds(this.planoImageBounds);
+
+            // Re-calc size after a short delay to ensure container is fully rendered/visible
+            setTimeout(() => {
+                if (this.map) {
+                    this.map.invalidateSize();
+                }
+            }, 500);
 
             this.polygonLayer.addTo(this.map);
             this.drawLayer.addTo(this.map);

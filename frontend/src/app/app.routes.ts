@@ -22,6 +22,7 @@ import { FraccionamientoListComponent } from './components/fraccionamientos/frac
 import { LoteListComponent } from './components/lotes/lote-list/lote-list.component';
 import { ReportesComponent } from './admin/reportes/reportes.component';
 import { CargaDatosComponent } from './admin/carga-datos/carga-datos.component';
+import { PolygonEditorComponent } from './board-admin/polygon-editor/polygon-editor.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
@@ -38,6 +39,7 @@ export const routes: Routes = [
     { path: 'admin/users', component: AdminUsersComponent },
     { path: 'admin/reportes', component: ReportesComponent },
     { path: 'admin/carga-datos', component: CargaDatosComponent },
+    { path: 'admin/polygon-editor', component: PolygonEditorComponent },
     { path: 'admin/crm/leads', component: CrmLeadsComponent },
     { path: 'admin/crm/opportunities', component: CrmOpportunitiesComponent },
     { path: 'recepcion', component: BoardRecepcionComponent },
