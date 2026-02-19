@@ -1,0 +1,54 @@
+.doc-content {
+  min-height: 500px;
+  max-height: 70vh;
+  overflow-y: auto;
+  line-height: 1.8;
+}
+
+.doc-content h1 {
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.doc-content h2 {
+  color: #495057;
+  margin-top: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0.3rem;
+}
+
+.doc-content h3 {
+  color: #6c757d;
+  margin-top: 1rem;
+}
+
+.doc-content ul {
+  margin-left: 1.5rem;
+}
+
+.doc-content li {
+  margin-bottom: 0.5rem;
+}
+
+.list-group-item.active {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+@media print {
+  .card-header button,
+  .col-md-3 {
+    display: none !important;
+  }
+  
+  .col-md-9 {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .doc-content {
+    max-height: none !important;
+  }
+}

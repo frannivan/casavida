@@ -1,0 +1,119 @@
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card bg-primary text-white shadow-sm border-0 h-100 cursor-pointer" routerLink="/admin/generar-contrato" style="cursor: pointer;">
+                <div class="card-body d-flex align-items-center">
+                    <div class="rounded-circle bg-white-50 p-3 me-3">
+                        <i class="fas fa-file-signature fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold">Generar Nuevo Contrato</h5>
+                        <p class="small mb-0 opacity-75">Crear contrato legal para lote disponible</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card bg-success text-white shadow-sm border-0 h-100 cursor-pointer" routerLink="/admin" [queryParams]="{view: 'payments'}" style="cursor: pointer;">
+                <div class="card-body d-flex align-items-center">
+                    <div class="rounded-circle bg-white-50 p-3 me-3">
+                        <i class="fas fa-money-bill-wave fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold">Registrar Cobro / Pago</h5>
+                        <p class="small mb-0 opacity-75">Ingresar abonos y mensualidades de clientes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0"><i class="fas fa-clipboard-check me-2 text-info"></i>Validación de Pagos Pendientes</h5>
+            <button class="btn btn-sm btn-outline-light rounded-pill px-3" (click)="loadPagos()">
+                <i class="fas fa-sync-alt me-1"></i> Actualizar Listado
+            </button>
+        </div>
+        <div class="card-body">
+            <!-- Filter Controls -->
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-6 mb-2">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 text-muted"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control border-start-0" placeholder="Buscar por referencia o concepto..." [(ngModel)]="searchTerm"
+                            (input)="filterPagos()">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 text-muted"><i class="fas fa-filter"></i></span>
+                        <select class="form-select border-start-0" [(ngModel)]="statusFilter" (change)="filterPagos()">
+                            <option value="ALL">Todos los estatus</option>
+                            <option value="PENDIENTE">Sólo Pendientes</option>
+                            <option value="VALIDADO">Validados</option>
+                            <option value="RECHAZADO">Rechazados</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="message" class="alert alert-info">{{ message }}</div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Referencia</th>
+                            <th>Concepto</th>
+                            <th>Estatus</th>
+                            <th>Validación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let pago of filteredPagos">
+                            <td>{{ pago.fechaPago }}</td>
+                            <td>{{ pago.monto | currency:'MXN' }}</td>
+                            <td>{{ pago.referencia || 'N/A' }}</td>
+                            <td>{{ pago.concepto }}</td>
+                            <td>
+                                <span class="badge" [ngClass]="{
+                                    'bg-success': pago.estatus === 'VALIDADO',
+                                    'bg-warning text-dark': !pago.estatus || pago.estatus === 'PENDIENTE',
+                                    'bg-danger': pago.estatus === 'RECHAZADO'
+                                }">
+                                    {{ pago.estatus || 'PENDIENTE' }}
+                                </span>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="!pago.estatus || pago.estatus === 'PENDIENTE'">
+                                    <button class="btn btn-sm btn-success me-2" (click)="validatePayment(pago.id)">✅
+                                        Validar</button>
+                                    <button class="btn btn-sm btn-danger" (click)="rejectPayment(pago.id)">❌
+                                        Rechazar</button>
+                                </ng-container>
+                                <div *ngIf="pago.estatus && pago.estatus !== 'PENDIENTE'">
+                                    <span class="text-muted small">
+                                        <i class="fas fa-check-circle text-success" *ngIf="pago.estatus === 'VALIDADO'"></i>
+                                        <i class="fas fa-times-circle text-danger" *ngIf="pago.estatus === 'RECHAZADO'"></i>
+                                        {{ pago.estatus }}
+                                    </span>
+                                    <div class="x-small text-muted" *ngIf="pago.validadoPor">
+                                        Por: {{ pago.validadoPor }}<br>
+                                        {{ pago.fechaValidacion | date:'dd/MM HH:mm' }}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="filteredPagos.length === 0">
+                            <td colspan="6" class="text-center">No se encontraron pagos.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

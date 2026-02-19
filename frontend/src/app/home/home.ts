@@ -1,0 +1,112 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { LoteService } from '../services/lote';
+import { FraccionamientoService } from '../services/fraccionamiento';
+
+import { MapComponent } from '../map/map';
+
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [CommonModule, RouterModule, FormsModule, MapComponent],
+  templateUrl: './home.html',
+  styleUrl: './home.css'
+})
+export class HomeComponent implements OnInit {
+  lotes: any[] = [];
+  allFraccionamientos: any[] = []; // Master list
+  fraccionamientos: any[] = []; // Display list
+  ubicaciones: string[] = [];
+  isLoading = true;
+
+  // Filter Models
+  searchFraccionamiento = '';
+  searchUbicacion = '';
+  sortDir = 'asc';
+
+  constructor(
+    private loteService: LoteService,
+    private fraccionamientoService: FraccionamientoService
+  ) { }
+
+  ngOnInit(): void {
+    this.loadFraccionamientos();
+    this.search();
+  }
+
+  loadFraccionamientos(): void {
+    this.fraccionamientoService.getAllFraccionamientos().subscribe({
+      next: data => {
+        this.allFraccionamientos = data;
+        this.fraccionamientos = data;
+        // Extract unique locations
+        this.ubicaciones = [...new Set(data.map((f: any) => f.ubicacion))].filter(Boolean) as string[];
+        
+        // If we opened home with a search pending or search() was called already, 
+        // re-run filtering now that allFraccionamientos is ready.
+        if (this.searchFraccionamiento || this.searchUbicacion) {
+          this.applyLocalFiltering();
+        }
+      },
+      error: err => console.error(err)
+    });
+  }
+
+  getDisplayUrl(url: string): string {
+    if (!url) return 'https://placehold.co/300x200?text=Sin+Imagen';
+    if (url.includes('via.placeholder.com')) {
+      return url.replace('via.placeholder.com', 'placehold.co');
+    }
+    // Fix old image URLs that don't have the context path
+    if (url.startsWith('/api/images/')) {
+      return '/casavida' + url;
+    }
+    // Fix static asset paths (like /images/lotes/)
+    if (url.startsWith('/images/')) {
+      return '/casavida' + url;
+    }
+    return url;
+  }
+
+  onFraccionamientoSelect(event: any): void {
+    this.searchFraccionamiento = event;
+    this.search();
+    // Optional: Scroll to results
+    const grid = document.querySelector('.grid-container');
+    if (grid) grid.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  private applyLocalFiltering(): void {
+    const fracId = this.searchFraccionamiento ? Number(this.searchFraccionamiento) : null;
+    const ubicacion = this.searchUbicacion || undefined;
+
+    if (fracId) {
+        this.fraccionamientos = this.allFraccionamientos.filter(f => Number(f.id) === fracId);
+    } else if (ubicacion) {
+        this.fraccionamientos = this.allFraccionamientos.filter(f => f.ubicacion === ubicacion);
+    } else {
+        this.fraccionamientos = this.allFraccionamientos;
+    }
+  }
+
+  search(): void {
+    this.isLoading = true;
+    const fracId = this.searchFraccionamiento ? Number(this.searchFraccionamiento) : null;
+    const ubicacion = this.searchUbicacion || undefined;
+
+    this.applyLocalFiltering();
+
+    this.loteService.getPublicLotes(fracId, ubicacion, this.sortDir).subscribe({
+      next: data => {
+        this.lotes = data;
+        this.isLoading = false;
+      },
+      error: err => {
+        console.error(err);
+        this.isLoading = false;
+      }
+    });
+  }
+}

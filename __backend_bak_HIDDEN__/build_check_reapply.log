@@ -1,0 +1,58 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.casavida:backend >------------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ backend ---
+[INFO] Deleting /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- compiler:3.10.1:compile (default-compile) @ backend ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 58 source files to /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[28,9] illegal start of type
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[28,13] ';' expected
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[28,21] <identifier> expected
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[29,9] illegal start of type
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[29,13] ';' expected
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[29,28] <identifier> expected
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[32,12] implicitly declared classes are not supported in -source 11
+  (use -source 25 or higher to enable implicitly declared classes)
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[79,1] class, interface, or enum expected
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[1,1] compact source file should not have package declaration
+[INFO] 9 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  17.006 s
+[INFO] Finished at: 2026-02-17T14:11:28-06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.10.1:compile (default-compile) on project backend: Compilation failure: Compilation failure: 
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[28,9] illegal start of type
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[28,13] ';' expected
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[28,21] <identifier> expected
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[29,9] illegal start of type
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[29,13] ';' expected
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[29,28] <identifier> expected
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[32,12] implicitly declared classes are not supported in -source 11
+[ERROR]   (use -source 25 or higher to enable implicitly declared classes)
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[79,1] class, interface, or enum expected
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/entity/Fraccionamiento.java:[1,1] compact source file should not have package declaration
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

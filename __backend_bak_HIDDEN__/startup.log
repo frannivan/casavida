@@ -1,0 +1,273 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.casavida:backend >------------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:2.7.18:run (default-cli) > test-compile @ backend >>>
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- compiler:3.10.1:compile (default-compile) @ backend ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.2.0:testResources (default-testResources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] skip non existing resourceDirectory /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.10.1:testCompile (default-testCompile) @ backend ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:2.7.18:run (default-cli) < test-compile @ backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:2.7.18:run (default-cli) @ backend ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.18)
+
+2026-02-17 13:18:50.996  INFO 81430 --- [           main] com.casavida.backend.BackendApplication  : Starting BackendApplication using Java 25.0.1 on Frans-MacBook-Air.local with PID 81430 (/Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes started by franivan in /Users/franivan/Documents/ProyectosWeb/CasaVida/backend)
+2026-02-17 13:18:51.000  INFO 81430 --- [           main] com.casavida.backend.BackendApplication  : No active profile set, falling back to 1 default profile: "default"
+2026-02-17 13:18:53.604  INFO 81430 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-17 13:18:53.761  INFO 81430 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 135 ms. Found 10 JPA repository interfaces.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/Users/franivan/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/9.0.83/tomcat-embed-core-9.0.83.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+2026-02-17 13:18:55.125  INFO 81430 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8082 (http)
+2026-02-17 13:18:55.152  INFO 81430 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-17 13:18:55.153  INFO 81430 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.83]
+2026-02-17 13:18:55.342  INFO 81430 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-17 13:18:55.343  INFO 81430 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4236 ms
+2026-02-17 13:18:55.592  INFO 81430 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-17 13:18:55.761  INFO 81430 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-17 13:18:56.345  INFO 81430 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-17 13:18:57.019  INFO 81430 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-17 13:18:58.621  INFO 81430 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-17 13:18:58.784  INFO 81430 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2026-02-17 13:18:59.647 ERROR 81430 --- [           main] j.LocalContainerEntityManagerFactoryBean : Failed to initialize JPA EntityManagerFactory: @OneToOne or @ManyToOne on com.casavida.backend.entity.Permission.module references an unknown entity: java.lang.Module
+2026-02-17 13:18:59.649 ERROR 81430 --- [           main] o.s.b.web.embedded.tomcat.TomcatStarter  : Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'webSecurityConfig': Unsatisfied dependency expressed through field 'userDetailsService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userDetailsServiceImpl': Unsatisfied dependency expressed through field 'userRepository'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'userRepository' defined in com.casavida.backend.repository.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot create inner bean '(inner bean)#626c19cf' of type [org.springframework.orm.jpa.SharedEntityManagerCreator] while setting bean property 'entityManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name '(inner bean)#626c19cf': Cannot resolve reference to bean 'entityManagerFactory' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.AnnotationException: @OneToOne or @ManyToOne on com.casavida.backend.entity.Permission.module references an unknown entity: java.lang.Module
+2026-02-17 13:18:59.733  INFO 81430 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-02-17 13:18:59.740  WARN 81430 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [MVStore background writer /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/data/casavida_db.mv.db] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base/java.lang.Object.wait0(Native Method)
+ java.base/java.lang.Object.wait(Object.java:389)
+ org.h2.mvstore.MVStore$BackgroundWriterThread.run(MVStore.java:3768)
+2026-02-17 13:18:59.741  WARN 81430 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1 housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:271)
+ java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1803)
+ java.base/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1166)
+ java.base/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:883)
+ java.base/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1016)
+ java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1076)
+ java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+ java.base/java.lang.Thread.run(Thread.java:1474)
+2026-02-17 13:18:59.741  WARN 81430 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [H2-serialization] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base/java.util.concurrent.locks.LockSupport.park(LockSupport.java:369)
+ java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:520)
+ java.base/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:4364)
+ java.base/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:4310)
+ java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1752)
+ java.base/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+ java.base/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1016)
+ java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1076)
+ java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+ java.base/java.lang.Thread.run(Thread.java:1474)
+2026-02-17 13:18:59.742  WARN 81430 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [H2-save] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base/java.util.concurrent.locks.LockSupport.park(LockSupport.java:369)
+ java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:520)
+ java.base/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:4364)
+ java.base/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:4310)
+ java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1752)
+ java.base/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+ java.base/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1016)
+ java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1076)
+ java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+ java.base/java.lang.Thread.run(Thread.java:1474)
+2026-02-17 13:18:59.743  WARN 81430 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1 connection adder] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:271)
+ java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1803)
+ java.base/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:460)
+ java.base/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1015)
+ java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1076)
+ java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+ java.base/java.lang.Thread.run(Thread.java:1474)
+2026-02-17 13:18:59.744  WARN 81430 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+2026-02-17 13:18:59.745  INFO 81430 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-17 13:18:59.750  INFO 81430 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-02-17 13:18:59.775  INFO 81430 --- [           main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2026-02-17 13:18:59.855 ERROR 81430 --- [           main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:165) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:585) ~[spring-context-5.3.31.jar:5.3.31]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:409) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289) ~[spring-boot-2.7.18.jar:2.7.18]
+	at com.casavida.backend.BackendApplication.main(BackendApplication.java:10) ~[classes/:na]
+Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:142) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:104) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:481) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:211) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:184) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:162) ~[spring-boot-2.7.18.jar:2.7.18]
+	... 8 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'webSecurityConfig': Unsatisfied dependency expressed through field 'userDetailsService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userDetailsServiceImpl': Unsatisfied dependency expressed through field 'userRepository'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'userRepository' defined in com.casavida.backend.repository.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot create inner bean '(inner bean)#626c19cf' of type [org.springframework.orm.jpa.SharedEntityManagerCreator] while setting bean property 'entityManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name '(inner bean)#626c19cf': Cannot resolve reference to bean 'entityManagerFactory' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.AnnotationException: @OneToOne or @ManyToOne on com.casavida.backend.entity.Permission.module references an unknown entity: java.lang.Module
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:713) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:693) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:119) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:408) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1431) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:619) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:405) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:213) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:213) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:204) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addServletContextInitializerBeans(ServletContextInitializerBeans.java:98) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:86) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:262) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:236) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:53) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4904) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328) ~[na:na]
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:149) ~[na:na]
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:866) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:794) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1332) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1322) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328) ~[na:na]
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:149) ~[na:na]
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:866) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:248) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:433) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:921) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:171) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:489) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:123) ~[spring-boot-2.7.18.jar:2.7.18]
+	... 13 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userDetailsServiceImpl': Unsatisfied dependency expressed through field 'userRepository'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'userRepository' defined in com.casavida.backend.repository.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot create inner bean '(inner bean)#626c19cf' of type [org.springframework.orm.jpa.SharedEntityManagerCreator] while setting bean property 'entityManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name '(inner bean)#626c19cf': Cannot resolve reference to bean 'entityManagerFactory' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.AnnotationException: @OneToOne or @ManyToOne on com.casavida.backend.entity.Permission.module references an unknown entity: java.lang.Module
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:713) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:693) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:119) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:408) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1431) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:619) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:276) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1391) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1311) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:710) ~[spring-beans-5.3.31.jar:5.3.31]
+	... 63 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'userRepository' defined in com.casavida.backend.repository.UserRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Cannot create inner bean '(inner bean)#626c19cf' of type [org.springframework.orm.jpa.SharedEntityManagerCreator] while setting bean property 'entityManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name '(inner bean)#626c19cf': Cannot resolve reference to bean 'entityManagerFactory' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.AnnotationException: @OneToOne or @ManyToOne on com.casavida.backend.entity.Permission.module references an unknown entity: java.lang.Module
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveInnerBean(BeanDefinitionValueResolver.java:389) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:134) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1707) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1452) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:619) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:276) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1391) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1311) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:710) ~[spring-beans-5.3.31.jar:5.3.31]
+	... 77 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name '(inner bean)#626c19cf': Cannot resolve reference to bean 'entityManagerFactory' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.AnnotationException: @OneToOne or @ManyToOne on com.casavida.backend.entity.Permission.module references an unknown entity: java.lang.Module
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:342) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:113) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:688) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:505) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveInnerBean(BeanDefinitionValueResolver.java:374) ~[spring-beans-5.3.31.jar:5.3.31]
+	... 90 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.AnnotationException: @OneToOne or @ManyToOne on com.casavida.backend.entity.Permission.module references an unknown entity: java.lang.Module
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:330) ~[spring-beans-5.3.31.jar:5.3.31]
+	... 98 common frames omitted
+Caused by: org.hibernate.AnnotationException: @OneToOne or @ManyToOne on com.casavida.backend.entity.Permission.module references an unknown entity: java.lang.Module
+	at org.hibernate.cfg.ToOneFkSecondPass.doSecondPass(ToOneFkSecondPass.java:100) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processEndOfQueue(InFlightMetadataCollectorImpl.java:1750) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processFkSecondPassesInOrder(InFlightMetadataCollectorImpl.java:1694) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processSecondPasses(InFlightMetadataCollectorImpl.java:1623) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.31.jar:5.3.31]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.31.jar:5.3.31]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.31.jar:5.3.31]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.31.jar:5.3.31]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.31.jar:5.3.31]
+	... 105 common frames omitted
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  16.492 s
+[INFO] Finished at: 2026-02-17T13:19:00-06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.7.18:run (default-cli) on project backend: Application finished with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

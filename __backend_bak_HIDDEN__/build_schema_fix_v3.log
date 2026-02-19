@@ -1,0 +1,44 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.casavida:backend >------------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ backend ---
+[INFO] Deleting /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- compiler:3.10.1:compile (default-compile) @ backend ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 58 source files to /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes
+[INFO] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java: /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java uses or overrides a deprecated API.
+[INFO] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.2.0:testResources (default-testResources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- compiler:3.10.1:testCompile (default-testCompile) @ backend ---
+[INFO] Changes detected - recompiling the module!
+[INFO] 
+[INFO] --- surefire:2.22.2:test (default-test) @ backend ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.2.2:jar (default-jar) @ backend ---
+[INFO] Building jar: /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/backend-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:2.7.18:repackage (repackage) @ backend ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  15.700 s
+[INFO] Finished at: 2026-02-17T14:00:14-06:00
+[INFO] ------------------------------------------------------------------------

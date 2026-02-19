@@ -1,0 +1,47 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.casavida:backend >------------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ backend ---
+[INFO] Deleting /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- compiler:3.10.1:compile (default-compile) @ backend ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 58 source files to /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes
+[INFO] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java: /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java uses or overrides a deprecated API.
+[INFO] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java: Recompile with -Xlint:deprecation for details.
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[96,53] cannot find symbol
+  symbol:   method getMetodoPago()
+  location: variable p of type com.casavida.backend.entity.Pago
+[INFO] 1 error
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.531 s
+[INFO] Finished at: 2026-02-17T13:43:51-06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.10.1:compile (default-compile) on project backend: Compilation failure
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[96,53] cannot find symbol
+[ERROR]   symbol:   method getMetodoPago()
+[ERROR]   location: variable p of type com.casavida.backend.entity.Pago
+[ERROR] 
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

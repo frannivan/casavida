@@ -1,0 +1,198 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.casavida:backend >------------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:2.7.18:run (default-cli) > test-compile @ backend >>>
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- compiler:3.10.1:compile (default-compile) @ backend ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 62 source files to /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes
+[INFO] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java: /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java uses or overrides a deprecated API.
+[INFO] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.2.0:testResources (default-testResources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] skip non existing resourceDirectory /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.10.1:testCompile (default-testCompile) @ backend ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:2.7.18:run (default-cli) < test-compile @ backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:2.7.18:run (default-cli) @ backend ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.18)
+
+2026-02-17 13:26:02.747  INFO 82126 --- [           main] com.casavida.backend.BackendApplication  : Starting BackendApplication using Java 25.0.1 on Frans-MacBook-Air.local with PID 82126 (/Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes started by franivan in /Users/franivan/Documents/ProyectosWeb/CasaVida/backend)
+2026-02-17 13:26:02.759  INFO 82126 --- [           main] com.casavida.backend.BackendApplication  : No active profile set, falling back to 1 default profile: "default"
+2026-02-17 13:26:05.206  INFO 82126 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-17 13:26:05.383  INFO 82126 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 151 ms. Found 10 JPA repository interfaces.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/Users/franivan/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/9.0.83/tomcat-embed-core-9.0.83.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+2026-02-17 13:26:06.773  INFO 82126 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8087 (http)
+2026-02-17 13:26:06.802  INFO 82126 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-17 13:26:06.802  INFO 82126 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.83]
+2026-02-17 13:26:07.300  INFO 82126 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-17 13:26:07.301  INFO 82126 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4292 ms
+2026-02-17 13:26:07.661  INFO 82126 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-17 13:26:07.798  INFO 82126 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-17 13:26:08.496  INFO 82126 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-17 13:26:08.784  INFO 82126 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-17 13:26:09.666  INFO 82126 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-17 13:26:09.723  INFO 82126 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2026-02-17 13:26:12.495 DEBUG 82126 --- [           main] org.hibernate.SQL                        : create table role_permissions (role_id integer not null, permission_id bigint not null, primary key (role_id, permission_id))
+Hibernate: create table role_permissions (role_id integer not null, permission_id bigint not null, primary key (role_id, permission_id))
+2026-02-17 13:26:12.502 DEBUG 82126 --- [           main] org.hibernate.SQL                        : alter table users add column created_at timestamp
+Hibernate: alter table users add column created_at timestamp
+2026-02-17 13:26:12.539 DEBUG 82126 --- [           main] org.hibernate.SQL                        : alter table role_permissions add constraint FKegdk29eiy7mdtefy5c7eirr6e foreign key (permission_id) references permissions
+Hibernate: alter table role_permissions add constraint FKegdk29eiy7mdtefy5c7eirr6e foreign key (permission_id) references permissions
+2026-02-17 13:26:12.555 DEBUG 82126 --- [           main] org.hibernate.SQL                        : alter table role_permissions add constraint FKn5fotdgk8d1xvo8nav9uv3muc foreign key (role_id) references roles
+Hibernate: alter table role_permissions add constraint FKn5fotdgk8d1xvo8nav9uv3muc foreign key (role_id) references roles
+2026-02-17 13:26:12.559  INFO 82126 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-02-17 13:26:12.590  INFO 82126 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-17 13:26:13.426  INFO 82126 --- [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./data/casavida_db'
+2026-02-17 13:26:13.570 DEBUG 82126 --- [           main] o.springframework.web.filter.CorsFilter  : Filter 'corsFilter' configured for use
+--- FraccionamientoController INSTANTIATED ---
+--- LoteController INSTANTIATED ---
+2026-02-17 13:26:15.132  WARN 82126 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-17 13:26:15.353 DEBUG 82126 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 56 mappings in 'requestMappingHandlerMapping'
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::invokeCleaner has been called by nonapi.io.github.classgraph.utils.FileUtils (file:/Users/franivan/.m2/repository/io/github/classgraph/classgraph/4.8.149/classgraph-4.8.149.jar)
+WARNING: Please consider reporting this to the maintainers of class nonapi.io.github.classgraph.utils.FileUtils
+WARNING: sun.misc.Unsafe::invokeCleaner will be removed in a future release
+2026-02-17 13:26:16.649 DEBUG 82126 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-02-17 13:26:16.757  INFO 82126 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1ae2028d, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@259ae1a9, org.springframework.security.web.context.SecurityContextPersistenceFilter@3fe21d0e, org.springframework.security.web.header.HeaderWriterFilter@2fd409c1, org.springframework.web.filter.CorsFilter@d082916, org.springframework.security.web.authentication.logout.LogoutFilter@2f97e3de, com.casavida.backend.security.jwt.AuthTokenFilter@6b529d42, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@a0e35c3, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1d7f0cd0, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@67201002, org.springframework.security.web.session.SessionManagementFilter@47800bd7, org.springframework.security.web.access.ExceptionTranslationFilter@75caecf7, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@513ddf5f]
+2026-02-17 13:26:17.076 DEBUG 82126 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-02-17 13:26:17.210 DEBUG 82126 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-02-17 13:26:17.489  WARN 82126 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Invocation of init method failed; nested exception is org.springframework.jdbc.datasource.init.ScriptStatementFailedException: Failed to execute SQL script statement #41 of URL [file:/Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes/data.sql]: INSERT INTO fraccionamientos (id, nombre, ubicacion, descripcion, logo_url, coordenadas_geo, poligono_delimitador) VALUES (1, 'Residencial Las Palmas', 'Cancún, Quintana Roo', 'Exclusivo fraccionamiento.', '/casavida/api/images/palmas.png', '21.1619, -86.8515', '[[21.162795,-86.849289],[21.162170,-86.848870],[21.161319,-86.850695],[21.161560,-86.850947],[21.161840,-86.850936],[21.162055,-86.850850],[21.162795,-86.849321]]'); nested exception is org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "POLIGONO_DELIMITADOR" not found; SQL statement:
+INSERT INTO fraccionamientos (id, nombre, ubicacion, descripcion, logo_url, coordenadas_geo, poligono_delimitador) VALUES (1, 'Residencial Las Palmas', 'Cancún, Quintana Roo', 'Exclusivo fraccionamiento.', '/casavida/api/images/palmas.png', '21.1619, -86.8515', '[[21.162795,-86.849289],[21.162170,-86.848870],[21.161319,-86.850695],[21.161560,-86.850947],[21.161840,-86.850936],[21.162055,-86.850850],[21.162795,-86.849321]]') [42122-214]
+2026-02-17 13:26:17.495  INFO 82126 --- [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-17 13:26:17.498  INFO 82126 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-17 13:26:17.501  INFO 82126 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-02-17 13:26:17.505  INFO 82126 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-02-17 13:26:17.511  WARN 82126 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [MVStore background writer /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/data/casavida_db.mv.db] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base/java.lang.Object.wait0(Native Method)
+ java.base/java.lang.Object.wait(Object.java:389)
+ org.h2.mvstore.MVStore$BackgroundWriterThread.run(MVStore.java:3768)
+2026-02-17 13:26:17.512  WARN 82126 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [H2-serialization] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base/java.util.concurrent.locks.LockSupport.park(LockSupport.java:369)
+ java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:520)
+ java.base/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:4364)
+ java.base/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:4310)
+ java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1752)
+ java.base/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+ java.base/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1016)
+ java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1076)
+ java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+ java.base/java.lang.Thread.run(Thread.java:1474)
+2026-02-17 13:26:17.512  WARN 82126 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [H2-save] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base/java.util.concurrent.locks.LockSupport.park(LockSupport.java:369)
+ java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:520)
+ java.base/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:4364)
+ java.base/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:4310)
+ java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1752)
+ java.base/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+ java.base/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1016)
+ java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1076)
+ java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+ java.base/java.lang.Thread.run(Thread.java:1474)
+2026-02-17 13:26:17.527  INFO 82126 --- [           main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2026-02-17 13:26:17.597 ERROR 82126 --- [           main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Invocation of init method failed; nested exception is org.springframework.jdbc.datasource.init.ScriptStatementFailedException: Failed to execute SQL script statement #41 of URL [file:/Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes/data.sql]: INSERT INTO fraccionamientos (id, nombre, ubicacion, descripcion, logo_url, coordenadas_geo, poligono_delimitador) VALUES (1, 'Residencial Las Palmas', 'Cancún, Quintana Roo', 'Exclusivo fraccionamiento.', '/casavida/api/images/palmas.png', '21.1619, -86.8515', '[[21.162795,-86.849289],[21.162170,-86.848870],[21.161319,-86.850695],[21.161560,-86.850947],[21.161840,-86.850936],[21.162055,-86.850850],[21.162795,-86.849321]]'); nested exception is org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "POLIGONO_DELIMITADOR" not found; SQL statement:
+INSERT INTO fraccionamientos (id, nombre, ubicacion, descripcion, logo_url, coordenadas_geo, poligono_delimitador) VALUES (1, 'Residencial Las Palmas', 'Cancún, Quintana Roo', 'Exclusivo fraccionamiento.', '/casavida/api/images/palmas.png', '21.1619, -86.8515', '[[21.162795,-86.849289],[21.162170,-86.848870],[21.161319,-86.850695],[21.161560,-86.850947],[21.161840,-86.850936],[21.162055,-86.850850],[21.162795,-86.849321]]') [42122-214]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:322) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:929) ~[spring-context-5.3.31.jar:5.3.31]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:591) ~[spring-context-5.3.31.jar:5.3.31]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:409) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289) ~[spring-boot-2.7.18.jar:2.7.18]
+	at com.casavida.backend.BackendApplication.main(BackendApplication.java:10) ~[classes/:na]
+Caused by: org.springframework.jdbc.datasource.init.ScriptStatementFailedException: Failed to execute SQL script statement #41 of URL [file:/Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes/data.sql]: INSERT INTO fraccionamientos (id, nombre, ubicacion, descripcion, logo_url, coordenadas_geo, poligono_delimitador) VALUES (1, 'Residencial Las Palmas', 'Cancún, Quintana Roo', 'Exclusivo fraccionamiento.', '/casavida/api/images/palmas.png', '21.1619, -86.8515', '[[21.162795,-86.849289],[21.162170,-86.848870],[21.161319,-86.850695],[21.161560,-86.850947],[21.161840,-86.850936],[21.162055,-86.850850],[21.162795,-86.849321]]'); nested exception is org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "POLIGONO_DELIMITADOR" not found; SQL statement:
+INSERT INTO fraccionamientos (id, nombre, ubicacion, descripcion, logo_url, coordenadas_geo, poligono_delimitador) VALUES (1, 'Residencial Las Palmas', 'Cancún, Quintana Roo', 'Exclusivo fraccionamiento.', '/casavida/api/images/palmas.png', '21.1619, -86.8515', '[[21.162795,-86.849289],[21.162170,-86.848870],[21.161319,-86.850695],[21.161560,-86.850947],[21.161840,-86.850936],[21.162055,-86.850850],[21.162795,-86.849321]]') [42122-214]
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:282) ~[spring-jdbc-5.3.31.jar:5.3.31]
+	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.populate(ResourceDatabasePopulator.java:254) ~[spring-jdbc-5.3.31.jar:5.3.31]
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:54) ~[spring-jdbc-5.3.31.jar:5.3.31]
+	at org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer.runScripts(DataSourceScriptDatabaseInitializer.java:90) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.runScripts(AbstractScriptDatabaseInitializer.java:145) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyScripts(AbstractScriptDatabaseInitializer.java:107) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyDataScripts(AbstractScriptDatabaseInitializer.java:101) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.initializeDatabase(AbstractScriptDatabaseInitializer.java:76) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.afterPropertiesSet(AbstractScriptDatabaseInitializer.java:65) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.31.jar:5.3.31]
+	... 18 common frames omitted
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "POLIGONO_DELIMITADOR" not found; SQL statement:
+INSERT INTO fraccionamientos (id, nombre, ubicacion, descripcion, logo_url, coordenadas_geo, poligono_delimitador) VALUES (1, 'Residencial Las Palmas', 'Cancún, Quintana Roo', 'Exclusivo fraccionamiento.', '/casavida/api/images/palmas.png', '21.1619, -86.8515', '[[21.162795,-86.849289],[21.162170,-86.848870],[21.161319,-86.850695],[21.161560,-86.850947],[21.161840,-86.850936],[21.162055,-86.850850],[21.162795,-86.849321]]') [42122-214]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:502) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.message.DbException.get(DbException.java:223) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.message.DbException.get(DbException.java:199) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.table.Table.getColumn(Table.java:749) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.command.Parser.parseColumn(Parser.java:1256) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.command.Parser.parseColumnList(Parser.java:1241) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.command.Parser.parseInsert(Parser.java:1641) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.command.Parser.parsePrepared(Parser.java:814) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.command.Parser.parse(Parser.java:689) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.command.Parser.parse(Parser.java:661) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.command.Parser.prepareCommand(Parser.java:569) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:631) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:554) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1116) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:237) ~[h2-2.1.214.jar:2.1.214]
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:223) ~[h2-2.1.214.jar:2.1.214]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:94) ~[HikariCP-4.0.3.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-4.0.3.jar:na]
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:261) ~[spring-jdbc-5.3.31.jar:5.3.31]
+	... 28 common frames omitted
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  41.170 s
+[INFO] Finished at: 2026-02-17T13:26:17-06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.7.18:run (default-cli) on project backend: Application finished with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

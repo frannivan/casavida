@@ -1,0 +1,258 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.casavida:backend >------------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ backend ---
+[INFO] Deleting /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- compiler:3.10.1:compile (default-compile) @ backend ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 58 source files to /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes
+[INFO] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java: /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java uses or overrides a deprecated API.
+[INFO] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/PdfService.java: Recompile with -Xlint:deprecation for details.
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[4,37] package org.apache.poi.xssf.usermodel does not exist
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[3,25] package org.apache.poi.ss.usermodel does not exist
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[17,14] cannot find symbol
+  symbol:   class Workbook
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[17,38] cannot find symbol
+  symbol:   class XSSFWorkbook
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[18,13] cannot find symbol
+  symbol:   class Sheet
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[21,13] cannot find symbol
+  symbol:   class CellStyle
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[22,13] cannot find symbol
+  symbol:   class Font
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[25,61] package IndexedColors does not exist
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[26,40] cannot find symbol
+  symbol:   variable FillPatternType
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[29,13] cannot find symbol
+  symbol:   class Row
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[32,17] cannot find symbol
+  symbol:   class Cell
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[41,17] cannot find symbol
+  symbol:   class Row
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[55,14] cannot find symbol
+  symbol:   class Workbook
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[55,38] cannot find symbol
+  symbol:   class XSSFWorkbook
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[56,13] cannot find symbol
+  symbol:   class Sheet
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[59,13] cannot find symbol
+  symbol:   class CellStyle
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[60,13] cannot find symbol
+  symbol:   class Font
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[63,61] package IndexedColors does not exist
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[64,40] cannot find symbol
+  symbol:   variable FillPatternType
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[67,13] cannot find symbol
+  symbol:   class Row
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[70,17] cannot find symbol
+  symbol:   class Cell
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[83,21] cannot find symbol
+  symbol:   class Row
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[96,53] cannot find symbol
+  symbol:   method getMetodoPago()
+  location: variable p of type com.casavida.backend.entity.Pago
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[107,14] cannot find symbol
+  symbol:   class Workbook
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[107,38] cannot find symbol
+  symbol:   class XSSFWorkbook
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[108,13] cannot find symbol
+  symbol:   class Sheet
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[111,13] cannot find symbol
+  symbol:   class CellStyle
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[112,13] cannot find symbol
+  symbol:   class Font
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[116,13] cannot find symbol
+  symbol:   class Row
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[119,17] cannot find symbol
+  symbol:   class Cell
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[127,17] cannot find symbol
+  symbol:   class Row
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[141,14] cannot find symbol
+  symbol:   class Workbook
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[141,38] cannot find symbol
+  symbol:   class XSSFWorkbook
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[142,13] cannot find symbol
+  symbol:   class Sheet
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[145,13] cannot find symbol
+  symbol:   class CellStyle
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[146,13] cannot find symbol
+  symbol:   class Font
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[150,13] cannot find symbol
+  symbol:   class Row
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[153,17] cannot find symbol
+  symbol:   class Cell
+  location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[161,17] cannot find symbol
+  symbol:   class Row
+  location: class com.casavida.backend.services.ExcelService
+[INFO] 39 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  21.776 s
+[INFO] Finished at: 2026-02-17T13:43:33-06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.10.1:compile (default-compile) on project backend: Compilation failure: Compilation failure: 
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[4,37] package org.apache.poi.xssf.usermodel does not exist
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[3,25] package org.apache.poi.ss.usermodel does not exist
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[17,14] cannot find symbol
+[ERROR]   symbol:   class Workbook
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[17,38] cannot find symbol
+[ERROR]   symbol:   class XSSFWorkbook
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[18,13] cannot find symbol
+[ERROR]   symbol:   class Sheet
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[21,13] cannot find symbol
+[ERROR]   symbol:   class CellStyle
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[22,13] cannot find symbol
+[ERROR]   symbol:   class Font
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[25,61] package IndexedColors does not exist
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[26,40] cannot find symbol
+[ERROR]   symbol:   variable FillPatternType
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[29,13] cannot find symbol
+[ERROR]   symbol:   class Row
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[32,17] cannot find symbol
+[ERROR]   symbol:   class Cell
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[41,17] cannot find symbol
+[ERROR]   symbol:   class Row
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[55,14] cannot find symbol
+[ERROR]   symbol:   class Workbook
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[55,38] cannot find symbol
+[ERROR]   symbol:   class XSSFWorkbook
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[56,13] cannot find symbol
+[ERROR]   symbol:   class Sheet
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[59,13] cannot find symbol
+[ERROR]   symbol:   class CellStyle
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[60,13] cannot find symbol
+[ERROR]   symbol:   class Font
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[63,61] package IndexedColors does not exist
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[64,40] cannot find symbol
+[ERROR]   symbol:   variable FillPatternType
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[67,13] cannot find symbol
+[ERROR]   symbol:   class Row
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[70,17] cannot find symbol
+[ERROR]   symbol:   class Cell
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[83,21] cannot find symbol
+[ERROR]   symbol:   class Row
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[96,53] cannot find symbol
+[ERROR]   symbol:   method getMetodoPago()
+[ERROR]   location: variable p of type com.casavida.backend.entity.Pago
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[107,14] cannot find symbol
+[ERROR]   symbol:   class Workbook
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[107,38] cannot find symbol
+[ERROR]   symbol:   class XSSFWorkbook
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[108,13] cannot find symbol
+[ERROR]   symbol:   class Sheet
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[111,13] cannot find symbol
+[ERROR]   symbol:   class CellStyle
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[112,13] cannot find symbol
+[ERROR]   symbol:   class Font
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[116,13] cannot find symbol
+[ERROR]   symbol:   class Row
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[119,17] cannot find symbol
+[ERROR]   symbol:   class Cell
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[127,17] cannot find symbol
+[ERROR]   symbol:   class Row
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[141,14] cannot find symbol
+[ERROR]   symbol:   class Workbook
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[141,38] cannot find symbol
+[ERROR]   symbol:   class XSSFWorkbook
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[142,13] cannot find symbol
+[ERROR]   symbol:   class Sheet
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[145,13] cannot find symbol
+[ERROR]   symbol:   class CellStyle
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[146,13] cannot find symbol
+[ERROR]   symbol:   class Font
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[150,13] cannot find symbol
+[ERROR]   symbol:   class Row
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[153,17] cannot find symbol
+[ERROR]   symbol:   class Cell
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/main/java/com/casavida/backend/services/ExcelService.java:[161,17] cannot find symbol
+[ERROR]   symbol:   class Row
+[ERROR]   location: class com.casavida.backend.services.ExcelService
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
