@@ -19,8 +19,13 @@ public class AdminController {
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserDTO> getAllUsers() {
-        return adminService.getAllUsers();
+    public ResponseEntity<?> getAllUsers() {
+        try {
+            return ResponseEntity.ok(adminService.getAllUsers());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(new com.casavida.backend.payload.response.MessageResponse("Backend Error: " + e.getClass().getName() + ": " + e.getMessage()));
+        }
     }
 
     @PostMapping("/users")
