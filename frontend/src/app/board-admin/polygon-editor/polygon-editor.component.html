@@ -14,7 +14,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" [class.active]="activeTab === 'lotes'" (click)="$event.stopPropagation(); onTabChange('lotes')">
-                📦 Polígonos de Lotes
+                📦 Polígonos de Lote
             </a>
         </li>
     </ul>
@@ -29,7 +29,7 @@
             <div class="form-group" *ngIf="!fraccionamientoId">
                 <label>Seleccionar Fraccionamiento:</label>
                 <select class="form-control" [(ngModel)]="selectedFraccionamientoId"
-                    (change)="$event.stopPropagation(); loadFraccionamientoData()">
+                    (change)="loadFraccionamientoData()">
                     <option value="">-- Seleccionar --</option>
                     <option *ngFor="let f of fraccionamientos" [value]="f.id">
                         {{ f.nombre }}
@@ -43,19 +43,25 @@
                     <div class="col-md-3">
                         <!-- Controles -->
                         <div class="mb-3">
-                            <button class="btn btn-success btn-block" (click)="$event.stopPropagation(); saveFraccionamientoPolygon()"
-                                [disabled]="currentPoints.length < 3">
-                                💾 Guardar Polígono
+                            <button class="btn btn-primary btn-block mt-2" 
+                                *ngIf="selectedFraccionamiento.poligonoDelimitador && currentPoints.length === 0"
+                                (click)="startNewFraccionamientoDrawing()">
+                                ✨ Nuevo Polígono
                             </button>
-                            <button class="btn btn-warning btn-block mt-2" (click)="$event.stopPropagation(); clearPoints()">
+                            <button class="btn btn-success btn-block mt-2" 
+                                style="position: relative; z-index: 1001; pointer-events: auto !important;"
+                                (click)="saveFraccionamientoPolygon()">
+                                💾 Guardar Polígono ({{currentPoints.length}} pts)
+                            </button>
+                            <button class="btn btn-warning btn-block mt-2" (click)="clearPoints()">
                                 🗑️ Limpiar Puntos
                             </button>
                             <button class="btn btn-danger btn-block mt-2"
                                 *ngIf="selectedFraccionamiento.poligonoDelimitador"
-                                (click)="$event.stopPropagation(); deleteFraccionamientoPolygon()">
+                                (click)="deleteFraccionamientoPolygon()">
                                 ❌ Eliminar Guardado
                             </button>
-                            <button class="btn btn-info btn-block mt-2" (click)="$event.stopPropagation(); zoomToFraccionamiento()">
+                            <button class="btn btn-info btn-block mt-2" (click)="zoomToFraccionamiento()">
                                 📍 Centrar Mapa
                             </button>
                         </div>
@@ -72,7 +78,9 @@
 
                     <div class="col-md-9">
                         <!-- Área de Mapa -->
-                        <div id="map-fraccionamiento" style="height: 600px; width: 100%; z-index: 1;"></div>
+                        <div id="map-fraccionamiento" 
+                            style="height: 600px; width: 100%; z-index: 100; position: relative; pointer-events: auto !important;">
+                        </div>
                     </div>
                 </div>
 
@@ -92,7 +100,7 @@
                     <div class="form-group" *ngIf="!fraccionamientoId">
                         <label>Fraccionamiento</label>
                         <select class="form-control" [(ngModel)]="selectedFraccionamientoId"
-                            (change)="$event.stopPropagation(); loadLotesForFraccionamiento()">
+                            (change)="loadLotesForFraccionamiento()">
                             <option value="">-- Seleccionar --</option>
                             <option *ngFor="let f of fraccionamientos" [value]="f.id">
                                 {{ f.nombre }}
@@ -103,7 +111,7 @@
                     <!-- Selector de Lote -->
                     <div class="form-group" *ngIf="lotes.length > 0">
                         <label>Lote a Editar</label>
-                        <select class="form-control" [(ngModel)]="selectedLoteId" (change)="$event.stopPropagation(); loadLoteData()">
+                        <select class="form-control" [(ngModel)]="selectedLoteId" (change)="loadLoteData()">
                             <option value="">-- Seleccionar Lote --</option>
                             <option *ngFor="let lote of lotes" [value]="lote.id">
                                 {{ lote.numeroLote || lote.numero }} - {{ lote.manzana }} ({{ lote.estatus }})
@@ -138,15 +146,21 @@
 
                     <!-- Botones de Acción -->
                     <div class="mt-3" *ngIf="selectedLote">
-                        <button class="btn btn-success btn-block" (click)="$event.stopPropagation(); saveLotePolygon()"
-                            [disabled]="currentPoints.length < 3">
-                            💾 Guardar Lote
+                        <button class="btn btn-primary btn-block mt-2" 
+                            *ngIf="selectedLote.planoCoordinates && currentPoints.length === 0"
+                            (click)="startNewLoteDrawing()">
+                            ✨ Nuevo Polígono
                         </button>
-                        <button class="btn btn-warning btn-block mt-2" (click)="$event.stopPropagation(); clearPoints()">
+                        <button class="btn btn-success btn-block mt-2" 
+                            style="position: relative; z-index: 1001; pointer-events: auto !important;"
+                            (click)="saveLotePolygon()">
+                            💾 Guardar Lote ({{currentPoints.length}} pts)
+                        </button>
+                        <button class="btn btn-warning btn-block mt-2" (click)="clearPoints()">
                             🗑️ Limpiar Puntos
                         </button>
                         <button class="btn btn-danger btn-block mt-2" *ngIf="selectedLote.planoCoordinates"
-                            (click)="$event.stopPropagation(); deleteLotePolygon()">
+                            (click)="deleteLotePolygon()">
                             ❌ Eliminar Polígono
                         </button>
                     </div>
@@ -160,7 +174,9 @@
 
                 <!-- Columna Derecha: Área de Mapa -->
                 <div class="col-md-9">
-                     <div id="map-lotes" style="height: 700px; width: 100%; z-index: 1;"></div>
+                     <div id="map-lotes" 
+                        style="height: 700px; width: 100%; z-index: 100; position: relative; pointer-events: auto !important;">
+                     </div>
 
                     <div *ngIf="!selectedFraccionamiento" class="text-center p-5 text-muted">
                         Selecciona un fraccionamiento para comenzar.

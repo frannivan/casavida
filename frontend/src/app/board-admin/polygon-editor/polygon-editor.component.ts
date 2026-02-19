@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -41,7 +41,15 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     tempPolyline: L.Polyline | undefined;
     tempPolygon: L.Polygon | undefined;
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
+
+    @HostListener('document:mousedown', ['$event'])
+    onGlobalClick(event: MouseEvent): void {
+        const target = event.target as HTMLElement;
+        if (target && target.innerText && target.innerText.includes('Guardar')) {
+            console.log("DEBUG: Global MouseDown detected on:", target.innerText, target);
+        }
+    }
 
     ngOnInit(): void {
         if (this.fraccionamientoId) {
@@ -77,6 +85,7 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     onTabChange(tab: 'fraccionamiento' | 'lotes'): void {
+        console.log("DEBUG: onTabChange called with:", tab);
         this.activeTab = tab;
         this.resetMap();
         
@@ -135,16 +144,13 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         // But user can "Clear Points" to start over.
         // If saved polygon exists, warn user?
         if (this.activeTab === 'fraccionamiento' && this.selectedFraccionamiento?.poligonoDelimitador && this.currentPoints.length === 0) {
-           if (!confirm("El fraccionamiento ya tiene un polígono. ¿Deseas comenzar uno nuevo?")) return;
-           this.selectedFraccionamiento.poligonoDelimitador = null; // Clear view
-           this.polygonLayer.clearLayers();
+           console.log("Map click ignored: Existing fracc polygon. Use 'Nuevo Polígono' button.");
+           return;
         }
         
         if (this.activeTab === 'lotes' && this.selectedLote?.planoCoordinates && this.currentPoints.length === 0) {
-             if (!confirm("El lote ya tiene un polígono. ¿Deseas comenzar uno nuevo?")) return;
-             this.selectedLote.planoCoordinates = null;
-             this.polygonLayer.clearLayers(); // Re-render will handle showing others
-             this.displayExistingPolygons(); // Re-draw others
+             console.log("Map click ignored: Existing lote polygon. Use 'Nuevo Polígono' button.");
+             return;
         }
         
         if (this.activeTab === 'lotes' && !this.selectedLote) {
@@ -152,8 +158,9 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             return;
         }
 
-        this.currentPoints.push(latlng);
+        this.currentPoints = [...this.currentPoints, latlng];
         this.updateDrawLayers();
+        this.cdr.detectChanges();
     }
 
     updateDrawLayers(): void {
@@ -187,8 +194,29 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     
     clearPoints(): void {
+        console.log("DEBUG: clearPoints called");
         this.currentPoints = [];
         this.updateDrawLayers();
+        this.cdr.detectChanges();
+    }
+
+    startNewFraccionamientoDrawing(): void {
+        console.log("DEBUG: startNewFraccionamientoDrawing called");
+        this.selectedFraccionamiento.poligonoDelimitador = null;
+        this.polygonLayer.clearLayers();
+        this.currentPoints = [];
+        this.updateDrawLayers();
+        this.cdr.detectChanges();
+    }
+
+    startNewLoteDrawing(): void {
+        console.log("DEBUG: startNewLoteDrawing called");
+        this.selectedLote.planoCoordinates = null;
+        this.polygonLayer.clearLayers();
+        this.displayExistingPolygons(); // This will redraw others but NOT the current one as we cleared its coordinates
+        this.currentPoints = [];
+        this.updateDrawLayers();
+        this.cdr.detectChanges();
     }
 
     // === DATA LOADING ===
@@ -340,10 +368,14 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     // === SAVING ===
 
     saveFraccionamientoPolygon(): void {
+        console.log("DEBUG: saveFraccionamientoPolygon called. Points:", this.currentPoints.length);
+        // Force an alert to confirm the click reached the code
         if (this.currentPoints.length < 3) {
-            alert('Se requieren al menos 3 puntos para formar un polígono');
+            alert('❌ No se puede guardar: Se requieren al menos 3 puntos. Tienes: ' + this.currentPoints.length);
             return;
         }
+
+        if (!confirm('¿Deseas guardar este polígono para el fraccionamiento?')) return;
 
         // Convert LatLng objects to Array of Arrays [[lat,lng], ...] to be JSON serializable
         const pointsArray = this.currentPoints.map(p => [p.lat, p.lng]);
@@ -353,12 +385,19 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             `${environment.apiUrl}/fraccionamientos/adm/${this.selectedFraccionamiento.id}/poligono`,
             polygonJson,
             { headers: { 'Content-Type': 'text/plain' } }
-        ).subscribe(() => {
-            alert('Polígono del fraccionamiento guardado exitosamente');
-            this.selectedFraccionamiento.poligonoDelimitador = polygonJson;
-            this.currentPoints = [];
-            this.updateDrawLayers();
-            this.displayExistingPolygons();
+        ).subscribe({
+            next: () => {
+                alert('Polígono del fraccionamiento guardado exitosamente');
+                this.selectedFraccionamiento.poligonoDelimitador = polygonJson;
+                this.currentPoints = [];
+                this.updateDrawLayers();
+                this.displayExistingPolygons();
+                this.cdr.detectChanges();
+            },
+            error: (err) => {
+                console.error("Error saving fracc polygon:", err);
+                alert('No se pudo guardar el polígono. Revisa la consola para más detalles.');
+            }
         });
     }
 
@@ -390,11 +429,17 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     
     saveLotePolygon(): void {
-        if (!this.selectedLote) return;
-        if (this.currentPoints.length < 3) {
-            alert('Se requieren al menos 3 puntos');
+        console.log("DEBUG: saveLotePolygon called. Points:", this.currentPoints.length);
+        if (!this.selectedLote) {
+            alert('❌ No hay un lote seleccionado.');
             return;
         }
+        if (this.currentPoints.length < 3) {
+            alert('❌ No se puede guardar: Se requieren al menos 3 puntos. Tienes: ' + this.currentPoints.length);
+            return;
+        }
+
+        if (!confirm('¿Deseas guardar el polígono para el lote ' + this.selectedLote.numeroLote + '?')) return;
 
         const pointsArray = this.currentPoints.map(p => [p.lat, p.lng]);
         const polygonJson = JSON.stringify(pointsArray);
@@ -404,37 +449,42 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             `${environment.apiUrl}/lotes/adm/${this.selectedLote.id}/poligono`,
             polygonJson,
             { headers: { 'Content-Type': 'text/plain' } }
-        ).subscribe(() => {
-            // 2. Update Location (Centroid) to fix "wrong pin"
-            const newCentroid = this.calculateCentroid(this.currentPoints);
-            if (newCentroid) {
-                // We need to update the Lote entity with new coords.
-                // We'll reuse the full update endpoint, assuming this.selectedLote is up-to-date.
-                // Update local object first
-                this.selectedLote.coordenadasGeo = newCentroid;
-                this.selectedLote.planoCoordinates = polygonJson;
-                
-                this.http.put(
-                    `${environment.apiUrl}/lotes/${this.selectedLote.id}`,
-                    this.selectedLote
-                ).subscribe({
-                    next: () => {
-                        alert('Polígono y Ubicación (Pin) actualizados correctamente');
-                         this.currentPoints = [];
-                        this.updateDrawLayers();
-                        this.displayExistingPolygons();
-                    },
-                    error: (err) => {
-                        console.error(err);
-                        alert('Polígono guardado, pero error al actualizar ubicación del pin.');
-                    }
-                });
-            } else {
-                 alert('Polígono del lote guardado exitosamente');
-                 this.selectedLote.planoCoordinates = polygonJson;
-                 this.currentPoints = [];
-                 this.updateDrawLayers();
-                 this.displayExistingPolygons();
+        ).subscribe({
+            next: () => {
+                // 2. Update Location (Centroid) to fix "wrong pin"
+                const newCentroid = this.calculateCentroid(this.currentPoints);
+                if (newCentroid) {
+                    this.selectedLote.coordenadasGeo = newCentroid;
+                    this.selectedLote.planoCoordinates = polygonJson;
+                    
+                    this.http.put(
+                        `${environment.apiUrl}/lotes/${this.selectedLote.id}`,
+                        this.selectedLote
+                    ).subscribe({
+                        next: () => {
+                            alert('Polígono y Ubicación (Pin) actualizados correctamente');
+                            this.currentPoints = [];
+                            this.updateDrawLayers();
+                            this.displayExistingPolygons();
+                            this.cdr.detectChanges();
+                        },
+                        error: (err) => {
+                            console.error("Error updating lote location:", err);
+                            alert('Polígono guardado, pero error al actualizar ubicación del pin.');
+                        }
+                    });
+                } else {
+                    alert('Polígono del lote guardado exitosamente');
+                    this.selectedLote.planoCoordinates = polygonJson;
+                    this.currentPoints = [];
+                    this.updateDrawLayers();
+                    this.displayExistingPolygons();
+                    this.cdr.detectChanges();
+                }
+            },
+            error: (err) => {
+                console.error("Error saving lote polygon:", err);
+                alert('No se pudo guardar el polígono del lote.');
             }
         });
     }

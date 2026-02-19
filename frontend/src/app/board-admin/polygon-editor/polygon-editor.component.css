@@ -9,8 +9,13 @@
     position: relative;
 }
 
-svg {
-    z-index: 10;
+/* Removed global svg z-index to avoid Leaflet collision */
+
+/* Ensure buttons and controls are on top and clickable */
+.col-md-3 {
+    position: relative;
+    z-index: 1000;
+    pointer-events: auto !important;
 }
 
 circle:hover {
