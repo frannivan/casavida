@@ -69,7 +69,7 @@ export class FraccionamientoDetailComponent implements OnInit {
 
                 // Initialize SVG after data loads
                 afterNextRender(() => {
-                    if (this.fraccionamiento.planoSvg) {
+                    if (this.fraccionamiento?.planoSvg) {
                         this.renderInteractivePlano();
                     }
                 }, { injector: this.injector });
@@ -100,7 +100,7 @@ export class FraccionamientoDetailComponent implements OnInit {
 
     // === SVG FLOOR PLAN HANDLING ===
     renderInteractivePlano(): void {
-        if (!this.fraccionamiento.planoSvg) return;
+        if (!this.fraccionamiento?.planoSvg) return;
 
         // Sanitize SVG for safe rendering
         this.sanitizedPlanoSvg = this.sanitizer.bypassSecurityTrustHtml(
