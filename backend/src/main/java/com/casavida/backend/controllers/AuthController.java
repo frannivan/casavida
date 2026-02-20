@@ -107,17 +107,37 @@ public class AuthController {
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
-                switch (role) {
                     case "admin":
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role no encontrado."));
                         roles.add(adminRole);
-
                         break;
+                    case "vendedor":
+                        Role vendedorRole = roleRepository.findByName(ERole.ROLE_VENDEDOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Role no encontrado."));
+                        roles.add(vendedorRole);
+                        break;
+                    case "recepcion":
+                        Role recepcionRole = roleRepository.findByName(ERole.ROLE_RECEPCION)
+                                .orElseThrow(() -> new RuntimeException("Error: Role no encontrado."));
+                        roles.add(recepcionRole);
+                        break;
+                    case "contabilidad":
+                        Role contabilidadRole = roleRepository.findByName(ERole.ROLE_CONTABILIDAD)
+                                .orElseThrow(() -> new RuntimeException("Error: Role no encontrado."));
+                        roles.add(contabilidadRole);
+                        break;
+                    case "directivo":
+                        Role directivoRole = roleRepository.findByName(ERole.ROLE_DIRECTIVO)
+                                .orElseThrow(() -> new RuntimeException("Error: Role no encontrado."));
+                        roles.add(directivoRole);
+                        break;
+                    case "user":
                     default:
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role no encontrado."));
                         roles.add(userRole);
+                        break;
                 }
             });
         }
