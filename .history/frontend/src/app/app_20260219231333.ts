@@ -51,8 +51,8 @@ export class AppComponent {
       const user = this.storageService.getUser();
       this.roles = user.roles;
 
-      console.log('Login successful. User:', user.username);
-      console.log('User Roles:', user.roles);
+      console.log('Current User:', user);
+      // alert('DEBUG: User=' + user.username + ', Roles=' + JSON.stringify(user.roles));
       
       this.username = user.username;
       this.roles = user.roles || [];
