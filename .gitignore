@@ -1,0 +1,12 @@
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+.history/
+backend/data/
+__frontend_bak_HIDDEN__/
+*.tar.gz
+*.db
+nginx_*.conf
+nginx_*.txt
+*.log
