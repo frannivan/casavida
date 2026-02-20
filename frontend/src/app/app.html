@@ -1,20 +1,28 @@
+<!-- CONTENEDOR PRINCIPAL DE LA APLICACIÓN -->
 <div id="app">
-  <!-- Layout with Sidebar for Admin/Recepcion/Vendedor/Contabilidad/Directivo/User -->
+  
+  <!-- DISEÑO CON BARRA LATERAL (Admin, Vendedor, Recepción, etc.) -->
   <ng-container *ngIf="showAdminBoard || showRecepcionBoard || showVendedorBoard || showContabilidadBoard || showDirectivoBoard || showUserBoard; else publicLayout">
     <div class="d-flex" id="wrapper">
-      <!-- Sidebar -->
+      
+      <!-- Componente Sidebar (Barra Lateral) -->
       <app-sidebar></app-sidebar>
 
-      <!-- Page Content -->
+      <!-- Contenedor del Contenido de Página -->
       <div id="page-content-wrapper" style="margin-left: 250px; width: 100%;">
-        <!-- Top Navbar (Premium Admin Look) -->
+        
+        <!-- Navbar Superior (Premium Look) -->
         <nav class="navbar navbar-expand navbar-light bg-white border-bottom shadow-sm py-2">
           <div class="container-fluid">
+            <!-- Branding / Logo -->
             <a href="#" class="navbar-brand ms-3 fw-bold text-primary" routerLink="home">
               <i class="fas fa-home"></i> CasaVida
             </a>
+
+            <!-- Menú de Usuario (Derecha) -->
             <ul class="navbar-nav ms-auto me-3 align-items-center">
               <li class="nav-item me-3">
+                <!-- Etiqueta de Rol del Usuario -->
                 <span class="badge bg-soft-primary text-primary border border-primary-soft">
                   <i class="fas fa-user-shield" *ngIf="showAdminBoard"></i>
                   <i class="fas fa-user-tie" *ngIf="showVendedorBoard"></i>
@@ -22,6 +30,8 @@
                   {{ username }} <span class="text-muted fw-normal ms-1">({{ userRoleDisplay }})</span>
                 </span>
               </li>
+
+              <!-- Dropdown de Perfil con Círculo de Iniciales -->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
                   <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 32px; height: 32px;">
@@ -44,7 +54,7 @@
           </div>
         </nav>
 
-        <!-- Main Content -->
+        <!-- Área de Contenido Dinámico (Admin) -->
         <div class="container-fluid py-3">
           <router-outlet></router-outlet>
         </div>
@@ -52,13 +62,15 @@
     </div>
   </ng-container>
 
-  <!-- Standard Layout for Public/User (No Sidebar) -->
+  <!-- DISEÑO PÚBLICO / LOGIN (Sin Barra Lateral) -->
   <ng-template #publicLayout>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow py-3">
       <div class="container">
-        <a href="#" class="navbar-brand fw-bold fs-4" routerLink="home">
+        <!-- Logo Público -->
+        <a href="#" class="navbar-brand fw-bold fs-4" routerLink="/home">
            <span class="text-primary">Casa</span>Vida
         </a>
+        
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPublic">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -66,26 +78,28 @@
         <div class="collapse navbar-collapse" id="navbarPublic">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a href="/home" class="nav-link" routerLink="home"><i class="fas fa-home me-1"></i> Inicio</a>
+              <a class="nav-link" routerLink="/home" style="cursor: pointer;"><i class="fas fa-home me-1"></i> Inicio</a>
             </li>
-              <li class="nav-item ms-lg-2">
-                <button class="btn btn-danger btn-sm px-3" (click)="logout()">
-                  <i class="fas fa-sign-out-alt me-1"></i> Salir
-                </button>
-              </li>
+            <li class="nav-item ms-lg-2">
+              <button class="btn btn-danger btn-sm px-3" (click)="logout()" *ngIf="isLoggedIn">
+                <i class="fas fa-sign-out-alt me-1"></i> Salir
+              </button>
+            </li>
           </ul>
 
           <ul class="navbar-nav ms-auto align-items-center">
+            <!-- Opciones si NO está logueado -->
             <ng-container *ngIf="!isLoggedIn; else userLoggedIn">
               <li class="nav-item">
-                <a href="/register" class="nav-link" routerLink="register">Registrarse</a>
+                <a class="nav-link" routerLink="/register" style="cursor: pointer;">Registrarse</a>
               </li>
               <li class="nav-item ms-lg-2">
-                <a href="/login" class="btn btn-outline-light px-4" routerLink="login">Ingresar</a>
+                <a class="btn btn-outline-light px-4" routerLink="/login">Ingresar</a>
               </li>
             </ng-container>
+
+            <!-- Opciones si SÍ está logueado -->
             <ng-template #userLoggedIn>
-              <!-- Message Icon with Badge -->
               <li class="nav-item me-2">
                 <a routerLink="/mensajes" class="nav-link position-relative">
                   <i class="fas fa-envelope fs-5"></i>
@@ -119,11 +133,12 @@
       </div>
     </nav>
 
+    <!-- Área de Contenido Dinámico (Público) -->
     <div class="container mt-3">
       <router-outlet></router-outlet>
     </div>
   </ng-template>
 
-  <!-- Chatbot (Always visible) -->
+  <!-- Componente Chatbot (Global) -->
   <app-chatbot></app-chatbot>
 </div>
