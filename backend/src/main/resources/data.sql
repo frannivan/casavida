@@ -19,7 +19,7 @@ DELETE FROM opportunities;
 DELETE FROM leads;
 DELETE FROM user_roles;
 DELETE FROM clientes;
-DELETE FROM "users";
+DELETE FROM USERS;
 DELETE FROM lotes;
 DELETE FROM fraccionamientos;
 
@@ -28,7 +28,7 @@ SET REFERENTIAL_INTEGRITY TRUE;
 
 -- 3. Users (FRESH START)
 -- Passwords: password123 ($2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou)
-INSERT INTO "users" (id, username, email, password, created_at) VALUES 
+INSERT INTO USERS (id, username, email, password, created_at) VALUES 
 (1, 'admin', 'admin@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP),
 (2, 'vendedor', 'vendedor@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP),
 (3, 'recepcion', 'recepcion@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP),
@@ -60,7 +60,7 @@ INSERT INTO clientes (id, nombre, apellidos, email, telefono, direccion, ine, fe
 (2, 'María', 'García', 'maria@test.com', '9987654321', 'Colonia Centro, Mazunte', 'INE87654321', CURRENT_TIMESTAMP, 102);
 
 -- RESET SEQUENCES
-ALTER TABLE "users" ALTER COLUMN id RESTART WITH 200;
+ALTER TABLE USERS ALTER COLUMN id RESTART WITH 200;
 ALTER TABLE clientes ALTER COLUMN id RESTART WITH 10;
 ALTER TABLE fraccionamientos ALTER COLUMN id RESTART WITH 10;
 ALTER TABLE lotes ALTER COLUMN id RESTART WITH 10;
