@@ -1,4 +1,4 @@
--- FINAL ATTEMPT AT DATA INITIALIZATION (Strict 1-Role per User)
+-- FINAL ATTEMPT AT DATA INITIALIZATION (Strict Cleanup & Fresh Setup)
 
 -- 1. Roles
 MERGE INTO roles (id, name) KEY (id) VALUES (1, 'ROLE_USER');
@@ -9,6 +9,10 @@ MERGE INTO roles (id, name) KEY (id) VALUES (5, 'ROLE_CONTABILIDAD');
 MERGE INTO roles (id, name) KEY (id) VALUES (6, 'ROLE_DIRECTIVO');
 
 -- 2. Clean Up (Order matters due to constraints)
+DELETE FROM pagos;
+DELETE FROM contratos;
+DELETE FROM opportunities;
+DELETE FROM leads;
 DELETE FROM user_roles;
 DELETE FROM clientes;
 DELETE FROM "users";
@@ -17,7 +21,6 @@ DELETE FROM fraccionamientos;
 
 -- 3. Users
 -- Passwords: password123 ($2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou)
--- Note: For clients, the business rule is username=email and password=telefono.
 INSERT INTO "users" (id, username, email, password, created_at) VALUES 
 (1, 'admin', 'admin@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP),
 (2, 'vendedor', 'vendedor@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP),
@@ -56,4 +59,5 @@ ALTER TABLE "users" ALTER COLUMN id RESTART WITH 200;
 ALTER TABLE clientes ALTER COLUMN id RESTART WITH 10;
 ALTER TABLE fraccionamientos ALTER COLUMN id RESTART WITH 10;
 ALTER TABLE lotes ALTER COLUMN id RESTART WITH 10;
+
 
