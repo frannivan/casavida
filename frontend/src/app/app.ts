@@ -7,13 +7,6 @@ import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { MensajeService } from './services/mensaje';
 
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule, ChatbotComponent, SidebarComponent],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
-})
 /**
  * Componente principal de la aplicación que gestiona la estructura de layout,
  * la autenticación global y las notificaciones de mensajes.
