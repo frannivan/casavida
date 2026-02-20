@@ -1,4 +1,7 @@
--- FINAL ATTEMPT AT DATA INITIALIZATION (Deep Cleanup & Fresh Setup)
+-- FINAL ATTEMPT AT DATA INITIALIZATION (Nuclear Cleanup & Fresh Setup)
+
+-- Disable integrity checks to allow clean slate
+SET REFERENTIAL_INTEGRITY FALSE;
 
 -- 1. Roles
 MERGE INTO roles (id, name) KEY (id) VALUES (1, 'ROLE_USER');
@@ -8,21 +11,24 @@ MERGE INTO roles (id, name) KEY (id) VALUES (4, 'ROLE_RECEPCION');
 MERGE INTO roles (id, name) KEY (id) VALUES (5, 'ROLE_CONTABILIDAD');
 MERGE INTO roles (id, name) KEY (id) VALUES (6, 'ROLE_DIRECTIVO');
 
--- 2. Deep Clean Up (Order matters due to constraints)
-DELETE FROM mensajes;
-DELETE FROM pagos;
-DELETE FROM contratos;
-DELETE FROM opportunities;
-DELETE FROM leads;
-DELETE FROM user_roles;
-DELETE FROM clientes;
-DELETE FROM "users";
-DELETE FROM lotes;
-DELETE FROM fraccionamientos;
+-- 2. Massive Clean Up
+TRUNCATE TABLE mensajes;
+TRUNCATE TABLE pagos;
+TRUNCATE TABLE contratos;
+TRUNCATE TABLE opportunities;
+TRUNCATE TABLE leads;
+TRUNCATE TABLE user_roles;
+TRUNCATE TABLE clientes;
+TRUNCATE TABLE "users";
+TRUNCATE TABLE lotes;
+TRUNCATE TABLE fraccionamientos;
 
--- 3. Users (Using MERGE to overwrite if DELETE fails or records persist)
+-- Re-enable integrity checks
+SET REFERENTIAL_INTEGRITY TRUE;
+
+-- 3. Users (FRESH START)
 -- Passwords: password123 ($2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou)
-MERGE INTO "users" (id, username, email, password, created_at) KEY (id) VALUES 
+INSERT INTO "users" (id, username, email, password, created_at) VALUES 
 (1, 'admin', 'admin@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP),
 (2, 'vendedor', 'vendedor@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP),
 (3, 'recepcion', 'recepcion@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP),
@@ -58,6 +64,7 @@ ALTER TABLE "users" ALTER COLUMN id RESTART WITH 200;
 ALTER TABLE clientes ALTER COLUMN id RESTART WITH 10;
 ALTER TABLE fraccionamientos ALTER COLUMN id RESTART WITH 10;
 ALTER TABLE lotes ALTER COLUMN id RESTART WITH 10;
+
 
 
 
