@@ -34,7 +34,8 @@ export class SidebarComponent {
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
+    const authService = inject(AuthService);
+    authService.logout().subscribe({
       next: () => {
         this.storageService.clean();
         this.router.navigate(['/login']);

@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { StorageService } from '../../services/storage';
-import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-sidebar',
@@ -34,7 +33,8 @@ export class SidebarComponent {
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
+    const authService = inject(AuthService);
+    authService.logout().subscribe({
       next: () => {
         this.storageService.clean();
         this.router.navigate(['/login']);
