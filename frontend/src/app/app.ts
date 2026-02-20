@@ -14,9 +14,23 @@ import { MensajeService } from './services/mensaje';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
+/**
+ * Componente principal de la aplicación que gestiona la estructura de layout,
+ * la autenticación global y las notificaciones de mensajes.
+ */
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, RouterLink, CommonModule, ChatbotComponent, SidebarComponent],
+  templateUrl: './app.html',
+  styleUrl: './app.css'
+})
 export class AppComponent {
+  // Roles y estado de sesión
   roles: string[] = [];
   isLoggedIn = false;
+  
+  // Flags para mostrar paneles específicos por rol
   showAdminBoard = false;
   showModeratorBoard = false;
   showRecepcionBoard = false;
@@ -24,8 +38,9 @@ export class AppComponent {
   showUserBoard = false;
   showContabilidadBoard = false;
   showDirectivoBoard = false;
+  
   username?: string;
-  unreadMessagesCount = 0;
+  unreadMessagesCount = 0; // Contador global de mensajes no leídos
 
   private storageService = inject(StorageService);
   private authService = inject(AuthService);
@@ -35,7 +50,7 @@ export class AppComponent {
   constructor() { }
 
   ngOnInit(): void {
-    // Cleanup modal backdrops on route change
+    // Escucha cambios de ruta para limpiar residuos de modales (Bootstrap backdrops)
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const backdrops = document.querySelectorAll('.modal-backdrop');
@@ -45,19 +60,15 @@ export class AppComponent {
       }
     });
 
+    // Verifica si el usuario tiene una sesión activa
     this.isLoggedIn = this.storageService.isLoggedIn();
 
     if (this.isLoggedIn) {
       const user = this.storageService.getUser();
-      this.roles = user.roles;
-
-      console.log('Login successful. User:', user.username);
-      console.log('User Roles:', user.roles);
-      // alert('PERMISOS RECIBIDOS: ' + JSON.stringify(user.roles));
-      
       this.username = user.username;
       this.roles = user.roles || [];
 
+      // Mapeo dinámico de visibilidad según roles
       this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
       this.showRecepcionBoard = this.roles.includes('ROLE_RECEPCION');
       this.showVendedorBoard = this.roles.includes('ROLE_VENDEDOR');
@@ -65,10 +76,14 @@ export class AppComponent {
       this.showContabilidadBoard = this.roles.includes('ROLE_CONTABILIDAD');
       this.showDirectivoBoard = this.roles.includes('ROLE_DIRECTIVO');
 
+      // Carga inicial de notificaciones
       this.loadUnreadCount();
     }
   }
 
+  /**
+   * Consulta al backend el número de mensajes sin leer del usuario.
+   */
   loadUnreadCount(): void {
     if (this.isLoggedIn) {
       this.mensajeService.getUnreadCount().subscribe({
@@ -78,6 +93,9 @@ export class AppComponent {
     }
   }
 
+  /**
+   * Retorna una etiqueta legible para el rol principal del usuario.
+   */
   get userRoleDisplay(): string {
     if (this.showAdminBoard) return 'Administrador';
     if (this.showRecepcionBoard) return 'Recepción';
@@ -88,20 +106,20 @@ export class AppComponent {
     return 'Usuario';
   }
 
+  /**
+   * Finaliza la sesión del usuario y limpia el estado local.
+   * Redirección absoluta para evitar problemas con Nginx y dominios externos.
+   */
   logout(): void {
     this.authService.logout().subscribe({
       next: res => {
         this.storageService.clean();
-        this.router.navigate(['/login']).then(() => {
-          window.location.reload();
-        });
+        window.location.href = '/casavida/login';
       },
       error: err => {
         console.log(err);
         this.storageService.clean();
-        this.router.navigate(['/login']).then(() => {
-          window.location.reload();
-        });
+        window.location.href = '/casavida/login';
       }
     });
   }

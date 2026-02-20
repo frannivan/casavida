@@ -4,6 +4,10 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { StorageService } from '../../services/storage';
 import { AuthService } from '../../services/auth';
 
+/**
+ * Componente de barra lateral (Sidebar) que gestiona el menú de navegación principal.
+ * Filtra las opciones visibles según los roles del usuario autenticado.
+ */
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -12,7 +16,10 @@ import { AuthService } from '../../services/auth';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
+  // Almacena los roles del usuario actual
   roles: string[] = [];
+  
+  // Estados booleanos para simplificar las condiciones en el HTML
   isAdmin = false;
   isRecepcion = false;
   isVendedor = false;
@@ -25,6 +32,7 @@ export class SidebarComponent {
   private router = inject(Router);
 
   constructor() {
+    // Inicializa los estados de roles al cargar el componente
     const user = this.storageService.getUser();
     this.roles = user?.roles || [];
     this.isAdmin = this.roles.includes('ROLE_ADMIN');
@@ -35,19 +43,20 @@ export class SidebarComponent {
     this.isUser = this.roles.includes('ROLE_USER');
   }
 
+  /**
+   * Cierra la sesión del usuario, limpia el almacenamiento local y redirige al login.
+   * Se usa window.location.href con el prefijo /casavida/ para asegurar que no se escape
+   * del contexto de la aplicación hacia la raíz del servidor.
+   */
   logout(): void {
     this.authService.logout().subscribe({
       next: () => {
         this.storageService.clean();
-        this.router.navigate(['/login']).then(() => {
-          window.location.reload();
-        });
+        window.location.href = '/casavida/login';
       },
       error: () => {
         this.storageService.clean();
-        this.router.navigate(['/login']).then(() => {
-          window.location.reload();
-        });
+        window.location.href = '/casavida/login';
       }
     });
   }
