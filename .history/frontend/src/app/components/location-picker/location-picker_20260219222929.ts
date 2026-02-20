@@ -100,7 +100,7 @@ export class LocationPickerComponent implements AfterViewInit, OnDestroy, OnChan
           this.drawPolygon();
           // Center map on polygon
           if (this.polygonLayer) {
-            this.map.fitBounds(this.polygonLayer.getBounds(), { padding: [20, 20], maxZoom: 18 });
+            this.map.fitBounds(this.polygonLayer.getBounds());
           }
         }
       } catch (e) {

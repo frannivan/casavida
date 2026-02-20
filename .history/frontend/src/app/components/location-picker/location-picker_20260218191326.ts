@@ -100,7 +100,7 @@ export class LocationPickerComponent implements AfterViewInit, OnDestroy, OnChan
           this.drawPolygon();
           // Center map on polygon
           if (this.polygonLayer) {
-            this.map.fitBounds(this.polygonLayer.getBounds(), { padding: [20, 20], maxZoom: 18 });
+            this.map.fitBounds(this.polygonLayer.getBounds());
           }
         }
       } catch (e) {
@@ -112,7 +112,7 @@ export class LocationPickerComponent implements AfterViewInit, OnDestroy, OnChan
       if (lat && lng) {
         this.mode = 'POINT';
         this.placeMarker(lat, lng);
-        this.map.setView([lat, lng], 18);
+        this.map.setView([lat, lng], 15);
       }
     }
   }

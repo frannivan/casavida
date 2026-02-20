@@ -185,15 +185,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
     });
 
     if (hasMarkers) {
-      const sw = bounds.getSouthWest();
-      const ne = bounds.getNorthEast();
-      
-      // Check if it's a single point (bounds are identical)
-      if (sw.lat === ne.lat && sw.lng === ne.lng) {
-        this.map.setView(sw, 18); // High zoom for single point
-      } else {
-        this.map.fitBounds(bounds, { padding: [30, 30], maxZoom: 18 });
-      }
+      this.map.fitBounds(bounds, { padding: [50, 50] });
     }
   }
 
