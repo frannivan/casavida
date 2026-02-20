@@ -1,0 +1,18 @@
+{
+    "sourceFile": "frontend/src/app/services/mensaje.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1771537431028,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1771537431028,
+            "name": "Commit-0",
+            "content": "import { Injectable, inject } from '@angular/core';\nimport { HttpClient } from '@angular/common/http';\nimport { Observable } from 'rxjs';\nimport { environment } from '../../environments/environment';\n\nconst API_URL = environment.apiUrl + '/mensajes/';\n\nexport interface Mensaje {\n  id: number;\n  remitente: { id: number, username: string };\n  destinatario: { id: number, username: string };\n  asunto: string;\n  contenido: string;\n  fechaEnvio: string;\n  leido: boolean;\n}\n\n@Injectable({\n  providedIn: 'root'\n})\nexport class MensajeService {\n  private http = inject(HttpClient);\n\n  getRecibidos(): Observable<Mensaje[]> {\n    return this.http.get<Mensaje[]>(API_URL + 'recibidos');\n  }\n\n  getEnviados(): Observable<Mensaje[]> {\n    return this.http.get<Mensaje[]>(API_URL + 'enviados');\n  }\n\n  enviarMensaje(asunto: string, contenido: string, destinatarioId: number): Observable<any> {\n    return this.http.post(API_URL + 'enviar', { asunto, contenido, destinatarioId });\n  }\n\n  marcarComoLeido(id: number): Observable<any> {\n    return this.http.put(API_URL + id + '/leer', {});\n  }\n\n  getUnreadCount(): Observable<number> {\n    return this.http.get<number>(API_URL + 'unread-count');\n  }\n}\n"
+        }
+    ]
+}

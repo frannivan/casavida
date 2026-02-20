@@ -1,0 +1,22 @@
+{
+    "sourceFile": "frontend/src/app/mensajes/mensajes.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1771537596859,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771539803720,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n \n @Component({\n   selector: 'app-mensajes',\n   standalone: true,\n-  imports: [CommonModule, RouterLink, FormsModule],\n+  imports: [CommonModule, FormsModule],\n   templateUrl: './mensajes.html'\n })\n export class MensajesComponent implements OnInit {\n   activeTab: 'recibidos' | 'enviados' | 'nuevo' = 'recibidos';\n"
+                }
+            ],
+            "date": 1771537596859,
+            "name": "Commit-0",
+            "content": "import { Component, OnInit, inject } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { RouterLink } from '@angular/router';\nimport { FormsModule } from '@angular/forms';\nimport { MensajeService, Mensaje } from '../services/mensaje';\nimport { StorageService } from '../services/storage';\nimport { AdminService } from '../services/admin';\n\n@Component({\n  selector: 'app-mensajes',\n  standalone: true,\n  imports: [CommonModule, RouterLink, FormsModule],\n  templateUrl: './mensajes.html'\n})\nexport class MensajesComponent implements OnInit {\n  activeTab: 'recibidos' | 'enviados' | 'nuevo' = 'recibidos';\n  mensajes: Mensaje[] = [];\n  usuarios: any[] = [];\n  isLoading = false;\n  \n  // New Message Form\n  newMessage = {\n    destinatarioId: 0,\n    asunto: '',\n    contenido: ''\n  };\n\n  private mensajeService = inject(MensajeService);\n  private storageService = inject(StorageService);\n  private adminService = inject(AdminService);\n\n  ngOnInit(): void {\n    this.loadRecibidos();\n    this.loadUsuarios();\n  }\n\n  loadRecibidos(): void {\n    this.isLoading = true;\n    this.mensajeService.getRecibidos().subscribe({\n      next: data => {\n        this.mensajes = data;\n        this.isLoading = false;\n      },\n      error: err => {\n        console.error(err);\n        this.isLoading = false;\n      }\n    });\n  }\n\n  loadEnviados(): void {\n    this.isLoading = true;\n    this.mensajeService.getEnviados().subscribe({\n      next: data => {\n        this.mensajes = data;\n        this.isLoading = false;\n      },\n      error: err => {\n        console.error(err);\n        this.isLoading = false;\n      }\n    });\n  }\n\n  loadUsuarios(): void {\n    // For now, only show users if admin or similar. \n    // Ideally, we need a public endpoint for names, but let's use admin for now.\n    this.adminService.getUsers().subscribe({\n      next: data => this.usuarios = data,\n      error: err => console.error('Limitación de acceso a lista de usuarios', err)\n    });\n  }\n\n  switchTab(tab: 'recibidos' | 'enviados' | 'nuevo'): void {\n    this.activeTab = tab;\n    if (tab === 'recibidos') this.loadRecibidos();\n    if (tab === 'enviados') this.loadEnviados();\n  }\n\n  enviar(): void {\n    if (!this.newMessage.destinatarioId || !this.newMessage.asunto || !this.newMessage.contenido) {\n      alert('Por favor complete todos los campos');\n      return;\n    }\n\n    this.mensajeService.enviarMensaje(\n      this.newMessage.asunto,\n      this.newMessage.contenido,\n      Number(this.newMessage.destinatarioId)\n    ).subscribe({\n      next: () => {\n        alert('Mensaje enviado');\n        this.newMessage = { destinatarioId: 0, asunto: '', contenido: '' };\n        this.switchTab('enviados');\n      },\n      error: err => alert('Error al enviar: ' + (err.error.message || err.message))\n    });\n  }\n\n  marcarLeido(msg: Mensaje): void {\n    if (!msg.leido) {\n      this.mensajeService.marcarComoLeido(msg.id).subscribe({\n        next: () => msg.leido = true,\n        error: err => console.error(err)\n      });\n    }\n  }\n}\n"
+        }
+    ]
+}

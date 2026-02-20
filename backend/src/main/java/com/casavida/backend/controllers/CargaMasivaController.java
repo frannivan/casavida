@@ -196,7 +196,7 @@ public class CargaMasivaController {
     }
 
     @PostMapping("/upload/{tipo}")
-    public ResponseEntity<?> uploadData(@PathVariable String tipo, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadData(@PathVariable String tipo, @RequestParam("file") MultipartFile file) throws IOException {
         Workbook workbook = new XSSFWorkbook(file.getInputStream());
         Sheet sheet = workbook.getSheetAt(0);
 
@@ -361,6 +361,7 @@ public class CargaMasivaController {
                         cliente.setDireccion(direccion);
                         cliente.setIne(ine);
 
+                        // ClienteListener (Trigger) will handle User creation automatically
                         clienteRepository.save(cliente);
                         successCount++;
                     } catch (Exception e) {

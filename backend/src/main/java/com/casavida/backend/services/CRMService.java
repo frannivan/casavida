@@ -2,7 +2,9 @@ package com.casavida.backend.services;
 
 import com.casavida.backend.entity.*;
 import com.casavida.backend.repository.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,15 @@ public class CRMService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     // Leads logic
     public List<Lead> getAllLeads() {
@@ -112,9 +123,9 @@ public class CRMService {
         cliente.setNombre(lead.getNombre());
         cliente.setEmail(lead.getEmail());
         cliente.setTelefono(lead.getTelefono());
-        // Assume default values or split name if possible
         cliente.setDireccion("Pendiente de actualizar");
 
+        // The ClienteListener (Trigger) will handle User account creation automatically
         Cliente savedCliente = clienteRepository.save(cliente);
 
         opp.setStatus(EOpportunityStatus.WON);
