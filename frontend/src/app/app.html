@@ -1,6 +1,6 @@
 <div id="app">
-  <!-- Layout with Sidebar for Admin/Recepcion/Vendedor/Contabilidad/Directivo -->
-  <ng-container *ngIf="showAdminBoard || showRecepcionBoard || showVendedorBoard || showContabilidadBoard || showDirectivoBoard; else publicLayout">
+  <!-- Layout with Sidebar for Admin/Recepcion/Vendedor/Contabilidad/Directivo/User -->
+  <ng-container *ngIf="showAdminBoard || showRecepcionBoard || showVendedorBoard || showContabilidadBoard || showDirectivoBoard || showUserBoard; else publicLayout">
     <div class="d-flex" id="wrapper">
       <!-- Sidebar -->
       <app-sidebar></app-sidebar>
@@ -97,7 +97,9 @@
               
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                  <i class="fas fa-user-circle fs-5 me-1"></i> {{ username }}
+                  <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 32px; height: 32px;">
+                    {{ username?.substring(0,1)?.toUpperCase() }}
+                  </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                   <li><a class="dropdown-item py-2" routerLink="/profile"><i class="fas fa-user me-2"></i> Mi Perfil</a></li>

@@ -58,6 +58,21 @@
   border-left: 4px solid #0056b3;
 }
 
+/* Collapse Submenus */
+.collapse .list-group-item {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.collapse .list-group-item:hover {
+  opacity: 1;
+  padding-left: 2.2rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .me-2 {
   margin-right: 0.5rem;
 }

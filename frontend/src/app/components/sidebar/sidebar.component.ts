@@ -18,6 +18,7 @@ export class SidebarComponent {
   isVendedor = false;
   isContabilidad = false;
   isDirectivo = false;
+  isUser = false;
 
   private storageService = inject(StorageService);
   private authService = inject(AuthService);
@@ -31,17 +32,22 @@ export class SidebarComponent {
     this.isVendedor = this.roles.includes('ROLE_VENDEDOR');
     this.isContabilidad = this.roles.includes('ROLE_CONTABILIDAD');
     this.isDirectivo = this.roles.includes('ROLE_DIRECTIVO');
+    this.isUser = this.roles.includes('ROLE_USER');
   }
 
   logout(): void {
     this.authService.logout().subscribe({
       next: () => {
         this.storageService.clean();
-        window.location.href = '/casavida/login';
+        this.router.navigate(['/login']).then(() => {
+          window.location.reload();
+        });
       },
       error: () => {
         this.storageService.clean();
-        window.location.href = '/casavida/login';
+        this.router.navigate(['/login']).then(() => {
+          window.location.reload();
+        });
       }
     });
   }
