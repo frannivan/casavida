@@ -92,12 +92,16 @@ export class AppComponent {
     this.authService.logout().subscribe({
       next: res => {
         this.storageService.clean();
-        window.location.href = '/casavida/login';
+        this.router.navigate(['/login']).then(() => {
+          window.location.reload();
+        });
       },
       error: err => {
         console.log(err);
         this.storageService.clean();
-        window.location.href = '/casavida/login';
+        this.router.navigate(['/login']).then(() => {
+          window.location.reload();
+        });
       }
     });
   }
