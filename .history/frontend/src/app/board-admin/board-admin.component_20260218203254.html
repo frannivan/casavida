@@ -252,47 +252,16 @@
                         <!-- Section 1: Parties -->
                         <div class="card mb-3 border-0 shadow-sm" style="border-radius: 12px;">
                             <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h6 class="text-muted text-uppercase mb-0 small font-weight-bold">Información de las Partes</h6>
-                                    <button type="button" class="btn btn-sm" [class.btn-outline-primary]="!showNewClientForm" [class.btn-warning]="showNewClientForm" (click)="showNewClientForm = !showNewClientForm">
-                                        <i class="fas" [ngClass]="showNewClientForm ? 'fa-search' : 'fa-plus-circle'"></i>
-                                        {{ showNewClientForm ? ' Buscar Existente' : ' Nuevo Cliente' }}
-                                    </button>
-                                </div>
-
-                                <div class="form-group mb-3" *ngIf="!showNewClientForm">
+                                <h6 class="text-muted text-uppercase mb-3 small font-weight-bold">Información de las Partes</h6>
+                                <div class="form-group mb-3">
                                     <label class="small font-weight-bold"><i class="fas fa-user-tie text-primary mr-1"></i> Cliente</label>
-                                    <select class="form-control custom-select bg-light border-0" [(ngModel)]="contractData.clienteId" name="clienteId" [required]="!showNewClientForm">
+                                    <select class="form-control custom-select bg-light border-0" [(ngModel)]="contractData.clienteId" name="clienteId" required>
                                         <option [ngValue]="null">-- Seleccionar Cliente --</option>
                                         <option *ngFor="let c of clientes" [ngValue]="c.id">
                                             {{ c.nombre }} {{ c.apellidos }}
                                         </option>
                                     </select>
                                 </div>
-
-                                <!-- New Client Fields -->
-                                <div *ngIf="showNewClientForm" class="animate-fade-in mb-3 border-left-primary pl-3 py-2 bg-white rounded shadow-sm">
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <input type="text" class="form-control form-control-sm bg-light mb-2" placeholder="Nombre(s)*" [(ngModel)]="newClientData.nombre" name="nc_nombre" required>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <input type="text" class="form-control form-control-sm bg-light mb-2" placeholder="Apellidos*" [(ngModel)]="newClientData.apellidos" name="nc_apell" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-8">
-                                            <input type="email" class="form-control form-control-sm bg-light mb-2" placeholder="Email (Usuario)*" [(ngModel)]="newClientData.email" name="nc_email" required>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <input type="text" class="form-control form-control-sm bg-light mb-2" placeholder="Teléfono*" [(ngModel)]="newClientData.telefono" name="nc_tel" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-0">
-                                        <input type="text" class="form-control form-control-sm bg-light" placeholder="Dirección (Opcional)" [(ngModel)]="newClientData.direccion" name="nc_dir">
-                                    </div>
-                                </div>
-
                                 <div class="form-row">
                                     <div class="form-group col-md-6 mb-0">
                                         <label class="small font-weight-bold"><i class="fas fa-map-marker-alt text-danger mr-1"></i> Lote Disponible</label>
