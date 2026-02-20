@@ -12,16 +12,16 @@ MERGE INTO roles (id, name) KEY (id) VALUES (5, 'ROLE_CONTABILIDAD');
 MERGE INTO roles (id, name) KEY (id) VALUES (6, 'ROLE_DIRECTIVO');
 
 -- 2. Massive Clean Up
-TRUNCATE TABLE mensajes;
-TRUNCATE TABLE pagos;
-TRUNCATE TABLE contratos;
-TRUNCATE TABLE opportunities;
-TRUNCATE TABLE leads;
-TRUNCATE TABLE user_roles;
-TRUNCATE TABLE clientes;
-TRUNCATE TABLE users;
-TRUNCATE TABLE lotes;
-TRUNCATE TABLE fraccionamientos;
+DELETE FROM mensajes;
+DELETE FROM pagos;
+DELETE FROM contratos;
+DELETE FROM opportunities;
+DELETE FROM leads;
+DELETE FROM user_roles;
+DELETE FROM clientes;
+DELETE FROM "users";
+DELETE FROM lotes;
+DELETE FROM fraccionamientos;
 
 -- Re-enable integrity checks
 SET REFERENTIAL_INTEGRITY TRUE;
