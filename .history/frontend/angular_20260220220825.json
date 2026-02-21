@@ -23,7 +23,6 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "baseHref": "/casavida/",
             "assets": [
               {
                 "glob": "**/*",
