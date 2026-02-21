@@ -5,13 +5,6 @@ import { environment } from '../../environments/environment';
 
 const API_URL = environment.apiUrl + '/fraccionamientos/';
 
-/**
- * EIU-01: Servicio de Configuración de Fraccionamientos.
- * <p>
- * Gestiona el catálogo de desarrollos inmobiliarios. Permite la edición
- * de metadatos, visualización de planos y configuración de polígonos
- * para la representación geográfica en el mapa.
- */
 @Injectable({
     providedIn: 'root'
 })

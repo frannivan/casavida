@@ -14,17 +14,6 @@ import com.casavida.backend.entity.Role;
 import com.casavida.backend.entity.User;
 import com.casavida.backend.repository.UserRepository;
 
-/**
- * CONTROLADOR DE GESTIÓN DE SEGURIDAD Y USUARIOS (CU08)
- * <p>
- * Maneja las operaciones de perfil de usuario, cambios de contraseña y
- * servicios de directorio para la asignación de vendedores en los flujos
- * de negociación y contrato.
- * 
- * @author CasaVida Systems
- * @version 1.0
- * @see <a href="SRS_CasaVida_ERP.md#cu08-gestión-de-usuarios-y-permisos">CU08: Gestión de Usuarios</a>
- */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

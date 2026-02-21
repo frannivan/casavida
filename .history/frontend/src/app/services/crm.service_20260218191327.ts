@@ -5,13 +5,6 @@ import { environment } from '../../environments/environment';
 
 const API_URL = environment.apiUrl + '/crm/';
 
-/**
- * EIU-03: Servicio de Gestión de Relaciones con el Cliente (CRM).
- * <p>
- * Proporciona las herramientas para el seguimiento de prospectos (Leads) y 
- * la gestión de Oportunidades. Facilita la conversión de interesados en
- * clientes formales mediante flujos de trabajo validados.
- */
 @Injectable({
     providedIn: 'root'
 })

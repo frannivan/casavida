@@ -9,13 +9,6 @@ const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
-/**
- * EIU-08: Servicio de Administración de Usuarios y Seguridad.
- * <p>
- * Expone las funcionalidades de gestión de cuentas, roles y permisos.
- * Permite al Administrador el control total sobre los operarios del sistema 
- * y la integridad de los accesos.
- */
 @Injectable({
     providedIn: 'root'
 })
