@@ -10,18 +10,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/**
- * ECU-10: Motor de Generación de Reportes en Formato Excel.
- * <p>
- * Proporciona capacidades de exportación masiva de datos utilizando Apache POI.
- * Soporta la generación de sábanas de datos para usuarios, pagos e inventario 
- * cumpliendo con los estándares de auditoría del Directivo.
- * 
- * @author CasaVida Systems
- * @version 1.0
- * @see <a href="SRS_CasaVida_ERP.md#cu10-reportes-e-inteligencia-de-negocio">CU10: Reportes BI</a>
- * @see <a href="SRS_CasaVida_ERP.md#cu07-carga-masiva-de-datos">CU07: Carga Masiva</a>
- */
 @Service
 public class ExcelService {
 

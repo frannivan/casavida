@@ -18,13 +18,6 @@ export interface DashboardStats {
     ventasRecientes: any[];
 }
 
-/**
- * EIU-10: Servicio de Reportes e Inteligencia de Negocio.
- * <p>
- * Proporciona acceso a las métricas del Dashboard y facilita la descarga
- * de reportes consolidados. Actúa como el puente de visualización para 
- * los roles Directivo y Administrativo.
- */
 @Injectable({
     providedIn: 'root'
 })

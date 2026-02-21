@@ -11,17 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * CONTROLADOR DE CRM Y PROSPECTACIÓN (CU03)
- * <p>
- * Centraliza la gestión de Leads y Oportunidades. Permite el seguimiento 
- * de prospectos desde su captura inicial hasta la pre-calificación y
- * asignación de lotes específicos para negociación.
- * 
- * @author CasaVida Systems
- * @version 1.0
- * @see <a href="SRS_CasaVida_ERP.md#cu03-registro-de-clientes-y-seguimiento-crm">CU03: CRM Inmobiliario</a>
- */
 @RestController
 @RequestMapping("/api/crm")
 public class CRMController {

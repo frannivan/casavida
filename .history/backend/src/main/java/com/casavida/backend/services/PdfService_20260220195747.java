@@ -14,30 +14,9 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * ECU-06: Motor de Automatización Documental y Generación de Reportes.
- * <p>
- * Esta clase centraliza la lógica de generación de documentos PDF oficiales.
- * Utiliza OpenPDF (iText) para la maquetación de contratos, estados de cuenta 
- * y reportes ejecutivos de inventario y pagos.
- * 
- * @author CasaVida Systems
- * @version 1.0
- * @see <a href="SRS_CasaVida_ERP.md#cu06-emisión-de-contrato-legal">CU06: Emisión de Contrato</a>
- * @see <a href="SRS_CasaVida_ERP.md#cu09-seguimiento-e-historial-de-pagos">CU09: Seguimiento de Pagos</a>
- * @see <a href="SRS_CasaVida_ERP.md#cu10-reportes-e-inteligencia-de-negocio">CU10: Reportes BI</a>
- */
 @Service
 public class PdfService {
 
-    /**
-     * Genera un Estado de Cuenta profesional para un cliente contratado.
-     * Incluye resumen financiero, desglose de pagos realizados y saldo remanente.
-     * 
-     * @param contrato El contrato activo del cliente.
-     * @param pagos Lista de abonos registrados y validados.
-     * @return {@link ByteArrayInputStream} con el PDF generado para descarga o streaming.
-     */
     public ByteArrayInputStream generateEstadoCuenta(Contrato contrato, List<Pago> pagos) {
         Document document = new Document(PageSize.A4);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -149,12 +128,6 @@ public class PdfService {
         return new ByteArrayInputStream(out.toByteArray());
     }
 
-    /**
-     * Genera un reporte administrativo con el listado de usuarios y sus roles.
-     * 
-     * @param users Mapa de datos de usuarios obtenidos del sistema.
-     * @return {@link ByteArrayInputStream} con el PDF generado.
-     */
     public ByteArrayInputStream generateUsersReport(List<java.util.Map<String, Object>> users) {
         Document document = new Document(PageSize.A4);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -193,13 +166,6 @@ public class PdfService {
         return new ByteArrayInputStream(out.toByteArray());
     }
 
-    /**
-     * Genera el reporte ejecutivo de inventario.
-     * Detalla los lotes por fraccionamiento, manzana, precio y estatus actual.
-     * 
-     * @param lotes Lista de entidades de tipo {@link com.casavida.backend.entity.Lote}.
-     * @return {@link ByteArrayInputStream} con el PDF generado en formato apaisado.
-     */
     public ByteArrayInputStream generateInventarioReport(List<com.casavida.backend.entity.Lote> lotes) {
         Document document = new Document(PageSize.A4.rotate());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -241,12 +207,6 @@ public class PdfService {
         return new ByteArrayInputStream(out.toByteArray());
     }
 
-    /**
-     * Genera el reporte detallado de recaudación y pagos registrados.
-     * 
-     * @param pagos Lista de entidades {@link Pago} a incluir en el reporte.
-     * @return {@link ByteArrayInputStream} con el PDF generado.
-     */
     public ByteArrayInputStream generatePagosReport(List<Pago> pagos) {
         Document document = new Document(PageSize.A4.rotate());
         ByteArrayOutputStream out = new ByteArrayOutputStream();

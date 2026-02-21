@@ -8,24 +8,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-/**
- * ECU-05: Motor de Crédito y Simulación Financiera.
- * <p>
- * Esta clase representa el "Cerebro" financiero del sistema CasaVida ERP.
- * Se encarga de realizar los cálculos actuariales para generar tablas de amortización
- * basadas en el sistema de amortización francés (cuota fija).
- * 
- * @author CasaVida Systems
- * @version 1.0
- * @see <a href="SRS_CasaVida_ERP.md#cu05-simulación-y-cotización-multi-canal">CU05: Simulación Financiera</a>
- */
 @Service
 public class CreditService {
 
-    /**
-     * Representa una fila individual en la tabla de amortización.
-     * Contiene el desglose de capital, intereses y saldos por periodo.
-     */
     public static class AmortizationRow {
         private int numeroPago;
         private LocalDate fechaPago;
@@ -103,16 +88,6 @@ public class CreditService {
         }
     }
 
-    /**
-     * Calcula la tabla de amortización completa para un préstamo hipotecario/lote.
-     * Utiliza el método francés donde la cuota mensual es constante.
-     * 
-     * @param montoPrestamo El capital inicial a financiar (Monto Total - Enganche).
-     * @param plazoMeses El número total de periodos mensuales.
-     * @param tasaAnual La tasa de interés anual nominal (ej: 12.0 para 12%).
-     * @return Una lista de {@link AmortizationRow} con el desglose cronológico de los pagos.
-     * @throws ArithmeticException si el cálculo de la cuota resulta en una división por cero (plazo 0).
-     */
     public List<AmortizationRow> calculateAmortization(BigDecimal montoPrestamo, int plazoMeses, BigDecimal tasaAnual) {
         List<AmortizationRow> tabla = new ArrayList<>();
 

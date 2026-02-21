@@ -21,13 +21,6 @@ export interface ContratoRequest {
   tasaAnual: number;
 }
 
-/**
- * EIU-05/06: Servicio de Gestión de Ventas y Cotizaciones.
- * <p>
- * Este servicio conecta la interfaz de usuario con el motor financiero del backend.
- * Permite realizar simulaciones de crédito en tiempo real y formalizar contratos
- * para los roles de Vendedor y Administrador.
- */
 @Injectable({
   providedIn: 'root'
 })

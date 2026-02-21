@@ -11,17 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.casavida.backend.entity.Fraccionamiento;
 import com.casavida.backend.repository.FraccionamientoRepository;
 
-/**
- * CONTROLADOR DE FRACCIONAMIENTOS (CU01)
- * <p>
- * Este controlador gestiona el ciclo de vida de los proyectos inmobiliarios (Fraccionamientos).
- * Proporciona endpoints para la gestión de metadatos, planos SVG y delimitación 
- * geográfica mediante polígonos para su visualización en mapas.
- * 
- * @author CasaVida Systems
- * @version 1.0
- * @see <a href="SRS_CasaVida_ERP.md#cu01-configuración-de-fraccionamiento-y-desarrollo">CU01: Configuración de Fraccionamiento</a>
- */
 @RestController
 @RequestMapping("/api/fraccionamientos")
 @CrossOrigin(origins = "*", maxAge = 3600)
