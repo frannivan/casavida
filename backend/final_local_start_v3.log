@@ -1,0 +1,285 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.casavida:backend >------------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ backend ---
+[INFO] Deleting /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target
+[INFO] 
+[INFO] >>> spring-boot:2.7.18:run (default-cli) > test-compile @ backend >>>
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 65 source files with javac [debug parameters target 11] to target/classes
+[INFO] 
+[INFO] --- resources:3.2.0:testResources (default-testResources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] skip non existing resourceDirectory /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ backend ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:2.7.18:run (default-cli) < test-compile @ backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:2.7.18:run (default-cli) @ backend ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.18)
+
+2026-02-20 17:18:15.742  INFO 6978 --- [           main] com.casavida.backend.BackendApplication  : Starting BackendApplication using Java 11.0.17 on Frans-MacBook-Air.local with PID 6978 (/Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes started by franivan in /Users/franivan/Documents/ProyectosWeb/CasaVida/backend)
+2026-02-20 17:18:15.749  INFO 6978 --- [           main] com.casavida.backend.BackendApplication  : No active profile set, falling back to 1 default profile: "default"
+2026-02-20 17:18:27.914  INFO 6978 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-20 17:18:29.202  INFO 6978 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 974 ms. Found 11 JPA repository interfaces.
+2026-02-20 17:18:41.874  INFO 6978 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2026-02-20 17:18:42.211  INFO 6978 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-20 17:18:42.349  INFO 6978 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.83]
+2026-02-20 17:18:44.693  INFO 6978 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-20 17:18:44.695  INFO 6978 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 28444 ms
+2026-02-20 17:18:50.197  INFO 6978 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-20 17:18:51.329  INFO 6978 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-20 17:18:53.844  INFO 6978 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-20 17:18:56.172  INFO 6978 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-20 17:18:59.577  INFO 6978 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-20 17:18:59.867  INFO 6978 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2026-02-20 17:19:18.620 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists actions CASCADE 
+Hibernate: drop table if exists actions CASCADE 
+2026-02-20 17:19:18.660 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists clientes CASCADE 
+Hibernate: drop table if exists clientes CASCADE 
+2026-02-20 17:19:18.661 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists components CASCADE 
+Hibernate: drop table if exists components CASCADE 
+2026-02-20 17:19:18.662 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists contratos CASCADE 
+Hibernate: drop table if exists contratos CASCADE 
+2026-02-20 17:19:18.662 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists fraccionamientos CASCADE 
+Hibernate: drop table if exists fraccionamientos CASCADE 
+2026-02-20 17:19:18.663 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists leads CASCADE 
+Hibernate: drop table if exists leads CASCADE 
+2026-02-20 17:19:18.664 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists lote_imagenes CASCADE 
+Hibernate: drop table if exists lote_imagenes CASCADE 
+2026-02-20 17:19:18.664 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists lotes CASCADE 
+Hibernate: drop table if exists lotes CASCADE 
+2026-02-20 17:19:18.665 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists modules CASCADE 
+Hibernate: drop table if exists modules CASCADE 
+2026-02-20 17:19:18.666 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists opportunities CASCADE 
+Hibernate: drop table if exists opportunities CASCADE 
+2026-02-20 17:19:18.667 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists pagos CASCADE 
+Hibernate: drop table if exists pagos CASCADE 
+2026-02-20 17:19:18.667 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists permissions CASCADE 
+Hibernate: drop table if exists permissions CASCADE 
+2026-02-20 17:19:18.668 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists role_permissions CASCADE 
+Hibernate: drop table if exists role_permissions CASCADE 
+2026-02-20 17:19:19.041 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists roles CASCADE 
+Hibernate: drop table if exists roles CASCADE 
+2026-02-20 17:19:19.055 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists user_roles CASCADE 
+Hibernate: drop table if exists user_roles CASCADE 
+2026-02-20 17:19:19.085 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists users CASCADE 
+Hibernate: drop table if exists users CASCADE 
+2026-02-20 17:19:19.095 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table actions (id bigint generated by default as identity, created_at timestamp not null, description TEXT, display_name varchar(50) not null, name varchar(50) not null, primary key (id))
+Hibernate: create table actions (id bigint generated by default as identity, created_at timestamp not null, description TEXT, display_name varchar(50) not null, name varchar(50) not null, primary key (id))
+2026-02-20 17:19:19.148 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table clientes (id bigint generated by default as identity, apellidos varchar(255) not null, direccion varchar(255), email varchar(255) not null, fecha_registro timestamp, ine varchar(255), nombre varchar(255) not null, telefono varchar(255) not null, primary key (id))
+Hibernate: create table clientes (id bigint generated by default as identity, apellidos varchar(255) not null, direccion varchar(255), email varchar(255) not null, fecha_registro timestamp, ine varchar(255), nombre varchar(255) not null, telefono varchar(255) not null, primary key (id))
+2026-02-20 17:19:19.152 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table components (id bigint generated by default as identity, active boolean not null, created_at timestamp not null, description TEXT, display_name varchar(100) not null, display_order integer, name varchar(100) not null, route varchar(255), updated_at timestamp, module_id bigint not null, primary key (id))
+Hibernate: create table components (id bigint generated by default as identity, active boolean not null, created_at timestamp not null, description TEXT, display_name varchar(100) not null, display_order integer, name varchar(100) not null, route varchar(255), updated_at timestamp, module_id bigint not null, primary key (id))
+2026-02-20 17:19:19.156 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table contratos (id bigint generated by default as identity, enganche numeric(19,2), estatus varchar(255), fecha_contrato date, mensualidad numeric(19,2), monto_total numeric(19,2), plazo_meses integer, tasa_interes_anual double, cliente_id bigint not null, lote_id bigint not null, vendedor_id bigint, primary key (id))
+Hibernate: create table contratos (id bigint generated by default as identity, enganche numeric(19,2), estatus varchar(255), fecha_contrato date, mensualidad numeric(19,2), monto_total numeric(19,2), plazo_meses integer, tasa_interes_anual double, cliente_id bigint not null, lote_id bigint not null, vendedor_id bigint, primary key (id))
+2026-02-20 17:19:19.160 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table fraccionamientos (id bigint generated by default as identity, coordenadas_geo TEXT, descripcion varchar(255), logo_url varchar(255), nombre varchar(255) not null, poligono_delimitador TEXT, ubicacion varchar(255), primary key (id))
+Hibernate: create table fraccionamientos (id bigint generated by default as identity, coordenadas_geo TEXT, descripcion varchar(255), logo_url varchar(255), nombre varchar(255) not null, poligono_delimitador TEXT, ubicacion varchar(255), primary key (id))
+2026-02-20 17:19:19.165 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table leads (id bigint generated by default as identity, email varchar(255), fecha_registro timestamp, mensaje TEXT, nombre varchar(255) not null, source varchar(255), status varchar(255), telefono varchar(255), primary key (id))
+Hibernate: create table leads (id bigint generated by default as identity, email varchar(255), fecha_registro timestamp, mensaje TEXT, nombre varchar(255) not null, source varchar(255), status varchar(255), telefono varchar(255), primary key (id))
+2026-02-20 17:19:19.439 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table lote_imagenes (lote_id bigint not null, imagen_url varchar(255))
+Hibernate: create table lote_imagenes (lote_id bigint not null, imagen_url varchar(255))
+2026-02-20 17:19:19.441 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table lotes (id bigint generated by default as identity, area_metros_cuadrados double not null, coordenadas_geo TEXT, descripcion varchar(255), estatus varchar(20), imagen_url varchar(255), manzana varchar(255) not null, notas TEXT, numero_lote varchar(255) not null, plano_coordinates TEXT, precio_total numeric(19,2) not null, fraccionamiento_id bigint, primary key (id))
+Hibernate: create table lotes (id bigint generated by default as identity, area_metros_cuadrados double not null, coordenadas_geo TEXT, descripcion varchar(255), estatus varchar(20), imagen_url varchar(255), manzana varchar(255) not null, notas TEXT, numero_lote varchar(255) not null, plano_coordinates TEXT, precio_total numeric(19,2) not null, fraccionamiento_id bigint, primary key (id))
+2026-02-20 17:19:19.458 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table modules (id bigint generated by default as identity, active boolean not null, created_at timestamp not null, description TEXT, display_name varchar(100) not null, display_order integer, icon varchar(50), name varchar(100) not null, updated_at timestamp, primary key (id))
+Hibernate: create table modules (id bigint generated by default as identity, active boolean not null, created_at timestamp not null, description TEXT, display_name varchar(100) not null, display_order integer, icon varchar(50), name varchar(100) not null, updated_at timestamp, primary key (id))
+2026-02-20 17:19:19.644 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table opportunities (id bigint generated by default as identity, fecha_cierre_estimada date, monto_estimado numeric(19,2), notas TEXT, status varchar(255), lead_id bigint, lote_id bigint, primary key (id))
+Hibernate: create table opportunities (id bigint generated by default as identity, fecha_cierre_estimada date, monto_estimado numeric(19,2), notas TEXT, status varchar(255), lead_id bigint, lote_id bigint, primary key (id))
+2026-02-20 17:19:19.659 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table pagos (id bigint generated by default as identity, comprobante blob, comprobante_content_type varchar(255), concepto varchar(255), estatus varchar(255), fecha_pago date, fecha_validacion timestamp, metodo_pago varchar(255), monto numeric(19,2), referencia varchar(255), validado boolean, validado_por varchar(255), contrato_id bigint not null, primary key (id))
+Hibernate: create table pagos (id bigint generated by default as identity, comprobante blob, comprobante_content_type varchar(255), concepto varchar(255), estatus varchar(255), fecha_pago date, fecha_validacion timestamp, metodo_pago varchar(255), monto numeric(19,2), referencia varchar(255), validado boolean, validado_por varchar(255), contrato_id bigint not null, primary key (id))
+2026-02-20 17:19:19.667 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table permissions (id bigint generated by default as identity, active boolean not null, created_at timestamp not null, description TEXT, permission_key varchar(255) not null, updated_at timestamp, action_id bigint not null, component_id bigint, module_id bigint not null, primary key (id))
+Hibernate: create table permissions (id bigint generated by default as identity, active boolean not null, created_at timestamp not null, description TEXT, permission_key varchar(255) not null, updated_at timestamp, action_id bigint not null, component_id bigint, module_id bigint not null, primary key (id))
+2026-02-20 17:19:19.674 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table role_permissions (id bigint generated by default as identity, granted_at timestamp, granted_by varchar(255), permission_id bigint not null, role_id integer not null, primary key (id))
+Hibernate: create table role_permissions (id bigint generated by default as identity, granted_at timestamp, granted_by varchar(255), permission_id bigint not null, role_id integer not null, primary key (id))
+2026-02-20 17:19:19.677 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table roles (id integer generated by default as identity, name varchar(20), primary key (id))
+Hibernate: create table roles (id integer generated by default as identity, name varchar(20), primary key (id))
+2026-02-20 17:19:19.682 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table user_roles (user_id bigint not null, role_id integer not null, primary key (user_id, role_id))
+Hibernate: create table user_roles (user_id bigint not null, role_id integer not null, primary key (user_id, role_id))
+2026-02-20 17:19:19.830 DEBUG 6978 --- [           main] org.hibernate.SQL                        : create table users (id bigint generated by default as identity, created_at timestamp, email varchar(255) not null, password varchar(255) not null, username varchar(255) not null, primary key (id))
+Hibernate: create table users (id bigint generated by default as identity, created_at timestamp, email varchar(255) not null, password varchar(255) not null, username varchar(255) not null, primary key (id))
+2026-02-20 17:19:19.839 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table actions add constraint UK_oe93gku1sb0in93ahwynjt5in unique (name)
+Hibernate: alter table actions add constraint UK_oe93gku1sb0in93ahwynjt5in unique (name)
+2026-02-20 17:19:19.988 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table clientes add constraint UK_1c96wv36rk2hwui7qhjks3mvg unique (email)
+Hibernate: alter table clientes add constraint UK_1c96wv36rk2hwui7qhjks3mvg unique (email)
+2026-02-20 17:19:19.992 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table modules add constraint UK_n5ng23nwasusfsyqk68hx5a05 unique (name)
+Hibernate: alter table modules add constraint UK_n5ng23nwasusfsyqk68hx5a05 unique (name)
+2026-02-20 17:19:20.010 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table permissions add constraint UK_h1ss8mmscopr690vkcj25uj9a unique (permission_key)
+Hibernate: alter table permissions add constraint UK_h1ss8mmscopr690vkcj25uj9a unique (permission_key)
+2026-02-20 17:19:20.084 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table users add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email)
+Hibernate: alter table users add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email)
+2026-02-20 17:19:20.091 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table users add constraint UK_r43af9ap4edm43mmtq01oddj6 unique (username)
+Hibernate: alter table users add constraint UK_r43af9ap4edm43mmtq01oddj6 unique (username)
+2026-02-20 17:19:20.190 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table components add constraint FKfdu4k43qdtk5qdu5tkmoiarqf foreign key (module_id) references modules
+Hibernate: alter table components add constraint FKfdu4k43qdtk5qdu5tkmoiarqf foreign key (module_id) references modules
+2026-02-20 17:19:20.568 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table contratos add constraint FK1pllgg7q558aedufre3y4pewp foreign key (cliente_id) references clientes
+Hibernate: alter table contratos add constraint FK1pllgg7q558aedufre3y4pewp foreign key (cliente_id) references clientes
+2026-02-20 17:19:20.572 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table contratos add constraint FKsm4a6vibva184u8f9td65vmna foreign key (lote_id) references lotes
+Hibernate: alter table contratos add constraint FKsm4a6vibva184u8f9td65vmna foreign key (lote_id) references lotes
+2026-02-20 17:19:20.575 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table contratos add constraint FK7emve2vf3wgjecp31a7oax1yp foreign key (vendedor_id) references users
+Hibernate: alter table contratos add constraint FK7emve2vf3wgjecp31a7oax1yp foreign key (vendedor_id) references users
+2026-02-20 17:19:20.710 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table lote_imagenes add constraint FKn84vq5ciyk753qptvrwnp939d foreign key (lote_id) references lotes
+Hibernate: alter table lote_imagenes add constraint FKn84vq5ciyk753qptvrwnp939d foreign key (lote_id) references lotes
+2026-02-20 17:19:20.713 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table lotes add constraint FK91j3e4ckqbk885kyoq7f3wuco foreign key (fraccionamiento_id) references fraccionamientos
+Hibernate: alter table lotes add constraint FK91j3e4ckqbk885kyoq7f3wuco foreign key (fraccionamiento_id) references fraccionamientos
+2026-02-20 17:19:20.723 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table opportunities add constraint FK6541yivnfwu29r63jefd6lsdq foreign key (lead_id) references leads
+Hibernate: alter table opportunities add constraint FK6541yivnfwu29r63jefd6lsdq foreign key (lead_id) references leads
+2026-02-20 17:19:20.728 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table opportunities add constraint FKrkyrr7yqv9smyj1prphtex48m foreign key (lote_id) references lotes
+Hibernate: alter table opportunities add constraint FKrkyrr7yqv9smyj1prphtex48m foreign key (lote_id) references lotes
+2026-02-20 17:19:20.878 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table pagos add constraint FKfsgbuky3qe4emfg7adfd4md2l foreign key (contrato_id) references contratos
+Hibernate: alter table pagos add constraint FKfsgbuky3qe4emfg7adfd4md2l foreign key (contrato_id) references contratos
+2026-02-20 17:19:20.887 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table permissions add constraint FKql5yu3r5kbeww3liqu42u6r84 foreign key (action_id) references actions
+Hibernate: alter table permissions add constraint FKql5yu3r5kbeww3liqu42u6r84 foreign key (action_id) references actions
+2026-02-20 17:19:20.898 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table permissions add constraint FK96aqqbttbigk4ht2odwpj83sx foreign key (component_id) references components
+Hibernate: alter table permissions add constraint FK96aqqbttbigk4ht2odwpj83sx foreign key (component_id) references components
+2026-02-20 17:19:20.913 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table permissions add constraint FK22lamcef3kykumk5rwjiv4x5u foreign key (module_id) references modules
+Hibernate: alter table permissions add constraint FK22lamcef3kykumk5rwjiv4x5u foreign key (module_id) references modules
+2026-02-20 17:19:20.919 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table role_permissions add constraint FKegdk29eiy7mdtefy5c7eirr6e foreign key (permission_id) references permissions
+Hibernate: alter table role_permissions add constraint FKegdk29eiy7mdtefy5c7eirr6e foreign key (permission_id) references permissions
+2026-02-20 17:19:20.922 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table role_permissions add constraint FKn5fotdgk8d1xvo8nav9uv3muc foreign key (role_id) references roles
+Hibernate: alter table role_permissions add constraint FKn5fotdgk8d1xvo8nav9uv3muc foreign key (role_id) references roles
+2026-02-20 17:19:20.942 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table user_roles add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 foreign key (role_id) references roles
+Hibernate: alter table user_roles add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 foreign key (role_id) references roles
+2026-02-20 17:19:20.955 DEBUG 6978 --- [           main] org.hibernate.SQL                        : alter table user_roles add constraint FKhfh9dx7w3ubf1co1vdev94g3f foreign key (user_id) references users
+Hibernate: alter table user_roles add constraint FKhfh9dx7w3ubf1co1vdev94g3f foreign key (user_id) references users
+2026-02-20 17:19:21.041  INFO 6978 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-02-20 17:19:21.397  INFO 6978 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-20 17:19:27.060  INFO 6978 --- [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./data/casavida_db'
+2026-02-20 17:19:27.668 DEBUG 6978 --- [           main] o.springframework.web.filter.CorsFilter  : Filter 'corsFilter' configured for use
+2026-02-20 17:19:32.660  WARN 6978 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'adminController': Lookup method resolution failed; nested exception is java.lang.IllegalStateException: Failed to introspect Class [com.casavida.backend.controllers.AdminController] from ClassLoader [jdk.internal.loader.ClassLoaders$AppClassLoader@4b85612c]
+2026-02-20 17:19:32.669  INFO 6978 --- [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-20 17:19:32.670  INFO 6978 --- [           main] .SchemaDropperImpl$DelayedDropActionImpl : HHH000477: Starting delayed evictData of schema as part of SessionFactory shut-down'
+2026-02-20 17:19:32.671 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists actions CASCADE 
+Hibernate: drop table if exists actions CASCADE 
+2026-02-20 17:19:32.682 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists clientes CASCADE 
+Hibernate: drop table if exists clientes CASCADE 
+2026-02-20 17:19:32.693 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists components CASCADE 
+Hibernate: drop table if exists components CASCADE 
+2026-02-20 17:19:32.828 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists contratos CASCADE 
+Hibernate: drop table if exists contratos CASCADE 
+2026-02-20 17:19:32.839 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists fraccionamientos CASCADE 
+Hibernate: drop table if exists fraccionamientos CASCADE 
+2026-02-20 17:19:32.849 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists leads CASCADE 
+Hibernate: drop table if exists leads CASCADE 
+2026-02-20 17:19:32.850 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists lote_imagenes CASCADE 
+Hibernate: drop table if exists lote_imagenes CASCADE 
+2026-02-20 17:19:32.851 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists lotes CASCADE 
+Hibernate: drop table if exists lotes CASCADE 
+2026-02-20 17:19:32.855 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists modules CASCADE 
+Hibernate: drop table if exists modules CASCADE 
+2026-02-20 17:19:32.858 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists opportunities CASCADE 
+Hibernate: drop table if exists opportunities CASCADE 
+2026-02-20 17:19:32.859 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists pagos CASCADE 
+Hibernate: drop table if exists pagos CASCADE 
+2026-02-20 17:19:32.867 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists permissions CASCADE 
+Hibernate: drop table if exists permissions CASCADE 
+2026-02-20 17:19:32.871 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists role_permissions CASCADE 
+Hibernate: drop table if exists role_permissions CASCADE 
+2026-02-20 17:19:32.875 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists roles CASCADE 
+Hibernate: drop table if exists roles CASCADE 
+2026-02-20 17:19:32.877 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists user_roles CASCADE 
+Hibernate: drop table if exists user_roles CASCADE 
+2026-02-20 17:19:32.878 DEBUG 6978 --- [           main] org.hibernate.SQL                        : drop table if exists users CASCADE 
+Hibernate: drop table if exists users CASCADE 
+2026-02-20 17:19:32.890  INFO 6978 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-20 17:19:32.921  INFO 6978 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-02-20 17:19:32.925  INFO 6978 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-02-20 17:19:33.075  WARN 6978 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [MVStore background writer /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/data/casavida_db.mv.db] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@11.0.17/java.lang.Object.wait(Native Method)
+ app//org.h2.mvstore.MVStore$BackgroundWriterThread.run(MVStore.java:3768)
+2026-02-20 17:19:33.076  WARN 6978 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [H2-serialization] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@11.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@11.0.17/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+ java.base@11.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+ java.base@11.0.17/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+ java.base@11.0.17/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+ java.base@11.0.17/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+ java.base@11.0.17/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+ java.base@11.0.17/java.lang.Thread.run(Thread.java:834)
+2026-02-20 17:19:33.077  WARN 6978 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [H2-save] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@11.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@11.0.17/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+ java.base@11.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+ java.base@11.0.17/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+ java.base@11.0.17/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+ java.base@11.0.17/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+ java.base@11.0.17/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+ java.base@11.0.17/java.lang.Thread.run(Thread.java:834)
+2026-02-20 17:19:33.144  INFO 6978 --- [           main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2026-02-20 17:19:33.808 ERROR 6978 --- [           main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'adminController': Lookup method resolution failed; nested exception is java.lang.IllegalStateException: Failed to introspect Class [com.casavida.backend.controllers.AdminController] from ClassLoader [jdk.internal.loader.ClassLoaders$AppClassLoader@4b85612c]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:298) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.determineConstructorsFromBeanPostProcessors(AbstractAutowireCapableBeanFactory.java:1302) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1219) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955) ~[spring-beans-5.3.31.jar:5.3.31]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:929) ~[spring-context-5.3.31.jar:5.3.31]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:591) ~[spring-context-5.3.31.jar:5.3.31]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:409) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300) ~[spring-boot-2.7.18.jar:2.7.18]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289) ~[spring-boot-2.7.18.jar:2.7.18]
+	at com.casavida.backend.BackendApplication.main(BackendApplication.java:10) ~[classes/:na]
+Caused by: java.lang.IllegalStateException: Failed to introspect Class [com.casavida.backend.controllers.AdminController] from ClassLoader [jdk.internal.loader.ClassLoaders$AppClassLoader@4b85612c]
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:485) ~[spring-core-5.3.31.jar:5.3.31]
+	at org.springframework.util.ReflectionUtils.doWithLocalMethods(ReflectionUtils.java:321) ~[spring-core-5.3.31.jar:5.3.31]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:276) ~[spring-beans-5.3.31.jar:5.3.31]
+	... 18 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: com/casavida/backend/dto/UserDTO
+	at java.base/java.lang.Class.getDeclaredMethods0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3166) ~[na:na]
+	at java.base/java.lang.Class.getDeclaredMethods(Class.java:2309) ~[na:na]
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:467) ~[spring-core-5.3.31.jar:5.3.31]
+	... 20 common frames omitted
+Caused by: java.lang.ClassNotFoundException: com.casavida.backend.dto.UserDTO
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:581) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:178) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:521) ~[na:na]
+	... 24 common frames omitted
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:53 min
+[INFO] Finished at: 2026-02-20T17:19:34-06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.7.18:run (default-cli) on project backend: Application finished with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

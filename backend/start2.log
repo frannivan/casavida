@@ -1,0 +1,110 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.casavida:backend >------------------------
+[INFO] Building backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ backend ---
+[INFO] Deleting /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target
+[INFO] 
+[INFO] >>> spring-boot:2.7.18:run (default-cli) > test-compile @ backend >>>
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 3 resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 69 source files with javac [debug parameters target 11] to target/classes
+[INFO] 
+[INFO] --- resources:3.2.0:testResources (default-testResources) @ backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] skip non existing resourceDirectory /Users/franivan/Documents/ProyectosWeb/CasaVida/backend/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ backend ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 2 source files with javac [debug parameters target 11] to target/test-classes
+[INFO] 
+[INFO] <<< spring-boot:2.7.18:run (default-cli) < test-compile @ backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:2.7.18:run (default-cli) @ backend ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.18)
+
+2026-02-20 19:02:03.718  INFO 13453 --- [           main] com.casavida.backend.BackendApplication  : Starting BackendApplication using Java 11.0.17 on Frans-MacBook-Air.local with PID 13453 (/Users/franivan/Documents/ProyectosWeb/CasaVida/backend/target/classes started by franivan in /Users/franivan/Documents/ProyectosWeb/CasaVida/backend)
+2026-02-20 19:02:03.732  INFO 13453 --- [           main] com.casavida.backend.BackendApplication  : The following 1 profile is active: "dev"
+2026-02-20 19:02:11.020  INFO 13453 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-20 19:02:11.206  INFO 13453 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 161 ms. Found 10 JPA repository interfaces.
+2026-02-20 19:02:12.837  INFO 13453 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2026-02-20 19:02:12.867  INFO 13453 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-20 19:02:12.867  INFO 13453 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.83]
+2026-02-20 19:02:13.096  INFO 13453 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-20 19:02:13.096  INFO 13453 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 8912 ms
+2026-02-20 19:02:13.532  INFO 13453 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-20 19:02:13.736  INFO 13453 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-20 19:02:14.369  INFO 13453 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-20 19:02:14.706  INFO 13453 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-20 19:02:16.636  INFO 13453 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-20 19:02:16.709  INFO 13453 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2026-02-20 19:02:20.691  INFO 13453 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-02-20 19:02:20.733  INFO 13453 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-20 19:02:24.432  INFO 13453 --- [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./data/casavida'
+2026-02-20 19:02:26.301 DEBUG 13453 --- [           main] o.springframework.web.filter.CorsFilter  : Filter 'corsFilter' configured for use
+--- FraccionamientoController INSTANTIATED ---
+--- HealthController INSTANTIATED ---
+--- LoteController INSTANTIATED ---
+2026-02-20 19:02:32.500  WARN 13453 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-20 19:02:32.874 DEBUG 13453 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 83 mappings in 'requestMappingHandlerMapping'
+2026-02-20 19:02:34.359 DEBUG 13453 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-02-20 19:02:34.504  INFO 13453 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4d359c69, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@28f6a008, org.springframework.security.web.context.SecurityContextPersistenceFilter@7da1ef46, org.springframework.security.web.header.HeaderWriterFilter@5bc40f5d, org.springframework.web.filter.CorsFilter@71dfca65, org.springframework.security.web.authentication.logout.LogoutFilter@67216c33, com.casavida.backend.security.jwt.AuthTokenFilter@49c4118b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1ae23815, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@63ccb1b2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7fa86ddd, org.springframework.security.web.session.SessionManagementFilter@7bbe532b, org.springframework.security.web.access.ExceptionTranslationFilter@205b73d8, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2fafa9bf]
+2026-02-20 19:02:34.928 DEBUG 13453 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-02-20 19:02:35.123 DEBUG 13453 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-02-20 19:02:36.751  INFO 13453 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2026-02-20 19:02:36.818  INFO 13453 --- [           main] com.casavida.backend.BackendApplication  : Started BackendApplication in 36.344 seconds (JVM running for 38.281)
+2026-02-20 19:04:36.238  INFO 13453 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-20 19:04:36.282  INFO 13453 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-02-20 19:04:36.304 DEBUG 13453 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2026-02-20 19:04:36.312 DEBUG 13453 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2026-02-20 19:04:36.314 DEBUG 13453 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2026-02-20 19:04:36.372 DEBUG 13453 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@5b5f61cc
+2026-02-20 19:04:36.373 DEBUG 13453 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@7d381eae
+2026-02-20 19:04:36.373 DEBUG 13453 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-02-20 19:04:36.374  INFO 13453 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 72 ms
+2026-02-20 19:04:36.635 DEBUG 13453 --- [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.casavida.backend.controllers.AuthController#authenticateUser(LoginRequest)
+2026-02-20 19:04:36.728 DEBUG 13453 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/api/auth/signin", parameters={}
+2026-02-20 19:04:36.734 DEBUG 13453 --- [nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.casavida.backend.controllers.AuthController#authenticateUser(LoginRequest)
+2026-02-20 19:04:37.554 DEBUG 13453 --- [nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [com.casavida.backend.payload.request.LoginRequest@390f25f4]
+2026-02-20 19:04:39.013 DEBUG 13453 --- [nio-8080-exec-1] org.hibernate.SQL                        : select user0_.id as id1_12_, user0_.created_at as created_2_12_, user0_.email as email3_12_, user0_.password as password4_12_, user0_.username as username5_12_ from users user0_ where user0_.username=?
+Hibernate: select user0_.id as id1_12_, user0_.created_at as created_2_12_, user0_.email as email3_12_, user0_.password as password4_12_, user0_.username as username5_12_ from users user0_ where user0_.username=?
+2026-02-20 19:04:39.079 TRACE 13453 --- [nio-8080-exec-1] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [admin]
+2026-02-20 19:04:39.375 DEBUG 13453 --- [nio-8080-exec-1] org.hibernate.SQL                        : select roles0_.user_id as user_id1_11_0_, roles0_.role_id as role_id2_11_0_, role1_.id as id1_10_1_, role1_.name as name2_10_1_ from user_roles roles0_ inner join roles role1_ on roles0_.role_id=role1_.id where roles0_.user_id=?
+Hibernate: select roles0_.user_id as user_id1_11_0_, roles0_.role_id as role_id2_11_0_, role1_.id as id1_10_1_, role1_.name as name2_10_1_ from user_roles roles0_ inner join roles role1_ on roles0_.role_id=role1_.id where roles0_.user_id=?
+2026-02-20 19:04:39.423 TRACE 13453 --- [nio-8080-exec-1] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [BIGINT] - [1]
+2026-02-20 19:04:42.167 DEBUG 13453 --- [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
+2026-02-20 19:04:42.176 DEBUG 13453 --- [nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [com.casavida.backend.payload.response.JwtResponse@6ca37fc5]
+2026-02-20 19:04:42.533 DEBUG 13453 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  22:50 min
+[INFO] Finished at: 2026-02-20T19:23:50-06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.7.18:run (default-cli) on project backend: Application finished with exit code: 137 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
