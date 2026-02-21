@@ -61,19 +61,33 @@
                                 {{ (opp.fechaCierreEstimada | date:'dd/MM/yyyy') || 'Sin fecha' }}
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-primary rounded-pill px-3" *ngIf="opp.status === 'WON'"
-                                    (click)="convertToClient(opp)">
-                                    <i class="fas fa-user-plus mr-1"></i> Crear Cliente
-                                </button>
-                                <span *ngIf="opp.status !== 'WON'" class="text-muted small">En proceso</span>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-primary rounded-pill px-3 mr-1" *ngIf="opp.status === 'WON'"
+                                        (click)="convertToClient(opp)">
+                                        <i class="fas fa-user-plus mr-1"></i> Crear Cliente
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info rounded-pill" (click)="openCommModal(opp)">
+                                        <i class="fab fa-whatsapp"></i> / <i class="fas fa-envelope"></i>
+                                    </button>
+                                </div>
+                                <span *ngIf="opp.status !== 'WON'" class="text-muted d-block mt-1 small">En proceso</span>
                             </td>
                         </tr>
                         <tr *ngIf="opportunities.length === 0">
-                            <td colspan="6" class="text-center py-4 text-muted">No hay oportunidades activas.</td>
+                            <td colspan="7" class="text-center py-4 text-muted">No hay oportunidades activas.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    <!-- Communication Modal (WA/Email) -->
+    <app-communication-modal 
+        *ngIf="showCommModal" 
+        [show]="showCommModal" 
+        [targetId]="selectedOpportunity?.lead?.id" 
+        [targetName]="selectedOpportunity?.lead?.nombre"
+        (onClose)="showCommModal = false">
+    </app-communication-modal>
 </div>

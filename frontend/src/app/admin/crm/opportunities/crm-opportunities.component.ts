@@ -2,19 +2,21 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CRMService } from '../../../services/crm.service';
+import { CommunicationModalComponent } from '../communication-modal.component';
 
 @Component({
     selector: 'app-crm-opportunities',
     templateUrl: './crm-opportunities.component.html',
     styleUrls: ['./crm-opportunities.component.css'],
     standalone: true,
-    imports: [CommonModule, FormsModule]
+    imports: [CommonModule, FormsModule, CommunicationModalComponent]
 })
 export class CrmOpportunitiesComponent implements OnInit {
     opportunities: any[] = [];
     successMsg = '';
     errorMsg = '';
     searchTerm = '';
+    showCommModal = false;
 
     get filteredOpportunities() {
         if (!this.searchTerm) return this.opportunities;
@@ -67,4 +69,11 @@ export class CrmOpportunitiesComponent implements OnInit {
             error: (err: any) => this.errorMsg = 'Error al convertir a cliente'
         });
     }
+
+    openCommModal(opp: any): void {
+        this.selectedOpportunity = opp;
+        this.showCommModal = true;
+    }
+
+    selectedOpportunity: any = null;
 }

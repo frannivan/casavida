@@ -82,6 +82,32 @@
           "builder": "@angular/build:unit-test"
         }
       }
+    },
+    "crm-communication": {
+      "projectType": "library",
+      "root": "projects/crm-communication",
+      "sourceRoot": "projects/crm-communication/src",
+      "prefix": "crm",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/crm-communication/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/crm-communication/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/crm-communication/tsconfig.spec.json"
+          }
+        }
+      }
     }
   }
 }

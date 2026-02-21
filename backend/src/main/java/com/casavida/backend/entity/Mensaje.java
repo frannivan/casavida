@@ -6,6 +6,14 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Entidad de comunicación CRM.
+ * Registra mensajes de WhatsApp y Email intercambiados con Leads, Oportunidades o Clientes.
+ * Soporta trazabilidad completa del canal de comunicación comercial.
+ *
+ * @see Lead
+ * @since CU03 – Gestión de Leads / CU04 – Gestión de Oportunidades
+ */
 @Entity
 @Table(name = "mensajes")
 @Data
@@ -15,32 +23,46 @@ public class Mensaje {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "remitente_id", nullable = false)
-    private User remitente;
+    /** ID del Lead u Oportunidad asociado */
+    @Column(name = "target_id", nullable = false)
+    private Long targetId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "destinatario_id", nullable = false)
-    private User destinatario;
+    /** Tipo de canal: WA (WhatsApp) o EMAIL */
+    @Column(nullable = false, length = 10)
+    private String tipo;
 
-    @Column(nullable = false)
-    private String asunto;
+    /** Dirección del mensaje: ENVIADO o RECIBIDO */
+    @Column(nullable = false, length = 10)
+    private String direccion;
 
+    /** Contenido del mensaje o cuerpo del email */
     @Column(columnDefinition = "TEXT", nullable = false)
     private String contenido;
 
+    /** Nombre del remitente (vendedor, cliente, etc.) */
     @Column(nullable = false)
-    private LocalDateTime fechaEnvio;
+    private String remitente;
 
-    @Column(nullable = false)
-    private boolean leido = false;
+    /** Archivo adjunto (ej. "Cotizacion.pdf"), nullable */
+    private String adjunto;
 
-    public Mensaje(User remitente, User destinatario, String asunto, String contenido) {
-        this.remitente = remitente;
-        this.destinatario = destinatario;
-        this.asunto = asunto;
+    /** Fecha de envío o recepción */
+    @Column(name = "fecha", nullable = false)
+    private LocalDateTime fecha;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.fecha == null) {
+            this.fecha = LocalDateTime.now();
+        }
+    }
+
+    public Mensaje(Long targetId, String tipo, String direccion, String contenido, String remitente) {
+        this.targetId = targetId;
+        this.tipo = tipo;
+        this.direccion = direccion;
         this.contenido = contenido;
-        this.fechaEnvio = LocalDateTime.now();
-        this.leido = false;
+        this.remitente = remitente;
+        this.fecha = LocalDateTime.now();
     }
 }

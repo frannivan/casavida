@@ -3,6 +3,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "crm-communication": [
+        "./dist/crm-communication"
+      ]
+    },
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -28,6 +33,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/crm-communication/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/crm-communication/tsconfig.spec.json"
     }
   ]
 }
