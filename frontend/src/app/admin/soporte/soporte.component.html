@@ -1,0 +1,193 @@
+<div class="container-fluid py-4 min-vh-100 dark-bg">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h2 class="text-white fw-bold m-0 m-font animate-fade-in">
+                <i class="fas fa-headset me-2 text-primary"></i>Centro de Soporte
+            </h2>
+            <div *ngIf="isAdmin" class="d-flex gap-2">
+                <button class="btn btn-premium" data-bs-toggle="modal" data-bs-target="#reportModal">
+                    <i class="fas fa-plus me-2"></i>Reportar Incidencia
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Message -->
+    <div *ngIf="message" class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" (click)="message = ''"></button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row">
+        <!-- Tickets List -->
+        <div class="col-lg-8 mb-4">
+            <div class="glass-card h-100 p-0 overflow-hidden">
+                <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center bg-dark-accent">
+                    <h5 class="m-0 text-white">Tickets Recientes</h5>
+                    <div class="badge bg-primary">{{ tickets.length }} Total</div>
+                </div>
+
+                <div class="table-responsive" style="max-height: 70vh;">
+                    <table class="table table-dark table-hover m-0">
+                        <thead class="sticky-top bg-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Asunto</th>
+                                <th>Prioridad</th>
+                                <th>Estatus</th>
+                                <th>Fecha</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let t of tickets" (click)="selectTicket(t)" [class.table-active]="selectedTicket?.id === t.id" class="pointer">
+                                <td>#{{ t.id }}</td>
+                                <td>
+                                    <div class="fw-bold text-white">{{ t.titulo }}</div>
+                                    <small class="text-muted text-truncate d-inline-block" style="max-width: 200px;">{{ t.descripcion }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge" [ngClass]="{
+                                        'bg-danger': t.prioridad === 'ALTA',
+                                        'bg-warning text-dark': t.prioridad === 'MEDIA',
+                                        'bg-info text-dark': t.prioridad === 'BAJA'
+                                    }">{{ t.prioridad }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill border" [ngClass]="{
+                                        'border-primary text-primary': t.estatus === 'ABIERTO',
+                                        'border-warning text-warning': t.estatus === 'EN_PROCESO',
+                                        'border-info text-info': t.estatus === 'LISTO_PARA_PRUEBAS',
+                                        'border-success text-success': t.estatus === 'LISTO' || t.estatus === 'LIBERADO',
+                                        'border-danger text-danger': t.estatus === 'RECHAZADO'
+                                    }">{{ t.estatus }}</span>
+                                </td>
+                                <td><small>{{ t.fechaCreacion | date:'shortDate' }}</small></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-light">Ver</button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="tickets.length === 0">
+                                <td colspan="6" class="text-center py-5 text-muted">No hay incidencias reportadas.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticket Detail / Conversation -->
+        <div class="col-lg-4 mb-4">
+            <div class="glass-card h-100 d-flex flex-column p-0 border-primary-glow">
+                <div *ngIf="!selectedTicket" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted p-5 text-center">
+                    <i class="fas fa-ticket-alt fa-3x mb-3 opacity-25"></i>
+                    <p>Selecciona un ticket para ver los detalles y comentarios.</p>
+                </div>
+
+                <div *ngIf="selectedTicket" class="d-flex flex-column h-100 overflow-hidden">
+                    <div class="p-4 border-bottom border-secondary bg-dark-accent">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="text-white mb-0">#{{ selectedTicket.id }} - {{ selectedTicket.titulo }}</h5>
+                            <button class="btn-close btn-close-white btn-sm" (click)="selectedTicket = null"></button>
+                        </div>
+                        <p class="text-muted small mb-3">{{ selectedTicket.descripcion }}</p>
+                        
+                        <!-- Actions for Support and Admin -->
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <!-- Support Roles Actions -->
+                            <ng-container *ngIf="isSoporte">
+                                <button class="btn btn-xs btn-warning" (click)="updateStatus('EN_PROCESO')">En Proceso</button>
+                                <button class="btn btn-xs btn-info" (click)="updateStatus('LISTO_PARA_PRUEBAS')">Listo para Pruebas</button>
+                                <button class="btn btn-xs btn-danger" (click)="updateStatus('RECHAZADO')">Rechazar</button>
+                            </ng-container>
+
+                            <!-- Admin Actions after testing -->
+                            <ng-container *ngIf="isAdmin">
+                                <button class="btn btn-xs btn-success" (click)="updateStatus('LISTO')">Listo / Validado</button>
+                                <button class="btn btn-xs btn-outline-success" (click)="updateStatus('LIBERADO')">Liberar</button>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <!-- Conversation/Comments -->
+                    <div class="flex-grow-1 overflow-auto p-4 bg-black-25">
+                        <div *ngIf="selectedTicket.comentarios" class="mb-4">
+                            <h6 class="text-primary small fw-bold text-uppercase mb-3">Comentarios y Bitácora</h6>
+                            <div class="comments-container">
+                                <div *ngFor="let line of selectedTicket.comentarios.split('\n---\n')" class="comment-bubble mb-2">
+                                    {{ line }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Evidence if exists -->
+                        <div class="evidence-section mt-4" *ngIf="selectedTicket.id">
+                           <h6 class="text-primary small fw-bold text-uppercase mb-3">Evidencia Adjunta</h6>
+                           <div class="evidence-img-container rounded border border-secondary p-2 bg-dark">
+                               <img [src]="getEvidenciaUrl(selectedTicket.id)" class="img-fluid rounded" alt="Evidencia" 
+                                    onerror="this.parentElement.style.display='none'">
+                           </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Comment -->
+                    <div class="p-3 bg-dark-accent border-top border-secondary">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-dark text-white border-secondary" 
+                                   placeholder="Escribe un comentario..." [(ngModel)]="newComment" (keyup.enter)="addComment()">
+                            <button class="btn btn-primary" (click)="addComment()" [disabled]="!newComment">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Reportar Ticket -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-card p-0 overflow-hidden border-primary">
+            <div class="modal-header border-secondary bg-dark-accent">
+                <h5 class="modal-title text-white">Reportar Incidencia</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 bg-dark">
+                <div class="mb-3">
+                    <label class="form-label text-muted small text-uppercase">Título del Error/Cambio</label>
+                    <input type="text" class="form-control bg-dark-accent text-white border-secondary" 
+                           [(ngModel)]="newTicket.titulo" placeholder="Ej: Error al cargar lote 102">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small text-uppercase">Descripción Detallada</label>
+                    <textarea class="form-control bg-dark-accent text-white border-secondary" rows="4"
+                              [(ngModel)]="newTicket.descripcion" placeholder="Explica paso a paso qué sucede..."></textarea>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label text-muted small text-uppercase">Prioridad</label>
+                        <select class="form-select bg-dark-accent text-white border-secondary" [(ngModel)]="newTicket.prioridad">
+                            <option value="BAJA">Baja</option>
+                            <option value="MEDIA">Media</option>
+                            <option value="ALTA">Alta</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-muted small text-uppercase">Evidencia (Opcional)</label>
+                        <input type="file" class="form-control bg-dark-accent text-white border-secondary btn-sm" (change)="onFileSelected($event)">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-secondary bg-dark-accent">
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-premium" (click)="onSubmit()" data-bs-dismiss="modal" [disabled]="!newTicket.titulo || !newTicket.descripcion">
+                    Enviar Reporte
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

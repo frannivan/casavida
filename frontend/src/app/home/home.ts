@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LoteService } from '../services/lote';
 import { FraccionamientoService } from '../services/fraccionamiento';
+import { StorageService } from '../services/storage';
 
 import { MapComponent } from '../map/map';
 
@@ -20,18 +21,29 @@ export class HomeComponent implements OnInit {
   fraccionamientos: any[] = []; // Display list
   ubicaciones: string[] = [];
   isLoading = true;
+  isLoggedIn = false;
+  isStaff = false;
 
   // Filter Models
   searchFraccionamiento = '';
   searchUbicacion = '';
   sortDir = 'asc';
+  showMap = false; // Collapsible by default as requested
 
   constructor(
     private loteService: LoteService,
-    private fraccionamientoService: FraccionamientoService
+    private fraccionamientoService: FraccionamientoService,
+    private storageService: StorageService
   ) { }
 
   ngOnInit(): void {
+    const user = this.storageService.getUser();
+    this.isLoggedIn = this.storageService.isLoggedIn();
+    if (this.isLoggedIn && user && user.roles) {
+      this.isStaff = user.roles.some((role: string) => 
+        ['ROLE_ADMIN', 'ROLE_VENDEDOR', 'ROLE_RECEPCION', 'ROLE_CONTABILIDAD', 'ROLE_DIRECTIVO', 'ROLE_SOPORTE'].includes(role)
+      );
+    }
     this.loadFraccionamientos();
     this.search();
   }

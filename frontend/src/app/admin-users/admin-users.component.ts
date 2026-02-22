@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../services/admin';
 import { StorageService } from '../services/storage';
+import { ExportService } from '../services/export.service';
 
 @Component({
     selector: 'app-admin-users',
@@ -31,6 +32,7 @@ export class AdminUsersComponent implements OnInit {
     roles = ['ADMIN', 'USER', 'VENDEDOR', 'RECEPCION', 'CONTABILIDAD', 'DIRECTIVO'];
 
     private adminService = inject(AdminService);
+    private exportService = inject(ExportService);
     private cdr = inject(ChangeDetectorRef);
     private storageService = inject(StorageService);
 
@@ -143,5 +145,9 @@ export class AdminUsersComponent implements OnInit {
                 error: (err) => alert('Error eliminando: ' + (err.error?.message || err.message))
             });
         }
+    }
+
+    exportExcel(): void {
+        this.exportService.exportToExcel('/reportes/usuarios', {}, 'lista_usuarios.xlsx');
     }
 }

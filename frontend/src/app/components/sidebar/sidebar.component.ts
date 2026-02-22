@@ -26,6 +26,7 @@ export class SidebarComponent {
   isContabilidad = false;
   isDirectivo = false;
   isUser = false;
+  isSoporte = false;
 
   private storageService = inject(StorageService);
   private authService = inject(AuthService);
@@ -41,6 +42,7 @@ export class SidebarComponent {
     this.isContabilidad = this.roles.includes('ROLE_CONTABILIDAD');
     this.isDirectivo = this.roles.includes('ROLE_DIRECTIVO');
     this.isUser = this.roles.includes('ROLE_USER');
+    this.isSoporte = this.roles.includes('ROLE_SOPORTE');
   }
 
   /**

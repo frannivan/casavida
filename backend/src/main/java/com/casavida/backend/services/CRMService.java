@@ -87,6 +87,30 @@ public class CRMService {
     }
 
     @Transactional
+    public Lead sendPriceList(Long id, List<Long> fraccionamientoIds) {
+        Lead lead = leadRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Lead no encontrado"));
+        
+        lead.setStatus(ELeadStatus.PRICE_LIST_SENT);
+        String log = "\n[" + LocalDateTime.now() + "] Lista de precios enviada (IDs: " + fraccionamientoIds + ")";
+        lead.setMensaje(lead.getMensaje() == null ? log : lead.getMensaje() + log);
+        
+        return leadRepository.save(lead);
+    }
+
+    @Transactional
+    public Lead sendBudget(Long id, String details) {
+        Lead lead = leadRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Lead no encontrado"));
+        
+        lead.setStatus(ELeadStatus.BUDGET_SENT);
+        String log = "\n[" + LocalDateTime.now() + "] Presupuesto enviado: " + details;
+        lead.setMensaje(lead.getMensaje() == null ? log : lead.getMensaje() + log);
+        
+        return leadRepository.save(lead);
+    }
+
+    @Transactional
     public Opportunity convertLeadToOpportunity(Long leadId, Long loteId) {
         Lead lead = leadRepository.findById(leadId)
                 .orElseThrow(() -> new RuntimeException("Lead no encontrado"));

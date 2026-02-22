@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { ClienteService } from '../../services/cliente';
 import { FraccionamientoService } from '../../services/fraccionamiento';
 import { UserService } from '../../services/user.service';
+import { ExportService } from '../../services/export.service';
 
 @Component({
   selector: 'app-reportes',
@@ -41,6 +42,7 @@ export class ReportesComponent implements OnInit {
   private clienteService = inject(ClienteService);
   private fraccService = inject(FraccionamientoService);
   private userService = inject(UserService);
+  private exportService = inject(ExportService);
   private apiUrl = environment.apiUrl + '/reportes';
 
   ngOnInit(): void {
@@ -143,19 +145,31 @@ export class ReportesComponent implements OnInit {
     if (!this.reportType) return;
 
     if (format === 'pdf' && this.reportType !== 'pagos') {
-        // Currently only pagos (estado cuenta) has PDF, but we can expand
-        // For now, let's focus on the Excel which is requested for all
         alert('Exportación PDF disponible principalmente para Estados de Cuenta en Clientes.');
         return;
     }
 
-    let params = new HttpParams().set('format', format);
-    if (this.startDate) params = params.set('startDate', this.startDate);
-    if (this.endDate) params = params.set('endDate', this.endDate);
-    if (this.filterType) params = params.set('type', this.filterType);
-    if (this.filterId) params = params.set('id', this.filterId.toString());
+    const params: any = {
+      startDate: this.startDate,
+      endDate: this.endDate,
+      type: this.filterType,
+      id: this.filterId
+    };
 
-    const url = `${this.apiUrl}/${this.reportType}?${params.toString()}`;
-    window.open(url, '_blank');
+    if (format === 'excel') {
+      this.exportService.exportToExcel(`/reportes/${this.reportType}`, params, `reporte_${this.reportType}.xlsx`);
+    } else {
+      // PDF handling (keeping window.open for now if pdf doesn't require complex auth or if it's already working via direct link)
+      // Actually, PDF service also needs token. I should probably add exportToPdf to ExportService.
+      // But let's focus on Excel first as requested.
+      let httpParams = new HttpParams().set('format', 'pdf');
+      if (this.startDate) httpParams = httpParams.set('startDate', this.startDate);
+      if (this.endDate) httpParams = httpParams.set('endDate', this.endDate);
+      if (this.filterType) httpParams = httpParams.set('type', this.filterType);
+      if (this.filterId) httpParams = httpParams.set('id', this.filterId.toString());
+
+      const url = `${this.apiUrl}/${this.reportType}?${httpParams.toString()}`;
+      window.open(url, '_blank');
+    }
   }
 }

@@ -453,4 +453,52 @@ public class ReporteController {
         
         return ResponseEntity.ok(report);
     }
+
+    @GetMapping("/leads")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR')")
+    public ResponseEntity<?> getLeadsReport(
+            @RequestParam(required = false, defaultValue = "json") String format) {
+        
+        List<com.casavida.backend.entity.Lead> leads = leadRepository.findAll();
+
+        if ("excel".equalsIgnoreCase(format)) {
+            try {
+                ByteArrayInputStream bis = excelService.generateLeadsReport(leads);
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Content-Disposition", "attachment; filename=reporte_leads.xlsx");
+                return ResponseEntity.ok()
+                        .headers(headers)
+                        .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                        .body(new InputStreamResource(bis));
+            } catch (Exception e) {
+                return ResponseEntity.internalServerError().body("Error al generar Excel: " + e.getMessage());
+            }
+        }
+        
+        return ResponseEntity.ok(leads);
+    }
+
+    @GetMapping("/opportunities")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR')")
+    public ResponseEntity<?> getOpportunitiesReport(
+            @RequestParam(required = false, defaultValue = "json") String format) {
+        
+        List<com.casavida.backend.entity.Opportunity> opps = opportunityRepository.findAll();
+
+        if ("excel".equalsIgnoreCase(format)) {
+            try {
+                ByteArrayInputStream bis = excelService.generateOpportunitiesReport(opps);
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Content-Disposition", "attachment; filename=reporte_oportunidades.xlsx");
+                return ResponseEntity.ok()
+                        .headers(headers)
+                        .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                        .body(new InputStreamResource(bis));
+            } catch (Exception e) {
+                return ResponseEntity.internalServerError().body("Error al generar Excel: " + e.getMessage());
+            }
+        }
+        
+        return ResponseEntity.ok(opps);
+    }
 }

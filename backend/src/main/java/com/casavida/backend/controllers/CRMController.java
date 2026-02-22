@@ -53,6 +53,18 @@ public class CRMController {
         return ResponseEntity.ok(crmService.convertLeadToOpportunity(id, loteId));
     }
 
+    @PostMapping("/leads/{id}/send-price-list")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    public ResponseEntity<Lead> sendPriceList(@PathVariable Long id, @RequestBody List<Long> fraccionamientoIds) {
+        return ResponseEntity.ok(crmService.sendPriceList(id, fraccionamientoIds));
+    }
+
+    @PostMapping("/leads/{id}/send-budget")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    public ResponseEntity<Lead> sendBudget(@PathVariable Long id, @RequestBody java.util.Map<String, String> payload) {
+        return ResponseEntity.ok(crmService.sendBudget(id, payload.get("details")));
+    }
+
     // OPPORTUNITIES
     @GetMapping("/opportunities")
     @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")

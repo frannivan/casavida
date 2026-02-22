@@ -1,10 +1,11 @@
 .navbar {
     background-color: #333;
-    overflow: hidden;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative; /* Ensure z-index works if needed */
+    z-index: 1000;      /* Keep above other content */
 }
 
 .navbar-brand {

@@ -52,7 +52,15 @@ export class LoginComponent {
   }
 
   reloadPage(): void {
-    this.router.navigate(['/home']).then(() => {
+    const roles = this.storageService.getUser().roles;
+    let target = '/home';
+    
+    // Si es SOLO soporte, mandar directo al panel de soporte
+    if (roles.includes('ROLE_SOPORTE') && !roles.includes('ROLE_ADMIN')) {
+      target = '/admin/soporte';
+    }
+
+    this.router.navigate([target]).then(() => {
       window.location.reload();
     });
   }

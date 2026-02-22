@@ -87,6 +87,7 @@ public class WebSecurityConfig {
                 .antMatchers("/api/clientes/public/**").permitAll()
                 .antMatchers("/api/crm/leads").permitAll()
                 .antMatchers("/api/images/**").permitAll()
+                .antMatchers("/api/docs/**").permitAll() // Controller handles auth for .md/.html
                 .antMatchers("/api/mensajes/**").permitAll()
                 .antMatchers("/api/auth/debug/**").permitAll() // TEMPORARY DEBUG
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/h2-console", "/h2-console/**").permitAll()

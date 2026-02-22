@@ -112,7 +112,6 @@ public class ExcelService {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Inventario Lotes");
 
-            // Header style
             CellStyle headerStyle = workbook.createCellStyle();
             Font headerFont = workbook.createFont();
             headerFont.setBold(true);
@@ -136,6 +135,77 @@ public class ExcelService {
                 row.createCell(3).setCellValue(lote.getPrecioTotal().doubleValue());
                 row.createCell(4).setCellValue(lote.getAreaMetrosCuadrados());
                 row.createCell(5).setCellValue(String.valueOf(lote.getEstatus()));
+            }
+
+            workbook.write(out);
+            return new ByteArrayInputStream(out.toByteArray());
+        }
+    }
+
+    public ByteArrayInputStream generateLeadsReport(List<com.casavida.backend.entity.Lead> leads) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("Prospectos");
+
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+
+            Row headerRow = sheet.createRow(0);
+            String[] headers = {"ID", "Nombre", "Email", "Teléfono", "Origen", "Interés", "Estatus", "Fecha Registro"};
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+                sheet.setColumnWidth(i, 5000);
+            }
+
+            int rowIdx = 1;
+            for (com.casavida.backend.entity.Lead lead : leads) {
+                Row row = sheet.createRow(rowIdx++);
+                row.createCell(0).setCellValue(lead.getId());
+                row.createCell(1).setCellValue(lead.getNombre());
+                row.createCell(2).setCellValue(lead.getEmail());
+                row.createCell(3).setCellValue(lead.getTelefono());
+                row.createCell(4).setCellValue(lead.getSource());
+                row.createCell(5).setCellValue(lead.getInteres());
+                row.createCell(6).setCellValue(String.valueOf(lead.getStatus()));
+                row.createCell(7).setCellValue(lead.getFechaRegistro().toString());
+            }
+
+            workbook.write(out);
+            return new ByteArrayInputStream(out.toByteArray());
+        }
+    }
+
+    public ByteArrayInputStream generateOpportunitiesReport(List<com.casavida.backend.entity.Opportunity> opportunities) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("Oportunidades");
+
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+
+            Row headerRow = sheet.createRow(0);
+            String[] headers = {"ID", "Prospecto", "Lote", "Manzana", "Monto Estimado", "Estatus", "Cierre Estimado"};
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+                sheet.setColumnWidth(i, 5000);
+            }
+
+            int rowIdx = 1;
+            for (com.casavida.backend.entity.Opportunity opp : opportunities) {
+                Row row = sheet.createRow(rowIdx++);
+                row.createCell(0).setCellValue(opp.getId());
+                row.createCell(1).setCellValue(opp.getLead() != null ? opp.getLead().getNombre() : "N/A");
+                row.createCell(2).setCellValue(opp.getLote() != null ? opp.getLote().getNumeroLote() : "N/A");
+                row.createCell(3).setCellValue(opp.getLote() != null ? opp.getLote().getManzana() : "N/A");
+                row.createCell(4).setCellValue(opp.getMontoEstimado() != null ? opp.getMontoEstimado().doubleValue() : 0.0);
+                row.createCell(5).setCellValue(String.valueOf(opp.getStatus()));
+                row.createCell(6).setCellValue(opp.getFechaCierreEstimada() != null ? opp.getFechaCierreEstimada().toString() : "N/A");
             }
 
             workbook.write(out);

@@ -7,13 +7,16 @@ export interface Mensaje {
   id?: number;
   // CRM fields
   targetId?: number;
-  tipo?: 'WA' | 'EMAIL';
+  tipo?: 'WA' | 'EMAIL' | 'INTERNO';
   direccion?: 'ENVIADO' | 'RECIBIDO';
   contenido: string;
   fecha?: Date | string;
-  remitente: any; // string (CRM) or User object (internal)
+  remitente?: string; // string name (CRM / fallback)
   adjunto?: string;
   // Internal messaging fields
+  remitenteUser?: { id: number; username: string; email: string };
+  destinatarioUser?: { id: number; username: string; email: string };
+  // Legacy alias for template compatibility
   destinatario?: any;
   asunto?: string;
   fechaEnvio?: Date | string;

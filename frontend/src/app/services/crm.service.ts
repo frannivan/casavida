@@ -47,4 +47,12 @@ export class CRMService {
     convertOpportunityToClient(id: number): Observable<any> {
         return this.http.post(`${API_URL}opportunities/${id}/convert`, {});
     }
+
+    sendPriceList(leadId: number, fraccionamientoIds: number[]): Observable<any> {
+        return this.http.post(`${API_URL}leads/${leadId}/send-price-list`, fraccionamientoIds);
+    }
+
+    sendBudget(leadId: number, details: string): Observable<any> {
+        return this.http.post(`${API_URL}leads/${leadId}/send-budget`, { details });
+    }
 }

@@ -1,5 +1,5 @@
 <div class="container">
-    <header class="jumbotron">
+    <header class="jumbotron" *ngIf="!isLoggedIn">
         <h1 class="display-4">Bienvenido a CasaVida</h1>
         <p class="lead">Encuentra el terreno ideal para tu futuro hogar.</p>
     </header>
@@ -33,14 +33,55 @@
                     <i class="fas fa-filter me-1"></i> Filtrar
                 </button>
             </div>
+            <!-- Toggle Mapa (Estilo Filtro para Externos) -->
+            <div style="flex: 1.5 1 250px; min-width: 250px;" *ngIf="!isStaff">
+                <label class="form-label fw-bold">Mapa Interactivo</label>
+                <button class="btn btn-neutral-explorer w-100 d-flex justify-content-between align-items-center" 
+                        (click)="showMap = !showMap" [class.active]="showMap">
+                    <span class="font-premium">{{ showMap ? 'Ocultar Mapa Maestro' : 'Explorar Mapa Maestro' }}</span>
+                    <i class="fas fa-sm" [ngClass]="showMap ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+            </div>
         </div>
     </div>
 
-    <div *ngIf="isLoading" class="text-center">
-        <p>Cargando lotes disponibles...</p>
+    <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2 text-muted font-italic">Cargando la mejor selección de lotes para ti...</p>
     </div>
 
-    <div *ngIf="!isLoading">
+    <!-- Dropdown Mapa Iniciativo (Premium Design for Internal Users) -->
+    <div class="mb-5 text-center" *ngIf="!isLoading && isStaff">
+        <div class="map-premium-cta p-4 rounded-lg bg-white shadow-lg d-inline-block w-100" 
+             style="cursor: pointer; border: 2px solid #f8f9fa; transition: all 0.3s;"
+             (click)="showMap = !showMap">
+            <div class="d-flex justify-content-between align-items-center px-lg-4">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-soft-primary text-primary me-3">
+                        <i class="fas fa-map-marked-alt fa-lg"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="mb-0 fw-bold text-dark">Explorar Mapa Maestro</h5>
+                        <p class="mb-0 text-muted small">Visualiza la ubicación exacta de cada desarrollo y lote disponible.</p>
+                    </div>
+                </div>
+                <div class="ms-3">
+                    <button class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
+                        {{ showMap ? 'Ocultar Mapa' : 'Ver Mapa Interactivo' }}
+                        <i class="fas ms-2" [ngClass]="showMap ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4 animate-fade-in" *ngIf="showMap && isStaff">
+            <app-map [lotes]="lotes" [fraccionamientos]="fraccionamientos"
+                (selectFraccionamiento)="onFraccionamientoSelect($event)"></app-map>
+        </div>
+    </div>
+
+    <!-- Mapa para Externos (Justo debajo de filtros cuando se activa) -->
+    <div class="mb-5 animate-fade-in" *ngIf="!isLoading && !isStaff && showMap">
         <app-map [lotes]="lotes" [fraccionamientos]="fraccionamientos"
             (selectFraccionamiento)="onFraccionamientoSelect($event)"></app-map>
     </div>

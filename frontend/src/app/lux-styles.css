@@ -210,6 +210,19 @@ body {
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
+/* Custom Dropdown Toggle (Caret Fix) */
+.dropdown-toggle-custom {
+    text-decoration: none !important;
+}
+
+.dropdown-toggle-custom::after {
+    display: none !important;
+}
+
+.dropdown-toggle-custom:hover i {
+    color: var(--primary) !important;
+}
+
 /* Contrast & Status Fixes */
 .badge-light, .bg-light {
     color: #334155 !important; 

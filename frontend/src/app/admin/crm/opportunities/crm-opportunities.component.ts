@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CRMService } from '../../../services/crm.service';
 import { CommunicationModalComponent } from '../communication-modal.component';
+import { ExportService } from '../../../services/export.service';
 
 @Component({
     selector: 'app-crm-opportunities',
@@ -29,6 +30,7 @@ export class CrmOpportunitiesComponent implements OnInit {
     }
 
     private crmService = inject(CRMService);
+    private exportService = inject(ExportService);
 
     constructor() { }
 
@@ -73,6 +75,10 @@ export class CrmOpportunitiesComponent implements OnInit {
     openCommModal(opp: any): void {
         this.selectedOpportunity = opp;
         this.showCommModal = true;
+    }
+
+    exportExcel(): void {
+        this.exportService.exportToExcel('/reportes/opportunities', {}, 'lista_oportunidades.xlsx');
     }
 
     selectedOpportunity: any = null;

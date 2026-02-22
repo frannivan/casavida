@@ -1,6 +1,5 @@
 package com.casavida.backend.controllers;
 
-import com.casavida.backend.entity.Contrato;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -8,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,33 +23,106 @@ import java.util.stream.Stream;
 @RequestMapping("/api/docs")
 public class DocumentationController {
 
-    private final List<String> KNOWN_DOCS = List.of(
-        "ECU_EIU_Editor_Poligonos.md",
-        "ECU_EIU_Recepcion_Pagos.md"
-    );
-
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN') or hasRole('RECEPCION') or hasRole('VENDEDOR')")
     public List<String> listDocs() {
-        return KNOWN_DOCS;
+        try {
+            // Priority 1: Direct file system path (Development)
+            Path docsPath = Paths.get("src/main/resources/docs");
+            if (!Files.exists(docsPath)) {
+                // Priority 2: Try to find it relative to current directory if running elsewhere
+                docsPath = Paths.get("backend/src/main/resources/docs");
+            }
+            
+            if (Files.exists(docsPath)) {
+                try (Stream<Path> stream = Files.walk(docsPath, 5)) {
+                    return stream
+                            .filter(file -> !Files.isDirectory(file))
+                            .map(docsPath::relativize)
+                            .map(Path::toString)
+                            .filter(name -> name.endsWith(".md") || name.endsWith(".html") || 
+                                       name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg"))
+                            .collect(Collectors.toList());
+                }
+            }
+            
+            // Fallback for JAR/Production
+            return List.of("ECU_EIU_Editor_Poligonos.md", "ECU_EIU_Recepcion_Pagos.md", "ECU_EIU_Comunicacion_CRM.md");
+            
+        } catch (IOException e) {
+            return Collections.emptyList();
+        }
     }
 
-    @GetMapping("/{filename:.+}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('RECEPCION') or hasRole('VENDEDOR')")
-    public ResponseEntity<Resource> getDoc(@PathVariable String filename) {
-        // Validate filename against known list for security
-        if (!KNOWN_DOCS.contains(filename)) {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/**")
+    public ResponseEntity<Resource> getDoc(javax.servlet.http.HttpServletRequest request) {
+        String fullPath = request.getRequestURI();
+        // Extract the part after /api/docs/
+        String path = fullPath.substring(fullPath.indexOf("/api/docs/") + 10);
+        
+        // Normalize: remove leading slashes and prevent traversal
+        path = path.replace("\\", "/");
+        while (path.startsWith("/")) path = path.substring(1);
+        if (path.contains("..")) return ResponseEntity.badRequest().build();
+
+        // 1. Security check for sensitive document content
+        String lowerPath = path.toLowerCase();
+        boolean isProtected = lowerPath.endsWith(".md") || lowerPath.endsWith(".html");
+        
+        if (isProtected) {
+            org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || !auth.isAuthenticated() || auth instanceof org.springframework.security.authentication.AnonymousAuthenticationToken) {
+                return ResponseEntity.status(401).build();
+            }
         }
 
-        Resource resource = new org.springframework.core.io.ClassPathResource("docs/" + filename);
+        try {
+            Resource resource = null;
+            
+            // Try different possible locations relative to CWD
+            String[] locations = {
+                "src/main/resources/docs/",
+                "backend/src/main/resources/docs/",
+                "resources/docs/",
+                "docs/"
+            };
 
-        if (resource.exists() || resource.isReadable()) {
-            return ResponseEntity.ok()
-                    .contentType(MediaType.TEXT_MARKDOWN)
-                    .body(resource);
-        } else {
-            return ResponseEntity.notFound().build();
+            for (String loc : locations) {
+                Path fPath = Paths.get(loc + path);
+                if (Files.exists(fPath) && !Files.isDirectory(fPath)) {
+                    resource = new UrlResource(fPath.toUri());
+                    break;
+                }
+            }
+
+            // Fallback to ClassPath (Standard for JAR deployments)
+            if (resource == null) {
+                resource = new ClassPathResource("docs/" + path);
+                if (!resource.exists()) {
+                    resource = new ClassPathResource("static/docs/" + path);
+                }
+            }
+
+            if (resource != null && resource.exists()) {
+                String contentType = "application/octet-stream";
+                if (lowerPath.endsWith(".png")) contentType = "image/png";
+                else if (lowerPath.endsWith(".jpg") || lowerPath.endsWith(".jpeg")) contentType = "image/jpeg";
+                else if (lowerPath.endsWith(".gif")) contentType = "image/gif";
+                else if (lowerPath.endsWith(".webp")) contentType = "image/webp";
+                else if (lowerPath.endsWith(".svg")) contentType = "image/svg+xml";
+                else if (lowerPath.endsWith(".md")) contentType = "text/markdown; charset=UTF-8";
+                else if (lowerPath.endsWith(".html")) contentType = "text/html; charset=UTF-8";
+                
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(org.springframework.http.HttpHeaders.CACHE_CONTROL, "max-age=3600")
+                        .body(resource);
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
         }
+        
+        return ResponseEntity.notFound().build();
     }
 }

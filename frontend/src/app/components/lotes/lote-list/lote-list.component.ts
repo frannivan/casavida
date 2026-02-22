@@ -8,6 +8,7 @@ import { VentaService } from '../../../services/venta';
 import { PagoService } from '../../../services/pago';
 import { LocationPickerComponent } from '../../location-picker/location-picker';
 import { StorageService } from '../../../services/storage';
+import { ExportService } from '../../../services/export.service';
 
 @Component({
   selector: 'app-lote-list',
@@ -55,6 +56,7 @@ export class LoteListComponent implements OnInit {
   private ventaService = inject(VentaService);
   private pagoService = inject(PagoService);
   private storageService = inject(StorageService);
+  private exportService = inject(ExportService);
   private router = inject(Router);
 
   ngOnInit(): void {
@@ -234,29 +236,12 @@ export class LoteListComponent implements OnInit {
     this.filteredLotes = [...this.lotes];
   }
 
-  exportToCSV(): void {
-    const headers = ['Lote', 'Manzana', 'Precio', 'Area (m2)', 'Fraccionamiento', 'Estatus', 'Cliente'];
-    const rows = this.filteredLotes.map(l => [
-        l.numeroLote,
-        l.manzana,
-        l.precioTotal,
-        l.areaMetrosCuadrados,
-        l.fraccionamiento?.nombre || 'Independiente',
-        l.estatus,
-        this.loteContratoMap[l.id]?.cliente ? `${this.loteContratoMap[l.id].cliente.nombre} ${this.loteContratoMap[l.id].cliente.apellidos}` : 'Sin cliente'
-    ]);
-
-    let csvContent = "data:text/csv;charset=utf-8," 
-        + headers.join(",") + "\n"
-        + rows.map(e => e.join(",")).join("\n");
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `inventario_lotes_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  exportExcel(): void {
+    const params: any = {};
+    if (this.fraccionamientoFilter) params.fraccionamientoId = this.fraccionamientoFilter;
+    if (this.estatusFilter) params.estatus = this.estatusFilter;
+    
+    this.exportService.exportToExcel('/reportes/inventario', params, 'inventario_lotes.xlsx');
   }
 
   // --- History ---

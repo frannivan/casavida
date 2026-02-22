@@ -47,14 +47,14 @@
                                 <span *ngIf="!msg.leido && activeTab === 'recibidos'" class="badge bg-primary me-2">Nuevo</span>
                                 {{ msg.asunto }}
                             </h6>
-                            <small class="text-muted">{{ msg.fechaEnvio | date:'short' }}</small>
+                            <small class="text-muted">{{ msg.fecha | date:'short' }}</small>
                         </div>
                         <p class="mb-1 text-dark">{{ msg.contenido }}</p>
                         <small class="text-muted">
                             <i class="fas fa-user-circle me-1"></i>
                             
-                            <span *ngIf="activeTab === 'recibidos'">De: {{ msg.remitente.username }}</span>
-                            <span *ngIf="activeTab === 'enviados'">Para: {{ msg.destinatario.username }}</span>
+                            <span *ngIf="activeTab === 'recibidos'">De: {{ msg.remitenteUser?.username || msg.remitente || 'Sistema' }}</span>
+                            <span *ngIf="activeTab === 'enviados'">Para: {{ msg.destinatarioUser?.username || 'Desconocido' }}</span>
 
 
                         </small>

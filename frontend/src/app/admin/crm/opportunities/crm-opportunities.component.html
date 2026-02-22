@@ -1,6 +1,9 @@
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-primary font-weight-bold"><i class="fas fa-handshake mr-2"></i>Seguimiento de Oportunidades</h2>
+        <button class="btn btn-outline-success shadow-sm" (click)="exportExcel()">
+            <i class="fas fa-file-excel mr-2"></i>Exportar Excel
+        </button>
     </div>
 
     <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
