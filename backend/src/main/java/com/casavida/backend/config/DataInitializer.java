@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 import com.casavida.backend.entity.ERole;
 import com.casavida.backend.entity.Role;
+import com.casavida.backend.entity.RolePermission;
+import com.casavida.backend.repository.RolePermissionRepository;
 import com.casavida.backend.repository.RoleRepository;
 
 @Component
@@ -35,6 +37,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     com.casavida.backend.repository.PagoRepository pagoRepository;
+
+    @Autowired
+    RolePermissionRepository rolePermissionRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -67,6 +72,21 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("Admin user already exists.");
         }
         System.out.println("--- FAIL-SAFE DATA SEEDING COMPLETED ---");
+        
+        // 3. Permissions seeding (Fail-safe)
+        if (rolePermissionRepository.count() == 0) {
+            System.out.println("Seeding default permissions...");
+            seedDefaultPermissions();
+        }
+    }
+
+    private void seedDefaultPermissions() {
+        // This is a minimal set to ensure the UI is functional even if data.sql fails
+        String[] adminMenus = {"menu:home", "menu:admin_dashboard", "menu:clientes", "menu:users", "menu:leads", "menu:opportunities", "menu:fraccionamientos", "menu:lotes", "menu:reportes", "menu:carga_datos", "menu:documentacion", "menu:soporte", "menu:permissions", "menu:contratos"};
+        for (String m : adminMenus) {
+            rolePermissionRepository.save(new RolePermission("ROLE_ADMIN", m, true));
+        }
+        System.out.println("Default admin permissions seeded.");
     }
 
     private void seedRole(ERole roleName) {
