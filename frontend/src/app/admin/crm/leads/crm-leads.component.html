@@ -57,12 +57,17 @@
                                     'badge-status-won': lead.status === 'WON'
                                 }" style="min-width: 80px; text-align: center;">{{ lead.status }}</span>
                             </td>
-                            <td>
-                                <button class="btn btn-sm btn-success rounded-pill" (click)="openConvertModal(lead)"
-                                    *ngIf="lead.status !== 'QUALIFIED'">
-                                    <i class="fas fa-exchange-alt mr-1"></i> Convertir
-                                </button>
-                                <span *ngIf="lead.status === 'QUALIFIED'" class="text-muted small">Convertido</span>
+                             <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-success rounded-pill mr-1" (click)="openConvertModal(lead)"
+                                        *ngIf="lead.status !== 'QUALIFIED'">
+                                        <i class="fas fa-exchange-alt mr-1"></i> Convertir
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info rounded-pill" (click)="openCommModal(lead)">
+                                        <i class="fab fa-whatsapp"></i> / <i class="fas fa-envelope"></i>
+                                    </button>
+                                </div>
+                                <span *ngIf="lead.status === 'QUALIFIED'" class="text-muted d-block mt-1 small">Convertido</span>
                             </td>
                         </tr>
                     </tbody>
@@ -108,4 +113,13 @@
             </div>
         </div>
     </div>
+
+    <!-- Communication Modal (WA/Email) -->
+    <app-communication-modal 
+        *ngIf="showCommModal" 
+        [show]="showCommModal" 
+        [targetId]="selectedLead?.id" 
+        [targetName]="selectedLead?.nombre"
+        (onClose)="showCommModal = false">
+    </app-communication-modal>
 </div>

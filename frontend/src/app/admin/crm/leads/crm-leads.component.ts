@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CRMService } from '../../../services/crm.service';
 import { LoteService } from '../../../services/lote';
+import { CommunicationModalComponent } from '../communication-modal.component';
 
 @Component({
     selector: 'app-crm-leads',
     templateUrl: './crm-leads.component.html',
     styleUrls: ['./crm-leads.component.css'],
     standalone: true,
-    imports: [CommonModule, FormsModule]
+    imports: [CommonModule, FormsModule, CommunicationModalComponent]
 })
 export class CrmLeadsComponent implements OnInit {
     leads: any[] = [];
@@ -20,6 +21,7 @@ export class CrmLeadsComponent implements OnInit {
     successMsg = '';
     errorMsg = '';
     searchTerm = '';
+    showCommModal = false;
 
     get filteredLeads() {
         if (!this.searchTerm) return this.leads;
@@ -60,6 +62,11 @@ export class CrmLeadsComponent implements OnInit {
         this.showConvertModal = true;
         this.errorMsg = '';
         this.successMsg = '';
+    }
+
+    openCommModal(lead: any): void {
+        this.selectedLead = lead;
+        this.showCommModal = true;
     }
 
     confirmConvert(): void {
