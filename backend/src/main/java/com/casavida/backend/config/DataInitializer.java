@@ -38,8 +38,44 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Data initialization has been migrated to data.sql
-        // This method is intentionally left empty to prevent duplicate data insertion.
+        System.out.println("--- STARTING FAIL-SAFE DATA SEEDING (release-1.1) ---");
+        
+        // 1. Roles seeding
+        seedRole(ERole.ROLE_USER);
+        seedRole(ERole.ROLE_ADMIN);
+        seedRole(ERole.ROLE_VENDEDOR);
+        seedRole(ERole.ROLE_RECEPCION);
+        seedRole(ERole.ROLE_CONTABILIDAD);
+        seedRole(ERole.ROLE_DIRECTIVO);
+        seedRole(ERole.ROLE_SOPORTE);
+
+        // 2. Admin User seeding (password: password123)
+        if (!userRepository.existsByUsername("admin")) {
+            System.out.println("Seeding Admin user...");
+            com.casavida.backend.entity.User admin = new com.casavida.backend.entity.User();
+            admin.setUsername("admin");
+            admin.setEmail("admin@test.com");
+            admin.setPassword(encoder.encode("password123"));
+            
+            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                    .orElseThrow(() -> new RuntimeException("Error: Role ADMIN not found"));
+            admin.setRole(adminRole);
+            
+            userRepository.save(admin);
+            System.out.println("Admin user seeded successfully.");
+        } else {
+            System.out.println("Admin user already exists.");
+        }
+        System.out.println("--- FAIL-SAFE DATA SEEDING COMPLETED ---");
+    }
+
+    private void seedRole(ERole roleName) {
+        if (!roleRepository.findByName(roleName).isPresent()) {
+            Role role = new Role();
+            role.setName(roleName);
+            roleRepository.save(role);
+            System.out.println("Role " + roleName + " seeded.");
+        }
     }
 
     private void createLote(String numero, String manzana, Double area, Double precio, String img, String coords,

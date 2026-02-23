@@ -105,14 +105,26 @@ public class AuthController {
             finalRole = roleRepository.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role no encontrado."));
         } else {
-            ERole roleEnum = switch (roleStr.toLowerCase()) {
-                case "admin" -> ERole.ROLE_ADMIN;
-                case "vendedor" -> ERole.ROLE_VENDEDOR;
-                case "recepcion" -> ERole.ROLE_RECEPCION;
-                case "contabilidad" -> ERole.ROLE_CONTABILIDAD;
-                case "directivo" -> ERole.ROLE_DIRECTIVO;
-                default -> ERole.ROLE_USER;
-            };
+            ERole roleEnum;
+            switch (roleStr.toLowerCase()) {
+                case "admin":
+                    roleEnum = ERole.ROLE_ADMIN;
+                    break;
+                case "vendedor":
+                    roleEnum = ERole.ROLE_VENDEDOR;
+                    break;
+                case "recepcion":
+                    roleEnum = ERole.ROLE_RECEPCION;
+                    break;
+                case "contabilidad":
+                    roleEnum = ERole.ROLE_CONTABILIDAD;
+                    break;
+                case "directivo":
+                    roleEnum = ERole.ROLE_DIRECTIVO;
+                    break;
+                default:
+                    roleEnum = ERole.ROLE_USER;
+            }
             finalRole = roleRepository.findByName(roleEnum)
                     .orElseThrow(() -> new RuntimeException("Error: Role no encontrado."));
         }
