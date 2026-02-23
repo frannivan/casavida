@@ -173,11 +173,12 @@ export class BoardAdminComponent implements OnInit {
 
     ngOnInit(): void {
         const user = this.storageService.getUser();
-        this.isAdmin = user.roles.includes('ROLE_ADMIN');
-        this.isRecepcion = user.roles.includes('ROLE_RECEPCION');
-        this.isVendedor = user.roles.includes('ROLE_VENDEDOR');
-        this.isContabilidad = user.roles.includes('ROLE_CONTABILIDAD');
-        this.isDirectivo = user.roles.includes('ROLE_DIRECTIVO');
+        const role = user.role || '';
+        this.isAdmin = role === 'ROLE_ADMIN';
+        this.isRecepcion = role === 'ROLE_RECEPCION';
+        this.isVendedor = role === 'ROLE_VENDEDOR';
+        this.isContabilidad = role === 'ROLE_CONTABILIDAD';
+        this.isDirectivo = role === 'ROLE_DIRECTIVO';
 
         if (this.isVendedor) {
             this.boardTitle = 'Panel de Vendedor';
@@ -311,7 +312,7 @@ export class BoardAdminComponent implements OnInit {
 
         // Auto-assign current seller if applicable
         const currentUser = this.storageService.getUser();
-        if (currentUser && currentUser.roles && currentUser.roles.includes('ROLE_VENDEDOR')) {
+        if (currentUser && currentUser.role === 'ROLE_VENDEDOR') {
             this.contractData.vendedorId = currentUser.id;
         } else {
             this.contractData.vendedorId = '';

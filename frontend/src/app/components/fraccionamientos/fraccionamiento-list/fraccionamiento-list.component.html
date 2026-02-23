@@ -1,12 +1,12 @@
 <div class="card border-info">
     <div class="card-body">
         <h4>Inventario de Fraccionamientos</h4>
-        <button *ngIf="!readOnly" class="btn btn-info mb-3" (click)="isCreatingFracc ? resetForm() : isCreatingFracc = true">
+        <button *ngIf="canEdit()" class="btn btn-info mb-3" (click)="isCreatingFracc ? resetForm() : isCreatingFracc = true">
             {{ isCreatingFracc ? 'Cancelar' : 'Nuevo Fraccionamiento' }}
         </button>
 
         <!-- Create Form -->
-        <form *ngIf="isCreatingFracc && !readOnly" (ngSubmit)="onCreateFracc()" class="mb-4 p-3 bg-light border rounded">
+        <form *ngIf="isCreatingFracc && canEdit()" (ngSubmit)="onCreateFracc()" class="mb-4 p-3 bg-light border rounded">
             <div class="form-row">
                 <div class="col-md-6">
                     <label>Nombre</label>
@@ -49,8 +49,8 @@
                     <td>{{ f.ubicacion }}</td>
                     <td>
                         <button class="btn btn-sm btn-info mr-2" (click)="viewFraccDetail(f)">Ver Detalle / Lotes</button>
-                        <button *ngIf="!readOnly" class="btn btn-sm btn-primary mr-2" (click)="editFracc(f)">Editar</button>
-                        <button *ngIf="!readOnly" class="btn btn-sm btn-danger" (click)="deleteFracc(f.id)">Eliminar</button>
+                        <button *ngIf="canEdit()" class="btn btn-sm btn-primary mr-2" (click)="editFracc(f)">Editar</button>
+                        <button *ngIf="canDelete()" class="btn btn-sm btn-danger" (click)="deleteFracc(f.id)">Eliminar</button>
                     </td>
                 </tr>
             </tbody>

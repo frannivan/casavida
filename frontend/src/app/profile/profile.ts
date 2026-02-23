@@ -74,10 +74,10 @@ export class ProfileComponent implements OnInit {
   }
 
   get userRoleDisplay(): string {
-    const roles = this.currentUser?.roles || [];
-    if (roles.includes('ROLE_ADMIN')) return 'Administrador';
-    if (roles.includes('ROLE_VENDEDOR')) return 'Vendedor';
-    if (roles.includes('ROLE_RECEPCION')) return 'Recepción';
+    const role = this.currentUser?.role || '';
+    if (role === 'ROLE_ADMIN') return 'Administrador';
+    if (role === 'ROLE_VENDEDOR') return 'Vendedor';
+    if (role === 'ROLE_RECEPCION') return 'Recepción';
     return 'Cliente';
   }
 }

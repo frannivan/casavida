@@ -82,7 +82,7 @@ export class GenerarContratoComponent implements OnInit {
 
   autoAssignVendedor(): void {
     const currentUser = this.storageService.getUser();
-    if (currentUser && currentUser.roles && currentUser.roles.includes('ROLE_VENDEDOR')) {
+    if (currentUser && currentUser.role === 'ROLE_VENDEDOR') {
       this.contractData.vendedorId = currentUser.id;
     }
   }

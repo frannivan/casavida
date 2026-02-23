@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { StorageService } from '../../services/storage';
 import { AuthService } from '../../services/auth';
+import { PermissionService } from '../../services/permission';
 
 /**
  * Componente de barra lateral (Sidebar) que gestiona el menú de navegación principal.
@@ -15,9 +16,8 @@ import { AuthService } from '../../services/auth';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent {
-  // Almacena los roles del usuario actual
-  roles: string[] = [];
+export class SidebarComponent implements OnInit, OnDestroy {
+  role: string = '';
   
   // Estados booleanos para simplificar las condiciones en el HTML
   isAdmin = false;
@@ -27,28 +27,51 @@ export class SidebarComponent {
   isDirectivo = false;
   isUser = false;
   isSoporte = false;
-
+  
+  private permissionSubscription: any;
   private storageService = inject(StorageService);
   private authService = inject(AuthService);
+  private permissionService = inject(PermissionService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   constructor() {
-    // Inicializa los estados de roles al cargar el componente
     const user = this.storageService.getUser();
-    this.roles = user?.roles || [];
-    this.isAdmin = this.roles.includes('ROLE_ADMIN');
-    this.isRecepcion = this.roles.includes('ROLE_RECEPCION');
-    this.isVendedor = this.roles.includes('ROLE_VENDEDOR');
-    this.isContabilidad = this.roles.includes('ROLE_CONTABILIDAD');
-    this.isDirectivo = this.roles.includes('ROLE_DIRECTIVO');
-    this.isUser = this.roles.includes('ROLE_USER');
-    this.isSoporte = this.roles.includes('ROLE_SOPORTE');
+    this.role = user?.role || '';
+    this.isAdmin = this.role === 'ROLE_ADMIN';
+    this.isRecepcion = this.role === 'ROLE_RECEPCION';
+    this.isVendedor = this.role === 'ROLE_VENDEDOR';
+    this.isContabilidad = this.role === 'ROLE_CONTABILIDAD';
+    this.isDirectivo = this.role === 'ROLE_DIRECTIVO';
+    this.isUser = this.role === 'ROLE_USER';
+    this.isSoporte = this.role === 'ROLE_SOPORTE';
+  }
+
+  ngOnInit(): void {
+    // Subscribe to permission changes to trigger change detection
+    this.permissionSubscription = this.permissionService.permissions$.subscribe(() => {
+      // Force change detection to re-evaluate template methods like canAccess()
+      this.cdr.detectChanges();
+    });
+    // Load initial permissions for the current user
+    this.permissionService.loadUserPermissions().subscribe();
+  }
+
+  ngOnDestroy(): void {
+    if (this.permissionSubscription) {
+      this.permissionSubscription.unsubscribe();
+    }
+  }
+
+  canAccess(key: string): boolean {
+    if (key.includes(':')) {
+      return this.permissionService.hasPermission(key);
+    }
+    return this.permissionService.canAccessMenu(key);
   }
 
   /**
    * Cierra la sesión del usuario, limpia el almacenamiento local y redirige al login.
-   * Se usa window.location.href con el prefijo /casavida/ para asegurar que no se escape
-   * del contexto de la aplicación hacia la raíz del servidor.
    */
   logout(): void {
     this.authService.logout().subscribe({

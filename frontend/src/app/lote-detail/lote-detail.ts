@@ -57,7 +57,7 @@ export class LoteDetail implements OnInit {
 
   ngOnInit(): void {
     const user = this.storageService.getUser();
-    if (user && user.roles && (user.roles.includes('ROLE_ADMIN') || user.roles.includes('ROLE_DIRECTIVO') || user.roles.includes('ROLE_CONTABILIDAD'))) {
+    if (user && user.role && ['ROLE_ADMIN', 'ROLE_DIRECTIVO', 'ROLE_CONTABILIDAD'].includes(user.role)) {
       this.isAdmin = true;
     }
 

@@ -94,10 +94,16 @@
                         }">{{ user.role }}</span>
                     </td>
                     <td class="text-right px-4">
-                        <button class="btn btn-sm btn-outline-primary mr-2" (click)="openEditModal(user)">
+                        <button class="btn btn-sm btn-outline-primary mr-2" 
+                                [disabled]="user.role === 'ADMIN' && !isDirectivo"
+                                [title]="user.role === 'ADMIN' && !isDirectivo ? 'Solo un Directivo puede editar a un Administrador' : 'Editar'"
+                                (click)="openEditModal(user)">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user.id)">
+                        <button class="btn btn-sm btn-outline-danger" 
+                                [disabled]="user.role === 'ADMIN' && !isDirectivo"
+                                [title]="user.role === 'ADMIN' && !isDirectivo ? 'Solo un Directivo puede eliminar a un Administrador' : 'Eliminar'"
+                                (click)="deleteUser(user.id)">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>

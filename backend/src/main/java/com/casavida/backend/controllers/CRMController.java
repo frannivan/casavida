@@ -48,7 +48,7 @@ public class CRMController {
     }
 
     @PostMapping("/leads/{id}/convert")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION')")
     public ResponseEntity<Opportunity> convertLead(@PathVariable Long id, @RequestParam Long loteId) {
         return ResponseEntity.ok(crmService.convertLeadToOpportunity(id, loteId));
     }
@@ -67,13 +67,13 @@ public class CRMController {
 
     // OPPORTUNITIES
     @GetMapping("/opportunities")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION')")
     public List<Opportunity> getAllOpportunities() {
         return crmService.getAllOpportunities();
     }
 
     @PutMapping("/opportunities/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION')")
     public ResponseEntity<Opportunity> updateOpportunity(@PathVariable Long id, @RequestBody Opportunity opportunity) {
         return ResponseEntity.ok(crmService.updateOpportunity(id, opportunity));
     }

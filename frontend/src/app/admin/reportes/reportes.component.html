@@ -105,7 +105,7 @@
                             <th (click)="sort('id')" style="cursor:pointer">ID <i class="fas fa-sort ml-1"></i></th>
                             <th (click)="sort('username')" style="cursor:pointer">Usuario <i class="fas fa-sort ml-1"></i></th>
                             <th (click)="sort('email')" style="cursor:pointer">Email <i class="fas fa-sort ml-1"></i></th>
-                            <th>Roles</th>
+                            <th (click)="sort('role')" style="cursor:pointer">Rol <i class="fas fa-sort ml-1"></i></th>
                             <th (click)="sort('createdAt')" style="cursor:pointer">Fecha Registro <i class="fas fa-sort ml-1"></i></th>
                         </tr>
                         <tr *ngIf="reportType === 'pagos'">
@@ -132,7 +132,7 @@
                                 <td>{{ item.id }}</td>
                                 <td><strong>{{ item.username }}</strong></td>
                                 <td>{{ item.email }}</td>
-                                <td><span class="badge badge-info mr-1" *ngFor="let role of item.roles">{{ role }}</span></td>
+                                <td><span class="badge badge-info">{{ item.role }}</span></td>
                                 <td>{{ item.createdAt | date:'short' }}</td>
                             </tr>
                         </ng-container>

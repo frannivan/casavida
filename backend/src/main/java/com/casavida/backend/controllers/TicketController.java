@@ -32,13 +32,13 @@ public class TicketController {
     UserRepository userRepository;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SOPORTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SOPORTE', 'DIRECTIVO')")
     public List<Ticket> getAllTickets() {
         return ticketRepository.findAll();
     }
 
     @GetMapping("/mis-tickets")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION', 'CONTABILIDAD', 'DIRECTIVO')")
     public List<Ticket> getMyTickets(Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Error: Usuario no encontrado."));
@@ -46,7 +46,7 @@ public class TicketController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VENDEDOR', 'RECEPCION', 'CONTABILIDAD', 'DIRECTIVO')")
     public ResponseEntity<?> createTicket(
             @RequestParam("titulo") String titulo,
             @RequestParam("descripcion") String descripcion,
@@ -77,7 +77,7 @@ public class TicketController {
     }
 
     @GetMapping("/{id}/evidencia")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SOPORTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SOPORTE', 'DIRECTIVO', 'VENDEDOR', 'RECEPCION', 'CONTABILIDAD')")
     public ResponseEntity<byte[]> getEvidencia(@PathVariable Long id) {
         Ticket ticket = ticketRepository.findById(id).orElseThrow(() -> new RuntimeException("Ticket no encontrado."));
         if (ticket.getEvidencia() == null) {
@@ -90,7 +90,7 @@ public class TicketController {
     }
 
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SOPORTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SOPORTE', 'DIRECTIVO')")
     public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestBody Map<String, String> request) {
         Ticket ticket = ticketRepository.findById(id).orElseThrow(() -> new RuntimeException("Ticket no encontrado."));
         String status = request.get("status");
@@ -100,7 +100,7 @@ public class TicketController {
     }
 
     @PostMapping("/{id}/comentario")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SOPORTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SOPORTE', 'DIRECTIVO', 'VENDEDOR', 'RECEPCION', 'CONTABILIDAD')")
     public ResponseEntity<?> addComment(@PathVariable Long id, @RequestBody Map<String, String> request, Principal principal) {
         Ticket ticket = ticketRepository.findById(id).orElseThrow(() -> new RuntimeException("Ticket no encontrado."));
         String comment = request.get("comment");

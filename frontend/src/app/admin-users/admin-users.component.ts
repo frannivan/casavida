@@ -13,6 +13,7 @@ import { ExportService } from '../services/export.service';
 })
 export class AdminUsersComponent implements OnInit {
     isAdmin = false;
+    isDirectivo = false;
     users: any[] = [];
     filteredUsers: any[] = [];
     searchTerm = '';
@@ -43,8 +44,9 @@ export class AdminUsersComponent implements OnInit {
         try {
             const user = this.storageService.getUser();
             console.log('Current logged user:', user);
-            this.isAdmin = user && user.roles && user.roles.includes('ROLE_ADMIN');
-            console.log('isAdmin check:', this.isAdmin);
+            this.isAdmin = user && user.role === 'ROLE_ADMIN';
+            this.isDirectivo = user && user.role === 'ROLE_DIRECTIVO';
+            console.log('isAdmin check:', this.isAdmin, 'isDirectivo check:', this.isDirectivo);
             this.loadUsers();
         } catch (e) {
             console.error('Crash in ngOnInit:', e);
@@ -109,6 +111,11 @@ export class AdminUsersComponent implements OnInit {
     }
 
     openEditModal(user: any): void {
+        // Only Directivos can edit Admins
+        if (user.role === 'ADMIN' && !this.isDirectivo) {
+            alert('Solo un Directivo puede editar a un Administrador.');
+            return;
+        }
         this.isEditing = true;
         this.currentUser = { ...user, password: '' };
         this.showModal = true;
@@ -139,6 +146,12 @@ export class AdminUsersComponent implements OnInit {
     }
 
     deleteUser(id: number): void {
+        const userToDelete = this.users.find(u => u.id === id);
+        if (userToDelete && userToDelete.role === 'ADMIN' && !this.isDirectivo) {
+            alert('Solo un Directivo puede eliminar a un Administrador.');
+            return;
+        }
+
         if (confirm('¿Eliminar usuario?')) {
             this.adminService.deleteUser(id).subscribe({
                 next: () => this.loadUsers(),

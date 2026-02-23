@@ -292,9 +292,7 @@ public class ReporteController {
             userMap.put("id", user.getId());
             userMap.put("username", user.getUsername());
             userMap.put("email", user.getEmail());
-            userMap.put("roles", user.getRoles().stream()
-                .map(r -> r.getName().name())
-                .collect(java.util.stream.Collectors.toList()));
+            userMap.put("role", user.getRole() != null ? user.getRole().getName().name() : "ROLE_USER");
             userMap.put("createdAt", user.getCreatedAt());
             result.add(userMap);
         }

@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Directorio de Clientes</h4>
-            <button class="btn btn-light btn-sm" (click)="openClientModal()">
+            <button *appHasPermission="'action:cliente:create'" class="btn btn-light btn-sm" (click)="openClientModal()">
                 <i class="fa fa-plus"></i> Nuevo Cliente
             </button>
         </div>
@@ -55,7 +55,7 @@
                                 <button class="btn btn-sm btn-light border mr-1 rounded-pill px-3 shadow-sm" (click)="openDossier(c)">
                                     <i class="fa fa-folder-open text-primary mr-1"></i> Expediente
                                 </button>
-                                <button class="btn btn-sm btn-light border rounded-pill px-3 shadow-sm" (click)="openClientModal(c)">
+                                <button *appHasPermission="'action:cliente:edit'" class="btn btn-sm btn-light border rounded-pill px-3 shadow-sm" (click)="openClientModal(c)">
                                     <i class="fa fa-edit text-warning mr-1"></i> Editar
                                 </button>
                             </td>

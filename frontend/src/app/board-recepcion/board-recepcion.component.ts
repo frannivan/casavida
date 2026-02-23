@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PagoService, Pago } from '../services/pago';
 import { RouterModule } from '@angular/router';
+import { PermissionService } from '../services/permission';
 
 @Component({
   selector: 'app-board-recepcion',
@@ -19,6 +20,7 @@ export class BoardRecepcionComponent implements OnInit {
   message: string = '';
   
   private pagoService = inject(PagoService);
+  public permissionService = inject(PermissionService);
 
   ngOnInit(): void {
     this.loadPagos();

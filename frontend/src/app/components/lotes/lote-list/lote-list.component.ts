@@ -68,10 +68,10 @@ export class LoteListComponent implements OnInit {
 
   checkRoles(): void {
     const user = this.storageService.getUser();
-    if (user && user.roles) {
-      const isVendedor = user.roles.includes('ROLE_VENDEDOR');
-      const isRecepcion = user.roles.includes('ROLE_RECEPCION');
-      const isAdmin = user.roles.includes('ROLE_ADMIN');
+    if (user && user.role) {
+      const isVendedor = user.role === 'ROLE_VENDEDOR';
+      const isRecepcion = user.role === 'ROLE_RECEPCION';
+      const isAdmin = user.role === 'ROLE_ADMIN';
       
       // If Vendedor or Recepcion and NOT Admin, enforce read-only
       if ((isVendedor || isRecepcion) && !isAdmin) {

@@ -19,11 +19,11 @@ import { MensajeService } from './services/mensaje';
   styleUrl: './app.css'
 })
 export class AppComponent {
-  // Roles y estado de sesión
-  roles: string[] = [];
+  // Role and session state
+  role: string = '';
   isLoggedIn = false;
   
-  // Flags para mostrar paneles específicos por rol
+  // Flags for role-based boards
   showAdminBoard = false;
   showModeratorBoard = false;
   showRecepcionBoard = false;
@@ -59,15 +59,15 @@ export class AppComponent {
     if (this.isLoggedIn) {
       const user = this.storageService.getUser();
       this.username = user.username;
-      this.roles = user.roles || [];
+      this.role = user.role || '';
 
-      // Mapeo dinámico de visibilidad según roles
-      this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
-      this.showRecepcionBoard = this.roles.includes('ROLE_RECEPCION');
-      this.showVendedorBoard = this.roles.includes('ROLE_VENDEDOR');
-      this.showUserBoard = this.roles.includes('ROLE_USER');
-      this.showContabilidadBoard = this.roles.includes('ROLE_CONTABILIDAD');
-      this.showDirectivoBoard = this.roles.includes('ROLE_DIRECTIVO');
+      // Visibility based on single role
+      this.showAdminBoard = this.role === 'ROLE_ADMIN';
+      this.showRecepcionBoard = this.role === 'ROLE_RECEPCION';
+      this.showVendedorBoard = this.role === 'ROLE_VENDEDOR';
+      this.showUserBoard = this.role === 'ROLE_USER';
+      this.showContabilidadBoard = this.role === 'ROLE_CONTABILIDAD';
+      this.showDirectivoBoard = this.role === 'ROLE_DIRECTIVO';
 
       // Carga inicial de notificaciones
       this.loadUnreadCount();

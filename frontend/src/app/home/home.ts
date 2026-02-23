@@ -39,10 +39,8 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     const user = this.storageService.getUser();
     this.isLoggedIn = this.storageService.isLoggedIn();
-    if (this.isLoggedIn && user && user.roles) {
-      this.isStaff = user.roles.some((role: string) => 
-        ['ROLE_ADMIN', 'ROLE_VENDEDOR', 'ROLE_RECEPCION', 'ROLE_CONTABILIDAD', 'ROLE_DIRECTIVO', 'ROLE_SOPORTE'].includes(role)
-      );
+    if (this.isLoggedIn && user && user.role) {
+      this.isStaff = ['ROLE_ADMIN', 'ROLE_VENDEDOR', 'ROLE_RECEPCION', 'ROLE_CONTABILIDAD', 'ROLE_DIRECTIVO', 'ROLE_SOPORTE'].includes(user.role);
     }
     this.loadFraccionamientos();
     this.search();

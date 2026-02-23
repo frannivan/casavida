@@ -20,14 +20,14 @@ export class LoginComponent {
   isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = '';
-  roles: string[] = [];
+  role: string = '';
 
   constructor(private authService: AuthService, private storageService: StorageService, private router: Router) { }
 
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
       this.isLoggedIn = true;
-      this.roles = this.storageService.getUser().roles;
+      this.role = this.storageService.getUser().role;
       this.router.navigate(['/home']);
     }
   }
@@ -41,7 +41,7 @@ export class LoginComponent {
 
         this.isLoginFailed = false;
         this.isLoggedIn = true;
-        this.roles = this.storageService.getUser().roles;
+        this.role = this.storageService.getUser().role;
         this.reloadPage();
       },
       error: err => {
@@ -52,11 +52,11 @@ export class LoginComponent {
   }
 
   reloadPage(): void {
-    const roles = this.storageService.getUser().roles;
+    const role = this.storageService.getUser().role;
     let target = '/home';
     
     // Si es SOLO soporte, mandar directo al panel de soporte
-    if (roles.includes('ROLE_SOPORTE') && !roles.includes('ROLE_ADMIN')) {
+    if (role === 'ROLE_SOPORTE') {
       target = '/admin/soporte';
     }
 

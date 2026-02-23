@@ -54,15 +54,8 @@ public class CRMService {
     public List<Lead> getAllLeadsFiltered(List<String> roles) {
         List<Lead> allLeads = leadRepository.findAll();
 
-        if (roles.contains("ROLE_ADMIN")) {
+        if (roles.contains("ROLE_ADMIN") || roles.contains("ROLE_RECEPCION")) {
             return allLeads;
-        }
-
-        if (roles.contains("ROLE_RECEPCION")) {
-            // Reception sees "REPRESENTANTE" AND null/default ones
-            return allLeads.stream()
-                    .filter(l -> "REPRESENTANTE".equalsIgnoreCase(l.getInteres()) || l.getInteres() == null)
-                    .collect(java.util.stream.Collectors.toList());
         }
 
         if (roles.contains("ROLE_VENDEDOR")) {

@@ -5,7 +5,7 @@
             <h2 class="text-white fw-bold m-0 m-font animate-fade-in">
                 <i class="fas fa-headset me-2 text-primary"></i>Centro de Soporte
             </h2>
-            <div *ngIf="isAdmin" class="d-flex gap-2">
+            <div class="d-flex gap-2">
                 <button class="btn btn-premium" data-bs-toggle="modal" data-bs-target="#reportModal">
                     <i class="fas fa-plus me-2"></i>Reportar Incidencia
                 </button>
@@ -96,15 +96,15 @@
                         
                         <!-- Actions for Support and Admin -->
                         <div class="d-flex flex-wrap gap-2 mt-3">
-                            <!-- Support Roles Actions -->
-                            <ng-container *ngIf="isSoporte">
+                            <!-- Support Roles Actions (Support and Directivo can manage) -->
+                            <ng-container *ngIf="isSoporte || isDirectivo">
                                 <button class="btn btn-xs btn-warning" (click)="updateStatus('EN_PROCESO')">En Proceso</button>
                                 <button class="btn btn-xs btn-info" (click)="updateStatus('LISTO_PARA_PRUEBAS')">Listo para Pruebas</button>
                                 <button class="btn btn-xs btn-danger" (click)="updateStatus('RECHAZADO')">Rechazar</button>
                             </ng-container>
 
                             <!-- Admin Actions after testing -->
-                            <ng-container *ngIf="isAdmin">
+                            <ng-container *ngIf="isAdmin || isDirectivo">
                                 <button class="btn btn-xs btn-success" (click)="updateStatus('LISTO')">Listo / Validado</button>
                                 <button class="btn btn-xs btn-outline-success" (click)="updateStatus('LIBERADO')">Liberar</button>
                             </ng-container>
@@ -158,18 +158,18 @@
             </div>
             <div class="modal-body p-4 bg-dark">
                 <div class="mb-3">
-                    <label class="form-label text-muted small text-uppercase">Título del Error/Cambio</label>
+                    <label class="form-label text-light small text-uppercase fw-bold">Título del Error/Cambio</label>
                     <input type="text" class="form-control bg-dark-accent text-white border-secondary" 
                            [(ngModel)]="newTicket.titulo" placeholder="Ej: Error al cargar lote 102">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label text-muted small text-uppercase">Descripción Detallada</label>
+                    <label class="form-label text-light small text-uppercase fw-bold">Descripción Detallada</label>
                     <textarea class="form-control bg-dark-accent text-white border-secondary" rows="4"
                               [(ngModel)]="newTicket.descripcion" placeholder="Explica paso a paso qué sucede..."></textarea>
                 </div>
                 <div class="row mb-3">
                     <div class="col-6">
-                        <label class="form-label text-muted small text-uppercase">Prioridad</label>
+                        <label class="form-label text-light small text-uppercase fw-bold">Prioridad</label>
                         <select class="form-select bg-dark-accent text-white border-secondary" [(ngModel)]="newTicket.prioridad">
                             <option value="BAJA">Baja</option>
                             <option value="MEDIA">Media</option>
@@ -177,7 +177,7 @@
                         </select>
                     </div>
                     <div class="col-6">
-                        <label class="form-label text-muted small text-uppercase">Evidencia (Opcional)</label>
+                        <label class="form-label text-light small text-uppercase fw-bold">Evidencia (Opcional)</label>
                         <input type="file" class="form-control bg-dark-accent text-white border-secondary btn-sm" (change)="onFileSelected($event)">
                     </div>
                 </div>

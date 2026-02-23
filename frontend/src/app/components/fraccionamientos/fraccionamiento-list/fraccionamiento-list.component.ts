@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FraccionamientoService } from '../../../services/fraccionamiento';
 import { LoteService } from '../../../services/lote';
-
 import { StorageService } from '../../../services/storage';
+import { PermissionService } from '../../../services/permission';
 
 @Component({
   selector: 'app-fraccionamiento-list',
@@ -37,13 +37,18 @@ export class FraccionamientoListComponent implements OnInit {
   private fraccionamientoService = inject(FraccionamientoService);
   private loteService = inject(LoteService);
   private storageService = inject(StorageService);
+  public permissionService = inject(PermissionService);
 
   ngOnInit(): void {
-    const user = this.storageService.getUser();
-    if (user && user.roles.includes('ROLE_VENDEDOR')) {
-        this.readOnly = true;
-    }
     this.loadFraccionamientos();
+  }
+
+  canEdit(): boolean {
+    return this.permissionService.canPerformAction('fraccionamiento:edit');
+  }
+
+  canDelete(): boolean {
+    return this.permissionService.canPerformAction('fraccionamiento:delete');
   }
 
   loadFraccionamientos(): void {
@@ -100,7 +105,7 @@ export class FraccionamientoListComponent implements OnInit {
   }
 
   deleteFracc(id: number): void {
-      if (this.readOnly) return;
+      if (!this.canDelete()) return;
       if (confirm('¿Seguro de eliminar este fraccionamiento?')) {
           this.fraccionamientoService.deleteFraccionamiento(id).subscribe({
               next: () => this.loadFraccionamientos(),

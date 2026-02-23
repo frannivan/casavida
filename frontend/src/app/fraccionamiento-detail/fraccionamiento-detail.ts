@@ -55,7 +55,7 @@ export class FraccionamientoDetailComponent implements OnInit {
 
     ngOnInit(): void {
         const user = this.storageService.getUser();
-        if (user && user.roles && user.roles.includes('ROLE_ADMIN')) {
+        if (user && user.role === 'ROLE_ADMIN') {
             this.isAdmin = true;
         }
 

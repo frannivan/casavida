@@ -34,11 +34,8 @@ public class AdminService {
 
         return users.stream().map(user -> {
             String roleName = "USER";
-            if (user.getRoles() != null && !user.getRoles().isEmpty()) {
-                Role role = user.getRoles().iterator().next();
-                if (role != null && role.getName() != null) {
-                    roleName = role.getName().name().replace("ROLE_", "");
-                }
+            if (user.getRole() != null && user.getRole().getName() != null) {
+                roleName = user.getRole().getName().name().replace("ROLE_", "");
             }
             return new UserDTO(user.getId(), user.getUsername(), user.getEmail(), roleName);
         }).collect(Collectors.toList());
@@ -59,18 +56,13 @@ public class AdminService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        Set<Role> roles = new HashSet<>();
-        ERole roleEnum;
-        try {
-            roleEnum = ERole.valueOf("ROLE_" + request.getRole());
-        } catch (IllegalArgumentException e) {
-            roleEnum = ERole.ROLE_USER;
-        }
-
+        // Resolve role
+        String rName = request.getRole();
+        if (rName == null || rName.isEmpty()) rName = "USER";
+        ERole roleEnum = ERole.valueOf("ROLE_" + rName.toUpperCase());
         Role role = roleRepository.findByName(roleEnum)
                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        roles.add(role);
-        user.setRoles(roles);
+        user.setRole(role);
 
         userRepository.save(user);
     }
@@ -87,18 +79,14 @@ public class AdminService {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 
-        Set<Role> roles = new HashSet<>();
-        ERole roleEnum;
-        try {
-            roleEnum = ERole.valueOf("ROLE_" + request.getRole());
-        } catch (IllegalArgumentException e) {
-            roleEnum = ERole.ROLE_USER;
+        // Resolve role
+        String rName = request.getRole();
+        if (rName != null && !rName.isEmpty()) {
+            ERole roleEnum = ERole.valueOf("ROLE_" + rName.toUpperCase());
+            Role role = roleRepository.findByName(roleEnum)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            user.setRole(role);
         }
-
-        Role role = roleRepository.findByName(roleEnum)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        roles.add(role);
-        user.setRoles(roles);
 
         userRepository.save(user);
     }

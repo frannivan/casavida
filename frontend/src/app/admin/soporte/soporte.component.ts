@@ -16,6 +16,8 @@ export class SoporteComponent implements OnInit {
   tickets: Ticket[] = [];
   isAdmin = false;
   isSoporte = false;
+  isDirectivo = false;
+  canSeeAll = false;
   
   // Form fields
   newTicket: any = {
@@ -38,18 +40,22 @@ export class SoporteComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const roles = this.storageService.getUser().roles;
-    this.isAdmin = roles.includes('ROLE_ADMIN');
-    this.isSoporte = roles.includes('ROLE_SOPORTE');
+    const role = this.storageService.getUser().role || '';
+    this.isAdmin = role === 'ROLE_ADMIN';
+    this.isSoporte = role === 'ROLE_SOPORTE';
+    this.isDirectivo = role === 'ROLE_DIRECTIVO';
+    
+    // Support, Directivo and Admin (if configured) see all
+    this.canSeeAll = this.isSoporte || this.isDirectivo || this.isAdmin;
     
     this.loadTickets();
   }
 
   loadTickets(): void {
     this.loading = true;
-    const request = this.isAdmin && !this.isSoporte 
-      ? this.ticketService.getMyTickets() 
-      : this.ticketService.getAllTickets();
+    const request = this.canSeeAll 
+      ? this.ticketService.getAllTickets() 
+      : this.ticketService.getMyTickets();
       
     request.subscribe({
       next: data => {

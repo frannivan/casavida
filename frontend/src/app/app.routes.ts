@@ -24,6 +24,7 @@ import { ReportesComponent } from './admin/reportes/reportes.component';
 import { CargaDatosComponent } from './admin/carga-datos/carga-datos.component';
 import { PolygonEditorComponent } from './board-admin/polygon-editor/polygon-editor.component';
 import { SoporteComponent } from './admin/soporte/soporte.component';
+import { PermissionsAdminComponent } from './admin/permissions/permissions-admin.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
@@ -49,6 +50,7 @@ export const routes: Routes = [
     { path: 'cotizar', component: CotizacionComponent },
     { path: 'admin/generar-contrato', component: GenerarContratoComponent },
     { path: 'admin/soporte', component: SoporteComponent },
+    { path: 'admin/permissions', component: PermissionsAdminComponent },
     { path: 'panel-vendedor', component: BoardVendedorComponent },
     { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];

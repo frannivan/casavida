@@ -5,11 +5,12 @@ import { ActivatedRoute } from '@angular/router';
 import { ClienteService } from '../services/cliente';
 
 import { ClientDossierComponent } from './client-dossier/client-dossier.component';
+import { HasPermissionDirective } from '../directives/has-permission';
 
 @Component({
     selector: 'app-board-clients',
     standalone: true,
-    imports: [CommonModule, FormsModule, ClientDossierComponent],
+    imports: [CommonModule, FormsModule, ClientDossierComponent, HasPermissionDirective],
     templateUrl: './board-clients.component.html',
     styleUrl: './board-clients.component.css'
 })

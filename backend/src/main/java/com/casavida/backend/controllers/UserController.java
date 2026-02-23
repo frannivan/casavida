@@ -66,8 +66,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR') or hasRole('RECEPCION')")
     public List<UserSummary> getVendedores() {
         return userRepository.findAll().stream()
-                .filter(user -> user.getRoles().stream()
-                        .anyMatch(role -> role.getName() == ERole.ROLE_VENDEDOR))
+                .filter(user -> user.getRole() != null && user.getRole().getName() == ERole.ROLE_VENDEDOR)
                 .map(user -> new UserSummary(user.getId(), user.getUsername(), user.getEmail()))
                 .collect(Collectors.toList());
     }

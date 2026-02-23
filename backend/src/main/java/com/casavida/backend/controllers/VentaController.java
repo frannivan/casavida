@@ -307,7 +307,7 @@ public class VentaController {
             // Check if current user is VENDEDOR
             String username = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
             userRepository.findByUsername(username).ifPresent(currentUser -> {
-                if (currentUser.getRoles().stream().anyMatch(r -> r.getName() == com.casavida.backend.entity.ERole.ROLE_VENDEDOR)) {
+                if (currentUser.getRole() != null && currentUser.getRole().getName() == com.casavida.backend.entity.ERole.ROLE_VENDEDOR) {
                     contrato.setVendedor(currentUser);
                 }
             });
@@ -334,7 +334,7 @@ public class VentaController {
         User currentUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Error: Usuario no encontrado."));
 
-        if (currentUser.getRoles().stream().anyMatch(r -> r.getName() == com.casavida.backend.entity.ERole.ROLE_ADMIN)) {
+        if (currentUser.getRole() != null && currentUser.getRole().getName() == com.casavida.backend.entity.ERole.ROLE_ADMIN) {
             return contratoRepository.findAll();
         } else {
             // Filter by seller ID

@@ -35,7 +35,7 @@ public class ClienteListener {
 
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role no encontrado."));
-            user.setRoles(new HashSet<>(Collections.singletonList(userRole)));
+            user.setRole(userRole);
 
             cliente.setUser(user);
         }

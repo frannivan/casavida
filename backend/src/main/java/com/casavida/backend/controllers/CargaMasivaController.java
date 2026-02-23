@@ -74,8 +74,8 @@ public class CargaMasivaController {
 
         switch (tipo.toLowerCase()) {
             case "usuarios":
-                headers = new String[]{"username", "email", "password", "roles"};
-                descriptions = new String[]{"Nombre de usuario (único)", "Email (único)", "Contraseña", "Roles separados por coma (ROLE_USER,ROLE_ADMIN,ROLE_VENDEDOR)"};
+                headers = new String[]{"username", "email", "password", "rol"};
+                descriptions = new String[]{"Nombre de usuario (único)", "Email (único)", "Contraseña", "Rol del usuario (ROLE_USER, ROLE_ADMIN, ROLE_VENDEDOR, etc.)"};
                 break;
             case "lotes":
                 headers = new String[]{"numeroLote", "manzana", "precioTotal", "areaMetrosCuadrados", "coordenadasGeo", "fraccionamientoId", "estatus"};
@@ -141,8 +141,8 @@ public class CargaMasivaController {
     public ResponseEntity<byte[]> downloadMasterTemplate() throws IOException {
         Workbook workbook = new XSSFWorkbook();
         createSheet(workbook, "usuarios", 
-            new String[]{"username", "email", "password", "roles"},
-            new String[]{"Nombre de usuario (único)", "Email (único)", "Contraseña", "Roles separados por coma (ROLE_USER,ROLE_ADMIN,ROLE_VENDEDOR)"});
+            new String[]{"username", "email", "password", "rol"},
+            new String[]{"Nombre de usuario (único)", "Email (único)", "Contraseña", "Rol del usuario (ROLE_USER, ROLE_ADMIN, ROLE_VENDEDOR, etc.)"});
         
         createSheet(workbook, "lotes", 
             new String[]{"numeroLote", "manzana", "precioTotal", "areaMetrosCuadrados", "coordenadasGeo", "fraccionamientoId", "estatus"},
@@ -241,21 +241,18 @@ public class CargaMasivaController {
                         user.setEmail(email);
                         user.setPassword(passwordEncoder.encode(password));
 
-                        Set<Role> roles = new HashSet<>();
+                        Role role;
                         if (!rolesStr.isEmpty()) {
-                            String[] roleNames = rolesStr.split(",");
-                            for (String roleName : roleNames) {
-                                ERole eRole = ERole.valueOf(roleName.trim());
-                                Role role = roleRepository.findByName(eRole)
-                                        .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
-                                roles.add(role);
-                            }
+                            // Take first role if multiple provided by mistake
+                            String roleName = rolesStr.split(",")[0].trim();
+                            ERole eRole = ERole.valueOf(roleName);
+                            role = roleRepository.findByName(eRole)
+                                    .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
                         } else {
-                            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                            role = roleRepository.findByName(ERole.ROLE_USER)
                                     .orElseThrow(() -> new RuntimeException("Default role not found"));
-                            roles.add(userRole);
                         }
-                        user.setRoles(roles);
+                        user.setRole(role);
 
                         userRepository.save(user);
                         successCount++;

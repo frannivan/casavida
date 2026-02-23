@@ -23,30 +23,21 @@ DELETE FROM clientes;
 DELETE FROM USERS;
 DELETE FROM lotes;
 DELETE FROM fraccionamientos;
+DELETE FROM role_permissions;
 
 -- Re-enable integrity checks
 SET REFERENTIAL_INTEGRITY TRUE;
 
 -- 3. Users (FRESH START)
 -- Passwords: password123 ($2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou)
-MERGE INTO USERS (id, username, email, password, created_at) KEY (id) VALUES (1, 'admin', 'admin@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP);
-MERGE INTO USERS (id, username, email, password, created_at) KEY (id) VALUES (2, 'vendedor', 'vendedor@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP);
-MERGE INTO USERS (id, username, email, password, created_at) KEY (id) VALUES (3, 'recepcion', 'recepcion@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP);
-MERGE INTO USERS (id, username, email, password, created_at) KEY (id) VALUES (4, 'contabilidad', 'contabilidad@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP);
-MERGE INTO USERS (id, username, email, password, created_at) KEY (id) VALUES (5, 'directivo', 'directivo@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP);
-MERGE INTO USERS (id, username, email, password, created_at) KEY (id) VALUES (6, 'soporte', 'soporte@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP);
-MERGE INTO USERS (id, username, email, password, created_at) KEY (id) VALUES (101, 'franivan@test.com', 'franivan@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP);
-MERGE INTO USERS (id, username, email, password, created_at) KEY (id) VALUES (102, 'maria@test.com', 'maria@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', CURRENT_TIMESTAMP);
-
--- 4. Link Roles
-MERGE INTO user_roles (user_id, role_id) KEY (user_id, role_id) VALUES (1, 2);   -- Admin
-MERGE INTO user_roles (user_id, role_id) KEY (user_id, role_id) VALUES (2, 3);   -- Vendedor
-MERGE INTO user_roles (user_id, role_id) KEY (user_id, role_id) VALUES (3, 4);   -- Recepcion
-MERGE INTO user_roles (user_id, role_id) KEY (user_id, role_id) VALUES (4, 5);   -- Contabilidad
-MERGE INTO user_roles (user_id, role_id) KEY (user_id, role_id) VALUES (5, 6);   -- Directivo
-MERGE INTO user_roles (user_id, role_id) KEY (user_id, role_id) VALUES (6, 7);   -- Soporte
-MERGE INTO user_roles (user_id, role_id) KEY (user_id, role_id) VALUES (101, 1); -- Cliente
-MERGE INTO user_roles (user_id, role_id) KEY (user_id, role_id) VALUES (102, 1); -- Cliente
+MERGE INTO USERS (id, username, email, password, role_id, created_at) KEY (id) VALUES (1, 'admin', 'admin@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', 2, CURRENT_TIMESTAMP);
+MERGE INTO USERS (id, username, email, password, role_id, created_at) KEY (id) VALUES (2, 'vendedor', 'vendedor@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', 3, CURRENT_TIMESTAMP);
+MERGE INTO USERS (id, username, email, password, role_id, created_at) KEY (id) VALUES (3, 'recepcion', 'recepcion@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', 4, CURRENT_TIMESTAMP);
+MERGE INTO USERS (id, username, email, password, role_id, created_at) KEY (id) VALUES (4, 'contabilidad', 'contabilidad@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', 5, CURRENT_TIMESTAMP);
+MERGE INTO USERS (id, username, email, password, role_id, created_at) KEY (id) VALUES (5, 'directivo', 'directivo@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', 6, CURRENT_TIMESTAMP);
+MERGE INTO USERS (id, username, email, password, role_id, created_at) KEY (id) VALUES (6, 'soporte', 'soporte@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', 7, CURRENT_TIMESTAMP);
+MERGE INTO USERS (id, username, email, password, role_id, created_at) KEY (id) VALUES (101, 'franivan@test.com', 'franivan@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', 1, CURRENT_TIMESTAMP);
+MERGE INTO USERS (id, username, email, password, role_id, created_at) KEY (id) VALUES (102, 'maria@test.com', 'maria@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', 1, CURRENT_TIMESTAMP);
 
 -- 5. Entities
 INSERT INTO fraccionamientos (id, nombre, ubicacion, descripcion, logo_url, coordenadas_geo, poligono_delimitador) VALUES 
@@ -68,7 +59,6 @@ ALTER TABLE fraccionamientos ALTER COLUMN id RESTART WITH 10;
 ALTER TABLE lotes ALTER COLUMN id RESTART WITH 10;
 
 -- 7. Sample Messages (Internal + CRM)
--- Internal messages between users
 INSERT INTO mensajes (id, tipo, direccion, contenido, remitente, fecha, asunto, leido, remitente_user_id, destinatario_user_id) VALUES
 (1, 'INTERNO', 'ENVIADO', 'Hola Admin, quería comentarte que el lote A001 ya fue visitado por el cliente.', 'vendedor', PARSEDATETIME('2026-02-20 09:30:00', 'yyyy-MM-dd HH:mm:ss'), 'Actualización Lote A001', false, 2, 1),
 (2, 'INTERNO', 'ENVIADO', 'Perfecto, gracias por el aviso. ¿El cliente mostró interés en otros lotes?', 'admin', PARSEDATETIME('2026-02-20 10:15:00', 'yyyy-MM-dd HH:mm:ss'), 'Re: Actualización Lote A001', true, 1, 2),
@@ -76,7 +66,6 @@ INSERT INTO mensajes (id, tipo, direccion, contenido, remitente, fecha, asunto, 
 (4, 'INTERNO', 'ENVIADO', 'Por favor confirmen si el lote M001 sigue disponible, tengo un cliente interesado.', 'vendedor', PARSEDATETIME('2026-02-21 08:00:00', 'yyyy-MM-dd HH:mm:ss'), 'Disponibilidad Lote M001', false, 2, 3),
 (5, 'INTERNO', 'ENVIADO', 'Adjunto el reporte de ventas del mes pasado para revisión.', 'contabilidad', PARSEDATETIME('2026-02-18 16:30:00', 'yyyy-MM-dd HH:mm:ss'), 'Reporte de Ventas - Enero 2026', false, 4, 5);
 
--- CRM messages (WhatsApp and Email with Leads)
 INSERT INTO mensajes (id, target_id, tipo, direccion, contenido, remitente, fecha, leido) VALUES
 (6, 1, 'WA', 'ENVIADO', 'Hola, le escribimos de CasaVida. ¿Sigue interesado en el lote A001?', 'Vendedor', PARSEDATETIME('2026-02-20 11:00:00', 'yyyy-MM-dd HH:mm:ss'), false),
 (7, 1, 'WA', 'RECIBIDO', 'Sí, me gustaría agendar una visita esta semana.', 'Cliente', PARSEDATETIME('2026-02-20 11:05:00', 'yyyy-MM-dd HH:mm:ss'), false),
@@ -84,3 +73,102 @@ INSERT INTO mensajes (id, target_id, tipo, direccion, contenido, remitente, fech
 (9, 1, 'EMAIL', 'ENVIADO', 'ASUNTO: Cotización Lote A001\n\nEstimado cliente,\n\nAdjunto encontrará la cotización del Lote A001 en Residencial Las Palmas.\n\nPrecio: $150,000 MXN\nÁrea: 200 m²\n\nQuedamos a sus órdenes.', 'Vendedor', PARSEDATETIME('2026-02-19 15:00:00', 'yyyy-MM-dd HH:mm:ss'), false);
 
 ALTER TABLE mensajes ALTER COLUMN id RESTART WITH 100;
+
+-- 8. Default Permissions Reference Table
+CREATE TABLE IF NOT EXISTS role_permissions_default (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    role_name VARCHAR(255) NOT NULL,
+    permission_key VARCHAR(255) NOT NULL,
+    is_enabled BOOLEAN NOT NULL,
+    UNIQUE(role_name, permission_key)
+);
+
+-- Nuclear Clean for Permissions
+DELETE FROM role_permissions;
+DELETE FROM role_permissions_default;
+
+-- Seed Default Permissions (Comprehensive Inventory)
+INSERT INTO role_permissions_default (role_name, permission_key, is_enabled) VALUES 
+-- ADMIN
+('ROLE_ADMIN', 'menu:home', true),
+('ROLE_ADMIN', 'menu:admin_dashboard', true),
+('ROLE_ADMIN', 'menu:clientes', true),
+('ROLE_ADMIN', 'menu:users', true),
+('ROLE_ADMIN', 'menu:leads', true),
+('ROLE_ADMIN', 'menu:opportunities', true),
+('ROLE_ADMIN', 'menu:fraccionamientos', true),
+('ROLE_ADMIN', 'action:fraccionamiento:edit', true),
+('ROLE_ADMIN', 'action:fraccionamiento:delete', true),
+('ROLE_ADMIN', 'menu:lotes', true),
+('ROLE_ADMIN', 'menu:reportes', true),
+('ROLE_ADMIN', 'menu:carga_datos', true),
+('ROLE_ADMIN', 'menu:documentacion', true),
+('ROLE_ADMIN', 'menu:soporte', true),
+('ROLE_ADMIN', 'menu:permissions', true),
+('ROLE_ADMIN', 'menu:contratos', true),
+
+-- RECEPCIÓN
+('ROLE_RECEPCION', 'menu:home', true),
+('ROLE_RECEPCION', 'section:pagos', true),
+('ROLE_RECEPCION', 'menu:payments_view', true),
+('ROLE_RECEPCION', 'menu:contratos', true),
+('ROLE_RECEPCION', 'menu:contracts_view', true),
+('ROLE_RECEPCION', 'menu:leads', true),
+('ROLE_RECEPCION', 'menu:clientes', true),
+('ROLE_RECEPCION', 'menu:fraccionamientos', true),
+('ROLE_RECEPCION', 'menu:lotes', true),
+('ROLE_RECEPCION', 'menu:documentacion', true),
+('ROLE_RECEPCION', 'action:pago:validate', true),
+('ROLE_RECEPCION', 'action:pago:create', true),
+('ROLE_RECEPCION', 'menu:soporte', true),
+
+-- VENDEDOR
+('ROLE_VENDEDOR', 'menu:home', true),
+('ROLE_VENDEDOR', 'menu:panel_vendedor', true),
+('ROLE_VENDEDOR', 'menu:clientes', true),
+('ROLE_VENDEDOR', 'menu:leads', true),
+('ROLE_VENDEDOR', 'menu:opportunities', true),
+('ROLE_VENDEDOR', 'menu:fraccionamientos', true),
+('ROLE_VENDEDOR', 'menu:lotes', true),
+('ROLE_VENDEDOR', 'menu:cotizaciones', true),
+('ROLE_VENDEDOR', 'menu:documentacion', true),
+('ROLE_VENDEDOR', 'menu:soporte', true),
+('ROLE_VENDEDOR', 'menu:contratos', true),
+
+-- CONTABILIDAD
+('ROLE_CONTABILIDAD', 'menu:home', true),
+('ROLE_CONTABILIDAD', 'menu:panel_contabilidad', true),
+('ROLE_CONTABILIDAD', 'menu:payments_view', true),
+('ROLE_CONTABILIDAD', 'section:pagos', true),
+('ROLE_CONTABILIDAD', 'action:pago:validate', true),
+('ROLE_CONTABILIDAD', 'menu:clientes', true),
+('ROLE_CONTABILIDAD', 'menu:reportes', true),
+('ROLE_CONTABILIDAD', 'menu:soporte', true),
+
+-- DIRECTIVO
+('ROLE_DIRECTIVO', 'menu:home', true),
+('ROLE_DIRECTIVO', 'menu:panel_directivo', true),
+('ROLE_DIRECTIVO', 'menu:reportes', true),
+('ROLE_DIRECTIVO', 'menu:fraccionamientos', true),
+('ROLE_DIRECTIVO', 'action:fraccionamiento:edit', true),
+('ROLE_DIRECTIVO', 'action:fraccionamiento:delete', true),
+('ROLE_DIRECTIVO', 'menu:soporte', true),
+('ROLE_DIRECTIVO', 'menu:permissions', true),
+
+-- CLIENTE
+('ROLE_USER', 'menu:panel_cliente', true),
+('ROLE_USER', 'menu:profile', true),
+('ROLE_USER', 'menu:payments_history', true),
+('ROLE_USER', 'menu:contract_details', true),
+('ROLE_USER', 'menu:lot_details', true),
+('ROLE_USER', 'menu:home', true),
+
+-- SOPORTE (System Admin)
+('ROLE_SOPORTE', 'menu:home', true),
+('ROLE_SOPORTE', 'menu:soporte', true),
+('ROLE_SOPORTE', 'menu:admin_dashboard', true),
+('ROLE_SOPORTE', 'menu:users', true);
+
+-- Synchronize active role_permissions with defaults
+INSERT INTO role_permissions (role_name, permission_key, is_enabled)
+SELECT role_name, permission_key, is_enabled FROM role_permissions_default;
