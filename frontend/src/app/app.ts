@@ -59,7 +59,15 @@ export class AppComponent {
     if (this.isLoggedIn) {
       const user = this.storageService.getUser();
       this.username = user.username;
-      this.role = user.role || '';
+      
+      // Robust role extraction (handles release-1.1 and release-1.2 schemas)
+      if (user.role) {
+        this.role = user.role;
+      } else if (user.roles && Array.isArray(user.roles) && user.roles.length > 0) {
+        this.role = user.roles[0];
+      } else {
+        this.role = '';
+      }
 
       // Visibility based on single role
       this.showAdminBoard = this.role === 'ROLE_ADMIN';
