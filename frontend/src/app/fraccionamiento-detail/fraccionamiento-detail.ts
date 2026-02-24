@@ -103,6 +103,10 @@ export class FraccionamientoDetailComponent implements OnInit {
                 if (this.fraccionamiento && this.fraccionamiento.planoSvg) {
                     setTimeout(() => this.applyLoteColors(), 200);
                 }
+                // Also update image plan polygons if map exists
+                if (this.planMap) {
+                    this.renderPlanPolygons();
+                }
             },
             error: err => console.error(err)
         });
@@ -153,10 +157,10 @@ export class FraccionamientoDetailComponent implements OnInit {
                         break;
                     case 'VENDIDO':
                         path.style.fill = '#8B4513'; // Café/Marrón
-                        path.style.cursor = 'not-allowed';
+                        path.style.cursor = 'default';
                         break;
                     default:
-                        path.style.fill = '#999'; // Gris por defecto
+                        path.style.fill = '#6c757d'; // Gris por defecto
                 }
                 path.style.stroke = '#fff';
                 path.style.strokeWidth = '2';
@@ -172,31 +176,69 @@ export class FraccionamientoDetailComponent implements OnInit {
         if (!svg) return;
 
         const lotePaths = svg.querySelectorAll('[data-lote-id]');
+        const tooltip = document.getElementById('loteTooltip');
+        const tLote = document.getElementById('tooltipLote');
+        const tPrice = document.getElementById('tooltipPrice');
+        const tArea = document.getElementById('tooltipArea');
+        const tStatus = document.getElementById('tooltipStatusText');
+        const tDot = document.getElementById('tooltipStatusDot');
 
         lotePaths.forEach((path: any) => {
             // Click handler
             path.addEventListener('click', () => {
-                if (this.isEditing) return; // Disable click nav if editing (handled by component? No, if editing, this SVG is hidden)
+                if (this.isEditing) return;
 
                 const loteNumero = path.getAttribute('data-lote-id');
-                const lote = this.lotes.find(l => l.numero === loteNumero);
+                const lote = this.lotes.find(l => l.numero === loteNumero || l.numeroLote === loteNumero);
 
-                if (lote && lote.estatus !== 'VENDIDO') {
-                    // Navigate to lote detail page
-                    window.location.href = `/casavida/lote/${lote.id}`;
+                if (lote) {
+                    this.router.navigate(['/lote', lote.id]);
                 }
             });
 
             // Hover effects
-            path.addEventListener('mouseenter', () => {
-                const lote = this.lotes.find(l => l.numero === path.getAttribute('data-lote-id'));
-                if (lote && lote.estatus !== 'VENDIDO') {
+            path.addEventListener('mouseenter', (event: MouseEvent) => {
+                const loteNumero = path.getAttribute('data-lote-id');
+                const lote = this.lotes.find(l => l.numero === loteNumero || l.numeroLote === loteNumero);
+                
+                if (lote && tooltip && tLote && tArea && tStatus && tDot) {
                     path.style.opacity = '0.7';
+                    
+                    // Update Tooltip Content
+                    tLote.innerText = `Lote ${lote.numeroLote || lote.numero}`;
+                    if (tPrice) {
+                        tPrice.innerText = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(lote.precioTotal);
+                    }
+                    tArea.innerText = `${lote.areaMetrosCuadrados} m²`;
+                    tStatus.innerText = lote.estatus;
+                    
+                    // Status Dot Color
+                    let dotColor = '#28a745';
+                    if (lote.estatus === 'APARTADO') dotColor = '#007bff';
+                    if (lote.estatus === 'VENDIDO') dotColor = '#8B4513';
+                    tDot.style.backgroundColor = dotColor;
+
+                    // Show Tooltip
+                    tooltip.style.display = 'block';
+                    setTimeout(() => { tooltip.style.opacity = '1'; }, 10);
+                }
+            });
+
+            path.addEventListener('mousemove', (event: MouseEvent) => {
+                if (tooltip && tooltip.style.display === 'block') {
+                    tooltip.style.left = (event.clientX + 15) + 'px';
+                    tooltip.style.top = (event.clientY + 15) + 'px';
                 }
             });
 
             path.addEventListener('mouseleave', () => {
                 path.style.opacity = '1';
+                if (tooltip) {
+                    tooltip.style.opacity = '0';
+                    setTimeout(() => { 
+                        if (tooltip.style.opacity === '0') tooltip.style.display = 'none'; 
+                    }, 150);
+                }
             });
         });
     }
@@ -452,11 +494,13 @@ export class FraccionamientoDetailComponent implements OnInit {
              });
 
              this.planImageOverlay = L.imageOverlay(imgUrl, this.planImageBounds).addTo(this.planMap);
-             this.planMap.fitBounds(this.planImageBounds);
-
              this.planPolygonLayer = L.layerGroup().addTo(this.planMap);
-             
-             this.renderPlanPolygons();
+             this.renderPlanPolygons(true);
+             if (this.planPolygonLayer.getLayers().length === 0) {
+                 this.planMap.fitBounds(this.planImageBounds);
+             }
+
+
              
              // Handle resize
              setTimeout(() => { this.planMap.invalidateSize(); }, 500);
@@ -467,9 +511,11 @@ export class FraccionamientoDetailComponent implements OnInit {
         img.src = imgUrl;
     }
 
-    renderPlanPolygons(): void {
-        if (!this.planPolygonLayer) return;
+    renderPlanPolygons(shouldFitBounds: boolean = false): void {
+        if (!this.planPolygonLayer || !this.planMap) return;
         this.planPolygonLayer.clearLayers();
+        const bounds = L.latLngBounds([]);
+        let hasPolygons = false;
 
         this.lotes.forEach(lote => {
             if (lote.planoCoordinates) {
@@ -482,8 +528,8 @@ export class FraccionamientoDetailComponent implements OnInit {
                          
                          switch (lote.estatus) {
                             case 'DISPONIBLE': fillColor = '#28a745'; break; // Green
-                            case 'APARTADO': fillColor = '#ffc107'; break; // Yellow/Orange
-                            case 'VENDIDO': fillColor = '#dc3545'; break; // Red
+                            case 'APARTADO': fillColor = '#007bff'; break; // Blue (Aligned with SVG)
+                            case 'VENDIDO': fillColor = '#8B4513'; break; // Brown/Coffee (Aligned with SVG)
                         }
 
                         // Create Polygon
@@ -505,9 +551,9 @@ export class FraccionamientoDetailComponent implements OnInit {
                         polygon.bindTooltip(`
                             <div class="text-center">
                                 <strong>Lote ${lote.numeroLote || lote.numero}</strong><br>
+                                <span class="badge" style="background-color: ${fillColor}; color: white;">${lote.estatus}</span><br>
                                 ${lote.areaMetrosCuadrados} m²<br>
-                                $${lote.precioTotal}<br>
-                                ${lote.estatus}
+                                $${lote.precioTotal}
                             </div>
                         `, { sticky: true, direction: 'top' });
 
@@ -519,10 +565,16 @@ export class FraccionamientoDetailComponent implements OnInit {
                         });
 
                         polygon.addTo(this.planPolygonLayer);
+                        bounds.extend(polygon.getBounds());
+                        hasPolygons = true;
                     }
                 } catch (e) { console.error('Error parsing coords for lote', lote.id, e); }
             }
         });
+
+        if (shouldFitBounds && hasPolygons) {
+            this.planMap.fitBounds(bounds, { padding: [50, 50], maxZoom: 2 });
+        }
     }
 
     // Keep getImageUrl as it's used by initPlanMap
@@ -532,13 +584,23 @@ export class FraccionamientoDetailComponent implements OnInit {
         
         if (!fullUrl.startsWith('http')) {
              if (fullUrl.includes('/api/images/')) {
-                 if (!fullUrl.startsWith('/casavida') && environment.apiUrl.includes('/casavida')) {
-                     fullUrl = '/casavida' + (fullUrl.startsWith('/') ? '' : '/') + fullUrl;
+                 // Clean up any double context paths and ensure it leads with environment.apiUrl or similar
+                 // For now, if it has /casavida/, we keep it relative if we are in prod, 
+                 // but in local we might need to strip it if our proxy is just /api.
+                 // BETTER: Just ensure it's a valid relative path from the domain root.
+                 if (fullUrl.startsWith('/casavida/')) {
+                     // If we are in local (apiUrl is /api), strip /casavida and replace with /api
+                     if (environment.apiUrl === '/api') {
+                         fullUrl = fullUrl.replace('/casavida/api/', '/api/');
+                     }
+                 } else if (fullUrl.startsWith('/api/')) {
+                     // Already clean
                  }
              } else {
                  fullUrl = `${environment.apiUrl}/images/${imgUrl}`;
              }
         }
+        // Ensure no double slashes
         fullUrl = fullUrl.replace(/([^:]\/)\/+/g, "$1");
         return fullUrl + '?cb=' + new Date().getTime(); 
     }

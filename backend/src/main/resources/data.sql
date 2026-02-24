@@ -12,19 +12,19 @@ MERGE INTO roles (id, name) KEY (id) VALUES (5, 'ROLE_CONTABILIDAD');
 MERGE INTO roles (id, name) KEY (id) VALUES (6, 'ROLE_DIRECTIVO');
 MERGE INTO roles (id, name) KEY (id) VALUES (7, 'ROLE_SOPORTE');
 
--- 2. Massive Clean Up
-TRUNCATE TABLE mensajes;
-TRUNCATE TABLE pagos;
-TRUNCATE TABLE contratos;
-TRUNCATE TABLE opportunities;
-TRUNCATE TABLE leads;
-TRUNCATE TABLE user_roles;
-TRUNCATE TABLE clientes;
-TRUNCATE TABLE role_permissions;
-TRUNCATE TABLE role_permissions_default;
-TRUNCATE TABLE USERS;
-TRUNCATE TABLE lotes;
-TRUNCATE TABLE fraccionamientos;
+-- 2. Massive Clean Up (DISABLED TO PRESERVE DATA)
+-- TRUNCATE TABLE mensajes;
+-- TRUNCATE TABLE pagos;
+-- TRUNCATE TABLE contratos;
+-- TRUNCATE TABLE opportunities;
+-- TRUNCATE TABLE leads;
+-- TRUNCATE TABLE user_roles;
+-- TRUNCATE TABLE clientes;
+-- TRUNCATE TABLE role_permissions;
+-- TRUNCATE TABLE role_permissions_default;
+-- TRUNCATE TABLE USERS;
+-- TRUNCATE TABLE lotes;
+-- TRUNCATE TABLE fraccionamientos;
 
 -- Re-enable integrity checks
 SET REFERENTIAL_INTEGRITY TRUE;
@@ -41,15 +41,19 @@ MERGE INTO USERS (id, username, email, password, role_id, created_at) KEY (id) V
 MERGE INTO USERS (id, username, email, password, role_id, created_at) KEY (id) VALUES (102, 'maria@test.com', 'maria@test.com', '$2a$10$qbVHd72aWuXZTIrAm75aIud8plhMfJKbdps00KbjmqDrniX4bcpou', 1, CURRENT_TIMESTAMP);
 
 -- 5. Entities
-INSERT INTO fraccionamientos (id, nombre, ubicacion, descripcion, logo_url, coordenadas_geo, poligono_delimitador) VALUES 
+MERGE INTO fraccionamientos (id, nombre, ubicacion, descripcion, logo_url, coordenadas_geo, poligono_delimitador) KEY (id) VALUES 
 (1, 'Residencial Las Palmas', 'Cancún, Quintana Roo', 'Exclusivo fraccionamiento.', '/casavida/api/images/palmas.png', '21.1619, -86.8515', '[[21.162795,-86.849289],[21.162170,-86.848870],[21.161319,-86.850695],[21.161560,-86.850947],[21.161840,-86.850936],[21.162055,-86.850850],[21.162795,-86.849321]]'),
-(2, '7 Mares Residencial', 'Mazunte, Oaxaca', 'Eco-turístico.', '/casavida/api/images/7mares.png', '15.6665, -96.5556', '[[15.667814,-96.555597],[15.667711,-96.555114],[15.665727,-96.555081],[15.665992,-96.555699]]');
+(2, '7 Mares Residencial', 'Mazunte, Oaxaca', 'Eco-turístico.', '/casavida/api/images/7mares.png', '15.6665, -96.5556', '[[15.667814,-96.555597],[15.667711,-96.555114],[15.665727,-96.555081],[15.665992,-96.555699]]'),
+(3, 'Marina Azure', 'Puerto Vallarta, Jalisco', 'Vista espectacular al mar.', '/casavida/api/images/marina.png', '20.6534, -105.2435', '[[20.6550,-105.2450],[20.6550,-105.2420],[20.6520,-105.2420],[20.6520,-105.2450]]'),
+(4, 'Hacienda Real', 'Tequila, Jalisco', 'Tradición y confort.', '/casavida/api/images/hacienda.png', '20.8845, -103.8345', '[[20.8860,-103.8360],[20.8860,-103.8330],[20.8830,-103.8330],[20.8830,-103.8360]]');
 
-INSERT INTO lotes (id, numero_lote, manzana, precio_total, area_metros_cuadrados, coordenadas_geo, estatus, fraccionamiento_id, plano_coordinates) VALUES 
+MERGE INTO lotes (id, numero_lote, manzana, precio_total, area_metros_cuadrados, coordenadas_geo, estatus, fraccionamiento_id, plano_coordinates) KEY (id) VALUES 
 (1, 'A001', 'MZ A', 150000.0, 200.0, '21.1622, -86.8494', 'VENDIDO', 1, '[[21.162237,-86.849375],[21.162157,-86.849568],[21.161922,-86.849423],[21.162032,-86.849224],[21.162222,-86.849364]]'),
-(2, 'M001', 'Calle Mar', 100000.0, 500.0, '15.6665, -96.5556', 'DISPONIBLE', 2, '[[15.666449,-96.555699],[15.666444,-96.555477],[15.665992,-96.555482],[15.665990,-96.555750],[15.666418,-96.555705]]');
+(2, 'M001', 'Calle Mar', 100000.0, 500.0, '15.6665, -96.5556', 'DISPONIBLE', 2, '[[15.666449,-96.555699],[15.666444,-96.555477],[15.665992,-96.555482],[15.665990,-96.555750],[15.666418,-96.555705]]'),
+(3, 'MAR-01', 'Manzana 1', 250000.0, 300.0, '20.6535, -105.2430', 'DISPONIBLE', 3, '[[20.6540,-105.2440],[20.6540,-105.2430],[20.6530,-105.2430],[20.6530,-105.2440]]'),
+(4, 'HAC-01', 'Calle Principal', 120000.0, 450.0, '20.8845, -103.8340', 'DISPONIBLE', 4, '[[20.8850,-103.8350],[20.8850,-103.8340],[20.8840,-103.8340],[20.8840,-103.8350]]');
 
-INSERT INTO clientes (id, nombre, apellidos, email, telefono, direccion, ine, fecha_registro, user_id) VALUES 
+MERGE INTO clientes (id, nombre, apellidos, email, telefono, direccion, ine, fecha_registro, user_id) KEY (id) VALUES 
 (1, 'Francisco', 'Iván', 'franivan@test.com', '9981234567', 'Av. Kabah #123, Cancún', 'INE12345678', CURRENT_TIMESTAMP, 101),
 (2, 'María', 'García', 'maria@test.com', '9987654321', 'Colonia Centro, Mazunte', 'INE87654321', CURRENT_TIMESTAMP, 102);
 
@@ -58,6 +62,16 @@ ALTER TABLE USERS ALTER COLUMN id RESTART WITH 200;
 ALTER TABLE clientes ALTER COLUMN id RESTART WITH 10;
 ALTER TABLE fraccionamientos ALTER COLUMN id RESTART WITH 10;
 ALTER TABLE lotes ALTER COLUMN id RESTART WITH 10;
+
+-- 6. Leads & Opportunities
+MERGE INTO leads (id, nombre, email, telefono, mensaje, source, interes, status, fecha_registro) KEY (id) VALUES 
+(101, 'Carlos Ramirez', 'carlos@email.com', '5511223344', 'Interesado en Marina Azure', 'WEB', 'COTIZACION', 'NEW', CURRENT_TIMESTAMP),
+(102, 'Elena Gomez', 'elena@email.com', '5566778899', 'Busca casa de campo', 'CHATBOT', 'REPRESENTANTE', 'IN_PROGRESS', CURRENT_TIMESTAMP),
+(103, 'Roberto Diaz', 'roberto@email.com', '3344556677', 'Inversión patrimonial', 'WEB', 'COTIZACION', 'NEW', CURRENT_TIMESTAMP);
+
+MERGE INTO opportunities (id, lead_id, lote_id, monto_estimado, status, notas, fecha_cierre_estimada) KEY (id) VALUES 
+(101, 101, 1, 180000.0, 'NEGOTIATION', 'Interés alto en lote frente al mar', '2026-04-10'),
+(102, 102, 2, 95000.0, 'PROSPECTING', 'Buscando opciones de preventa', '2026-05-20');
 
 -- 7. Sample Messages (Internal + CRM)
 INSERT INTO mensajes (id, tipo, direccion, contenido, remitente, fecha, asunto, leido, remitente_user_id, destinatario_user_id) VALUES
@@ -107,6 +121,8 @@ INSERT INTO role_permissions_default (role_name, permission_key, is_enabled) VAL
 ('ROLE_ADMIN', 'menu:soporte', true),
 ('ROLE_ADMIN', 'menu:permissions', true),
 ('ROLE_ADMIN', 'menu:contratos', true),
+('ROLE_ADMIN', 'action:cliente:create', true),
+('ROLE_ADMIN', 'action:cliente:edit', true),
 
 -- RECEPCIÓN
 ('ROLE_RECEPCION', 'menu:home', true),
@@ -121,6 +137,10 @@ INSERT INTO role_permissions_default (role_name, permission_key, is_enabled) VAL
 ('ROLE_RECEPCION', 'menu:documentacion', true),
 ('ROLE_RECEPCION', 'action:pago:validate', true),
 ('ROLE_RECEPCION', 'action:pago:create', true),
+('ROLE_RECEPCION', 'action:cliente:create', true),
+('ROLE_RECEPCION', 'action:cliente:edit', true),
+('ROLE_RECEPCION', 'action:fraccionamiento:edit', true),
+('ROLE_RECEPCION', 'action:fraccionamiento:delete', true),
 ('ROLE_RECEPCION', 'menu:soporte', true),
 
 -- VENDEDOR
@@ -135,6 +155,8 @@ INSERT INTO role_permissions_default (role_name, permission_key, is_enabled) VAL
 ('ROLE_VENDEDOR', 'menu:documentacion', true),
 ('ROLE_VENDEDOR', 'menu:soporte', true),
 ('ROLE_VENDEDOR', 'menu:contratos', true),
+('ROLE_VENDEDOR', 'action:cliente:create', true),
+('ROLE_VENDEDOR', 'action:cliente:edit', true),
 
 -- CONTABILIDAD
 ('ROLE_CONTABILIDAD', 'menu:home', true),

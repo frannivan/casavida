@@ -1,13 +1,9 @@
 {
-    "/casavida/api": {
-        "target": "http://localhost:8080",
+    "/api": {
+        "target": "http://localhost:8080/casavida",
         "secure": false,
         "pathRewrite": {
-            "^/casavida": ""
+            "^/api": "/api"
         }
-    },
-    "/api": {
-        "target": "http://localhost:8080",
-        "secure": false
     }
 }

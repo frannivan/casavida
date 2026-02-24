@@ -22,6 +22,7 @@ export class AppComponent {
   // Role and session state
   role: string = '';
   isLoggedIn = false;
+  isSidebarToggled = false; // Estado para la barra lateral móvil
   
   // Flags for role-based boards
   showAdminBoard = false;
@@ -110,6 +111,13 @@ export class AppComponent {
   }
 
   /**
+   * Alterna la visibilidad de la barra lateral en dispositivos móviles.
+   */
+  toggleSidebar(): void {
+    this.isSidebarToggled = !this.isSidebarToggled;
+  }
+
+  /**
    * Finaliza la sesión del usuario y limpia el estado local.
    * Redirección absoluta para evitar problemas con Nginx y dominios externos.
    */
@@ -117,7 +125,7 @@ export class AppComponent {
     this.authService.logout().subscribe({
       next: res => {
         this.storageService.clean();
-        window.location.href = '/casavida/login';
+        this.router.navigate(['/login']);
       },
       error: err => {
         console.log(err);

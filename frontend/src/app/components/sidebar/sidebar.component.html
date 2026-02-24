@@ -8,29 +8,29 @@
   <div class="sidebar-content">
     <div class="list-group list-group-flush">
       <!-- SECCIÓN GENERAL: Accesos rápidos -->
-      <a *ngIf="canAccess('home')" routerLink="/home" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('home')" (click)="onNavClick()" routerLink="/home" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-home me-2"></i> Inicio
       </a>
 
       <!-- DASHBOARDS & PANELS -->
       <a *ngIf="canAccess('admin_dashboard')" 
-         routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="list-group-item list-group-item-action bg-dark text-white">
+         (click)="onNavClick()" routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-tachometer-alt me-2"></i> Dashboard Principal
       </a>
 
-      <a *ngIf="canAccess('panel_vendedor')" routerLink="/panel-vendedor" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('panel_vendedor')" (click)="onNavClick()" routerLink="/panel-vendedor" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-user-tie me-2"></i> Mi Panel Vendedor
       </a>
 
-      <a *ngIf="canAccess('panel_contabilidad')" routerLink="/contabilidad" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('panel_contabilidad')" (click)="onNavClick()" routerLink="/contabilidad" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-calculator me-2"></i> Panel Contabilidad
       </a>
 
-      <a *ngIf="canAccess('panel_directivo')" routerLink="/directivo" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('panel_directivo')" (click)="onNavClick()" routerLink="/directivo" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-briefcase me-2"></i> Panel Directivo
       </a>
 
-      <a *ngIf="canAccess('panel_cliente')" routerLink="/user" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('panel_cliente')" (click)="onNavClick()" routerLink="/user" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-th-large me-2"></i> Mi Portal Cliente
       </a>
 
@@ -50,41 +50,41 @@
       <!-- CRM SECCIÓN -->
       <div *ngIf="canAccess('leads') || canAccess('opportunities') || canAccess('clientes')" class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Gestión CRM</div>
       
-      <a *ngIf="canAccess('leads')" routerLink="/admin/crm/leads" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('leads')" (click)="onNavClick()" routerLink="/admin/crm/leads" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-user-plus me-2"></i> Prospectos
       </a>
 
-      <a *ngIf="canAccess('opportunities')" routerLink="/admin/crm/opportunities" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('opportunities')" (click)="onNavClick()" routerLink="/admin/crm/opportunities" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-chart-line me-2"></i> Oportunidades
       </a>
 
-      <a *ngIf="canAccess('clientes')" routerLink="/admin/clientes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('clientes')" (click)="onNavClick()" routerLink="/admin/clientes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-users me-2"></i> Clientes
       </a>
 
       <!-- INVENTARIO SECCIÓN -->
       <div *ngIf="canAccess('fraccionamientos') || canAccess('lotes')" class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Inventario</div>
       
-      <a *ngIf="canAccess('fraccionamientos')" routerLink="/admin/fraccionamientos" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('fraccionamientos')" (click)="onNavClick()" routerLink="/admin/fraccionamientos" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-city me-2"></i> Fraccionamientos
       </a>
 
-      <a *ngIf="canAccess('lotes')" routerLink="/admin/lotes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('lotes')" (click)="onNavClick()" routerLink="/admin/lotes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-th me-2"></i> Inventario de Lotes
       </a>
 
       <!-- VENTAS Y FINANZAS -->
       <div *ngIf="canAccess('contratos') || canAccess('cotizaciones') || canAccess('section:pagos')" class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Ventas y Finanzas</div>
 
-      <a *ngIf="canAccess('cotizaciones')" routerLink="/cotizar" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('cotizaciones')" (click)="onNavClick()" routerLink="/cotizar" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-calculator me-2"></i> Cotizador
       </a>
 
-      <a *ngIf="canAccess('contratos')" routerLink="/admin/generar-contrato" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('contratos')" (click)="onNavClick()" routerLink="/admin/generar-contrato" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-file-contract me-2"></i> Generar Contrato
       </a>
 
-      <a *ngIf="canAccess('section:pagos')" routerLink="/recepcion" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('section:pagos')" (click)="onNavClick()" routerLink="/recepcion" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-money-check-alt me-2 text-success"></i> Validación de Pagos
       </a>
 
@@ -99,30 +99,30 @@
       <!-- ADMINISTRACIÓN SECCIÓN -->
       <div *ngIf="canAccess('users') || canAccess('permissions')" class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Administración</div>
 
-      <a *ngIf="canAccess('users')" routerLink="/admin/users" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('users')" (click)="onNavClick()" routerLink="/admin/users" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-user-cog me-2"></i> Usuarios del Sistema
       </a>
 
-      <a *ngIf="canAccess('permissions')" routerLink="/admin/permissions" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white text-warning">
+      <a *ngIf="canAccess('permissions')" (click)="onNavClick()" routerLink="/admin/permissions" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white text-warning">
         <i class="fas fa-shield-alt me-2"></i> Gestionar Permisos
       </a>
 
       <!-- HERRAMIENTAS Y SOPORTE -->
       <div *ngIf="canAccess('reportes') || canAccess('carga_datos') || canAccess('documentacion')" class="list-group-item bg-dark text-info small text-uppercase fw-bold mt-3">Herramientas</div>
       
-      <a *ngIf="canAccess('reportes')" routerLink="/admin/reportes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('reportes')" (click)="onNavClick()" routerLink="/admin/reportes" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-chart-bar me-2"></i> Reportes
       </a>
       
-      <a *ngIf="canAccess('carga_datos')" routerLink="/admin/carga-datos" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('carga_datos')" (click)="onNavClick()" routerLink="/admin/carga-datos" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-file-upload me-2"></i> Carga Masiva
       </a>
       
-      <a *ngIf="canAccess('documentacion')" routerLink="/admin/documentacion" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
+      <a *ngIf="canAccess('documentacion')" (click)="onNavClick()" routerLink="/admin/documentacion" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white">
         <i class="fas fa-book me-2"></i> Documentación
       </a>
       
-      <a *ngIf="canAccess('soporte')" routerLink="/admin/soporte" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white border-top border-secondary mt-2">
+      <a *ngIf="canAccess('soporte')" (click)="onNavClick()" routerLink="/admin/soporte" routerLinkActive="active" class="list-group-item list-group-item-action bg-dark text-white border-top border-secondary mt-2">
         <i class="fas fa-headset me-2 text-primary"></i> Soporte Técnico
       </a>
     </div>

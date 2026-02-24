@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { StorageService } from '../../services/storage';
@@ -17,6 +17,7 @@ import { PermissionService } from '../../services/permission';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit, OnDestroy {
+  @Output() navItemClicked = new EventEmitter<void>();
   role: string = '';
   
   // Estados booleanos para simplificar las condiciones en el HTML
@@ -71,13 +72,21 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Notifica que se ha hecho clic en un elemento de navegación.
+   * Útil para cerrar el sidebar en dispositivos móviles.
+   */
+  onNavClick(): void {
+    this.navItemClicked.emit();
+  }
+
+  /**
    * Cierra la sesión del usuario, limpia el almacenamiento local y redirige al login.
    */
   logout(): void {
     this.authService.logout().subscribe({
       next: () => {
         this.storageService.clean();
-        window.location.href = '/casavida/login';
+        this.router.navigate(['/login']);
       },
       error: () => {
         this.storageService.clean();

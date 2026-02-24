@@ -68,7 +68,7 @@
 
                     <!-- Fallback to Leaflet Map if no Plan Image -->
                     <ng-template #fallbackMap>
-                        <app-map [lotes]="lotes" [fraccionamientos]="[fraccionamiento]"></app-map>
+                        <app-map *ngIf="fraccionamiento" [lotes]="lotes" [fraccionamientos]="[fraccionamiento]"></app-map>
                         <div *ngIf="isEditing" class="alert alert-warning position-absolute"
                             style="top: 10px; left: 10px; z-index: 1000;">
                             <strong>No hay imagen de plano.</strong> Sube una para comenzar a editar.
@@ -77,18 +77,61 @@
 
                 </div>
 
+                <!-- Admin Gallery Management (Only for Admins) -->
+                <div *ngIf="isAdmin" class="p-3 bg-white border-top border-bottom">
+                    <h5 class="mb-3">
+                        <i class="fas fa-images text-warning"></i> Gestión de Galería (Admin)
+                    </h5>
+
+                    <div class="form-group mb-0">
+                        <label class="font-weight-bold">Subir Imágenes a la Galería</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" (change)="uploadGalleryImage($event)"
+                                accept="image/*,application/pdf" id="adminGalleryUpload" multiple>
+                            <label class="custom-file-label" for="adminGalleryUpload">
+                                Elegir imágenes...
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Admin Gallery Thumbnails with Delete -->
+                    <div *ngIf="fraccionamiento?.galeriaImagenes && fraccionamiento?.galeriaImagenes?.length > 0" class="mt-3">
+                        <div class="d-flex flex-wrap">
+                            <div *ngFor="let img of fraccionamiento?.galeriaImagenes; let i = index"
+                                class="position-relative m-1" style="width: 80px; height: 80px;">
+                                <img [src]="img" class="w-100 h-100 rounded border" style="object-fit: cover;">
+
+                                <button
+                                    class="btn btn-sm position-absolute shadow-sm d-flex align-items-center justify-content-center"
+                                    [class.btn-warning]="fraccionamiento?.logoUrl === img"
+                                    [class.btn-light]="fraccionamiento?.logoUrl !== img"
+                                    style="bottom: 2px; right: 28px; border-radius: 50%; width: 24px; height: 24px; padding: 0; z-index: 10;"
+                                    (click)="setCoverImage(img)">
+                                    <i class="fas fa-star" style="font-size: 10px;" [class.text-white]="fraccionamiento?.logoUrl === img"></i>
+                                </button>
+
+                                <button class="btn btn-danger btn-sm position-absolute shadow-sm"
+                                    style="bottom: 2px; right: 2px; width: 24px; height: 24px; border-radius: 50%; padding: 0;"
+                                    (click)="deleteGalleryImage(i)">
+                                    <i class="fas fa-trash" style="font-size: 10px;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- SVG Floor Plan (Public View) -->
                 <div *ngIf="fraccionamiento?.planoSvg" class="mb-4 border rounded">
                     <h5 class="p-3 mb-0 bg-light border-bottom">
                         <i class="fas fa-sitemap text-info"></i> Plano del Desarrollo
                         <span class="ml-3">
-                            <span class="badge-status badge-status-active">
+                            <span class="badge-status badge-lote-disponible">
                                 <i class="fas fa-circle" style="font-size: 8px;"></i> Disponible
                             </span>
-                            <span class="badge-status badge-status-info ml-1">
+                            <span class="badge-status badge-lote-apartado ml-1">
                                 <i class="fas fa-circle" style="font-size: 8px;"></i> Apartado
                             </span>
-                            <span class="badge-status badge-status-danger ml-1">
+                            <span class="badge-status badge-lote-vendido ml-1">
                                 <i class="fas fa-circle" style="font-size: 8px;"></i> Vendido
                             </span>
                         </span>
@@ -103,56 +146,7 @@
                     </div>
                 </div>
 
-                <!-- Admin Gallery Management (Only for Admins) -->
-                <div *ngIf="isAdmin" class="p-3 bg-white border-top">
-                    <h5 class="mb-3">
-                        <i class="fas fa-images text-warning"></i> Gestión de Galería (Admin)
-                    </h5>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">Subir Imágenes a la Galería</label>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" (change)="uploadGalleryImage($event)"
-                                accept="image/*,application/pdf" id="adminGalleryUpload" multiple>
-                            <label class="custom-file-label" for="adminGalleryUpload">
-                                Elegir imágenes (JPEG, PNG, PDF, WebP - Max 50MB)...
-                            </label>
-                        </div>
-                        <small class="text-muted d-block mt-1">
-                            Puedes seleccionar múltiples archivos. Los PDFs se convertirán automáticamente a imágenes.
-                        </small>
-                    </div>
-
-                    <!-- Admin Gallery Thumbnails with Delete -->
-                    <div *ngIf="fraccionamiento?.galeriaImagenes && fraccionamiento?.galeriaImagenes?.length > 0" class="mt-3">
-                        <label class="font-weight-bold">Imágenes Actuales ({{ fraccionamiento?.galeriaImagenes?.length
-                            }})</label>
-                        <div class="d-flex flex-wrap">
-                            <div *ngFor="let img of fraccionamiento?.galeriaImagenes; let i = index"
-                                class="position-relative m-1" style="width: 120px; height: 120px;">
-                                <img [src]="img" class="w-100 h-100 rounded border" style="object-fit: cover;">
-
-                                <!-- Set Cover Button -->
-                                <button
-                                    class="btn btn-sm position-absolute shadow-sm d-flex align-items-center justify-content-center"
-                                    [class.btn-warning]="fraccionamiento?.logoUrl === img"
-                                    [class.btn-light]="fraccionamiento?.logoUrl !== img"
-                                    style="bottom: 5px; right: 35px; border-radius: 50%; width: 30px; height: 30px; padding: 0; z-index: 10;"
-                                    (click)="setCoverImage(img)" title="Usar como Portada">
-                                    <i class="fas fa-star" [class.text-white]="fraccionamiento?.logoUrl === img"
-                                        [class.text-muted]="fraccionamiento?.logoUrl !== img"></i>
-                                </button>
-
-                                <!-- Delete Button -->
-                                <button class="btn btn-danger btn-sm position-absolute shadow-sm"
-                                    style="bottom: 5px; right: 5px; width: 30px; height: 30px; line-height: 1; border-radius: 50%; padding: 0;"
-                                    (click)="deleteGalleryImage(i)" title="Eliminar imagen">
-                                    <i class="fas fa-trash" style="font-size: 12px;"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Gallery Below Map (Always Visible) - MOVED UP AS REQUESTED -->
                 <div *ngIf="fraccionamiento?.galeriaImagenes && fraccionamiento?.galeriaImagenes?.length > 0"
@@ -244,9 +238,9 @@
                                 <td>{{ lote.precioTotal | currency:'MXN' }}</td>
                                 <td>
                                     <span class="badge-status" [ngClass]="{
-                                            'badge-status-active': lote.estatus === 'DISPONIBLE',
-                                            'badge-status-danger': lote.estatus === 'VENDIDO',
-                                            'badge-status-info': lote.estatus === 'APARTADO'
+                                            'badge-lote-disponible': lote.estatus === 'DISPONIBLE',
+                                            'badge-lote-vendido': lote.estatus === 'VENDIDO',
+                                            'badge-lote-apartado': lote.estatus === 'APARTADO'
                                         }">{{ lote.estatus }}</span>
                                 </td>
                                 <td>
@@ -278,6 +272,17 @@
             <div class="position-absolute text-white" style="bottom: 20px;">
                 {{ currentImageIndex + 1 }} / {{ fraccionamiento?.galeriaImagenes?.length }}
             </div>
+        </div>
+    </div>
+
+    <!-- Custom Floating Tooltip for SVG -->
+    <div id="loteTooltip" class="lote-tooltip-custom" style="display: none; opacity: 0;">
+        <strong id="tooltipLote">Lote 0</strong>
+        <div id="tooltipPrice" class="fw-bold text-warning"></div>
+        <div id="tooltipArea">0 m²</div>
+        <div id="tooltipStatus">
+            <span class="status-dot" id="tooltipStatusDot"></span>
+            <span id="tooltipStatusText">DISPONIBLE</span>
         </div>
     </div>
 </div>

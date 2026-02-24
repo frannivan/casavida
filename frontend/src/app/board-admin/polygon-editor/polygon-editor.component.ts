@@ -49,13 +49,7 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
     constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
 
-    @HostListener('document:mousedown', ['$event'])
-    onGlobalClick(event: MouseEvent): void {
-        const target = event.target as HTMLElement;
-        if (target && target.innerText && target.innerText.includes('Guardar')) {
-            console.log("DEBUG: Global MouseDown detected on:", target.innerText, target);
-        }
-    }
+
 
     ngOnInit(): void {
         if (this.fraccionamientoId) {
@@ -166,8 +160,11 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         if (!fullUrl.startsWith('http')) {
              if (fullUrl.includes('/api/images/')) {
                  // Already has the full path part we need, but make sure it has the base /casavida if needed
-                 if (!fullUrl.startsWith('/casavida') && environment.apiUrl.includes('/casavida')) {
-                     fullUrl = '/casavida' + (fullUrl.startsWith('/') ? '' : '/') + fullUrl;
+                 if (fullUrl.startsWith('/casavida/')) {
+                     // If we are in local (apiUrl is /api), strip /casavida and replace with /api
+                     if (environment.apiUrl === '/api') {
+                         fullUrl = fullUrl.replace('/casavida/api/', '/api/');
+                     }
                  }
              } else {
                  // Component-only filename, append the full prefix
@@ -286,40 +283,7 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         }
     }
 
-    savePlanoLotePolygon(): void {
-        if (!this.selectedLote) {
-            alert('❌ No hay un lote seleccionado.');
-            return;
-        }
-        if (this.currentPoints.length < 3) {
-            alert('❌ Se requieren al menos 3 puntos. Tienes: ' + this.currentPoints.length);
-            return;
-        }
-        if (!confirm('¿Guardar polígono del lote ' + (this.selectedLote.numeroLote || this.selectedLote.numero) + ' sobre el plano?')) return;
 
-        // Save as [[y, x], ...] (Leaflet CRS.Simple uses [lat, lng] which maps to [y, x] in image coords)
-        const pointsArray = this.currentPoints.map(p => [p.lat, p.lng]);
-        const polygonJson = JSON.stringify(pointsArray);
-
-        this.http.put(
-            `${environment.apiUrl}/lotes/adm/${this.selectedLote.id}/poligono`,
-            polygonJson,
-            { headers: { 'Content-Type': 'text/plain' } }
-        ).subscribe({
-            next: () => {
-                alert('Polígono sobre plano guardado exitosamente');
-                this.selectedLote.planoCoordinates = polygonJson;
-                this.currentPoints = [];
-                this.updateDrawLayers();
-                this.displayPlanoPolygons();
-                this.cdr.detectChanges();
-            },
-            error: (err) => {
-                console.error('Error saving plano polygon:', err);
-                alert('Error al guardar el polígono.');
-            }
-        });
-    }
 
     startNewPlanoLoteDrawing(): void {
         this.selectedLote.planoCoordinates = null;
@@ -660,15 +624,19 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // === SAVING ===
 
-    saveFraccionamientoPolygon(): void {
-        console.log("DEBUG: saveFraccionamientoPolygon called. Points:", this.currentPoints.length);
-        // Force an alert to confirm the click reached the code
+    saveFraccionamientoPolygon(event?: any): void {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        console.log("DEBUG: saveFraccionamientoPolygon execution started. Points:", this.currentPoints.length);
         if (this.currentPoints.length < 3) {
-            alert('❌ No se puede guardar: Se requieren al menos 3 puntos. Tienes: ' + this.currentPoints.length);
+            alert('❌ Se requieren al menos 3 puntos.');
             return;
         }
 
-        if (!confirm('¿Deseas guardar este polígono para el fraccionamiento?')) return;
+        // We'll remove confirm for now to test if it's the culprit
+        console.log("DEBUG: Proceeding to HTTP PUT for fracc polygon");
 
         // Convert LatLng objects to Array of Arrays [[lat,lng], ...] to be JSON serializable
         const pointsArray = this.currentPoints.map(p => [p.lat, p.lng]);
@@ -680,16 +648,39 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             { headers: { 'Content-Type': 'text/plain' } }
         ).subscribe({
             next: () => {
-                alert('Polígono del fraccionamiento guardado exitosamente');
-                this.selectedFraccionamiento.poligonoDelimitador = polygonJson;
-                this.currentPoints = [];
-                this.updateDrawLayers();
-                this.displayExistingPolygons();
-                this.cdr.detectChanges();
+                const newCentroid = this.calculateCentroid(this.currentPoints);
+                if (newCentroid) {
+                    this.selectedFraccionamiento.coordenadasGeo = newCentroid;
+                    this.selectedFraccionamiento.poligonoDelimitador = polygonJson;
+                    
+                    this.http.put(
+                        `${environment.apiUrl}/fraccionamientos/${this.selectedFraccionamiento.id}`,
+                        this.selectedFraccionamiento
+                    ).subscribe({
+                        next: () => {
+                            alert('✅ Polígono y ubicación del pin actualizados correctamente');
+                            this.currentPoints = [];
+                            this.updateDrawLayers();
+                            this.displayExistingPolygons();
+                            this.cdr.detectChanges();
+                        },
+                        error: (err) => {
+                            console.error("Error updating fracc location:", err);
+                            alert('Polígono guardado, pero error al actualizar ubicación del pin.');
+                        }
+                    });
+                } else {
+                    alert('✅ Polígono del fraccionamiento guardado exitosamente');
+                    this.selectedFraccionamiento.poligonoDelimitador = polygonJson;
+                    this.currentPoints = [];
+                    this.updateDrawLayers();
+                    this.displayExistingPolygons();
+                    this.cdr.detectChanges();
+                }
             },
             error: (err) => {
                 console.error("Error saving fracc polygon:", err);
-                alert('No se pudo guardar el polígono. Revisa la consola para más detalles.');
+                alert('No se pudo guardar el polígono.');
             }
         });
     }
@@ -721,19 +712,22 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         return `${centerLat.toFixed(6)}, ${centerLng.toFixed(6)}`;
     }
     
-    saveLotePolygon(): void {
-        console.log("DEBUG: saveLotePolygon called. Points:", this.currentPoints.length);
+    saveLotePolygon(event?: any): void {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        console.log("DEBUG: saveLotePolygon execution started. Points:", this.currentPoints.length);
         if (!this.selectedLote) {
             alert('❌ No hay un lote seleccionado.');
             return;
         }
         if (this.currentPoints.length < 3) {
-            alert('❌ No se puede guardar: Se requieren al menos 3 puntos. Tienes: ' + this.currentPoints.length);
+            alert('❌ Se requieren al menos 3 puntos.');
             return;
         }
 
-        if (!confirm('¿Deseas guardar el polígono para el lote ' + this.selectedLote.numeroLote + '?')) return;
-
+        console.log("DEBUG: Proceeding to HTTP PUT for lote polygon");
         const pointsArray = this.currentPoints.map(p => [p.lat, p.lng]);
         const polygonJson = JSON.stringify(pointsArray);
 
@@ -755,7 +749,7 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
                         this.selectedLote
                     ).subscribe({
                         next: () => {
-                            alert('Polígono y Ubicación (Pin) actualizados correctamente');
+                            alert('✅ Polígono y Ubicación (Pin) actualizados correctamente');
                             this.currentPoints = [];
                             this.updateDrawLayers();
                             this.displayExistingPolygons();
@@ -767,7 +761,7 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
                         }
                     });
                 } else {
-                    alert('Polígono del lote guardado exitosamente');
+                    alert('✅ Polígono del lote guardado exitosamente');
                     this.selectedLote.planoCoordinates = polygonJson;
                     this.currentPoints = [];
                     this.updateDrawLayers();
@@ -778,6 +772,45 @@ export class PolygonEditorComponent implements OnInit, AfterViewInit, OnDestroy 
             error: (err) => {
                 console.error("Error saving lote polygon:", err);
                 alert('No se pudo guardar el polígono del lote.');
+            }
+        });
+    }
+
+    savePlanoLotePolygon(event?: any): void {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        console.log("DEBUG: savePlanoLotePolygon execution started. Points:", this.currentPoints.length);
+        if (!this.selectedLote) {
+            alert('❌ No hay un lote seleccionado.');
+            return;
+        }
+        if (this.currentPoints.length < 3) {
+            alert('❌ Se requieren al menos 3 puntos.');
+            return;
+        }
+
+        console.log("DEBUG: Proceeding to HTTP PUT for plano polygon");
+        const pointsArray = this.currentPoints.map(p => [p.lat, p.lng]);
+        const polygonJson = JSON.stringify(pointsArray);
+
+        this.http.put(
+            `${environment.apiUrl}/lotes/adm/${this.selectedLote.id}/poligono`,
+            polygonJson,
+            { headers: { 'Content-Type': 'text/plain' } }
+        ).subscribe({
+            next: () => {
+                alert('✅ Polígono en plano guardado correctamente.');
+                this.selectedLote.planoCoordinates = polygonJson;
+                this.currentPoints = [];
+                this.updateDrawLayers();
+                this.displayExistingPolygons();
+                this.cdr.detectChanges();
+            },
+            error: (err) => {
+                console.error("Error saving plano polygon:", err);
+                alert('No se pudo guardar el polígono en plano.');
             }
         });
     }

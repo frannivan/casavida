@@ -27,14 +27,24 @@ public class DocumentationController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('RECEPCION') or hasRole('VENDEDOR')")
     public List<String> listDocs() {
         try {
-            // Priority 1: Direct file system path (Development)
-            Path docsPath = Paths.get("src/main/resources/docs");
-            if (!Files.exists(docsPath)) {
-                // Priority 2: Try to find it relative to current directory if running elsewhere
-                docsPath = Paths.get("backend/src/main/resources/docs");
+            // Priority 1: Direct file system paths
+            String[] possiblePaths = {
+                "src/main/resources/docs",
+                "backend/src/main/resources/docs",
+                "resources/docs",
+                "docs"
+            };
+
+            Path docsPath = null;
+            for (String p : possiblePaths) {
+                Path candidate = Paths.get(p);
+                if (Files.exists(candidate)) {
+                    docsPath = candidate;
+                    break;
+                }
             }
             
-            if (Files.exists(docsPath)) {
+            if (docsPath != null) {
                 try (Stream<Path> stream = Files.walk(docsPath, 5)) {
                     return stream
                             .filter(file -> !Files.isDirectory(file))
@@ -42,6 +52,7 @@ public class DocumentationController {
                             .map(Path::toString)
                             .filter(name -> name.endsWith(".md") || name.endsWith(".html") || 
                                        name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg"))
+                            .map(name -> name.replace("\\", "/")) // Normalize for cross-platform
                             .collect(Collectors.toList());
                 }
             }

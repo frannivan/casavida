@@ -179,7 +179,7 @@ public class LoteController {
      * @return Confirmación de creación
      */
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public ResponseEntity<?> createLote(@RequestBody Lote lote) {
         loteRepository.save(lote);
         return ResponseEntity.ok(new MessageResponse("Lote creado exitosamente."));
@@ -200,7 +200,7 @@ public class LoteController {
      * @return Confirmación o 404
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public ResponseEntity<?> updateLote(@PathVariable Long id, @RequestBody Lote loteDetails) {
         return loteRepository.findById(id).map(lote -> {
             lote.setNumeroLote(loteDetails.getNumeroLote());
@@ -239,7 +239,7 @@ public class LoteController {
      * @return Confirmación o 404
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public ResponseEntity<?> deleteLote(@PathVariable Long id) {
         if (loteRepository.existsById(id)) {
             loteRepository.deleteById(id);
@@ -263,7 +263,7 @@ public class LoteController {
      * @return Confirmación o 404
      */
     @PutMapping("/adm/{id}/poligono")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public ResponseEntity<?> updateLotePoligono(
             @PathVariable Long id,
             @RequestBody String coordinates) {
@@ -289,7 +289,7 @@ public class LoteController {
      * @return Lote actualizado o 404
      */
     @PutMapping("/adm/{id}/estatus")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public ResponseEntity<?> updateLoteEstatus(
             @PathVariable Long id,
             @RequestBody java.util.Map<String, String> body) {

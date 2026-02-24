@@ -36,7 +36,12 @@ export class MapComponent implements AfterViewInit, OnChanges {
     }).addTo(this.map);
 
     this.markersLayer = L.layerGroup().addTo(this.map);
-    this.updateMarkers();
+    
+    // Ensure map container is ready and layouted
+    setTimeout(() => {
+        this.map.invalidateSize();
+        this.updateMarkers();
+    }, 100);
   }
 
   private updateMarkers(): void {
@@ -58,20 +63,28 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
     if (this.fraccionamientos && this.fraccionamientos.length > 0) {
       this.fraccionamientos.forEach(f => {
+        if (!f) return;
         // 1.1 Support for Delimiter Polygon (poligonoDelimitador)
-        if (f.poligonoDelimitador && f.poligonoDelimitador.startsWith('[')) {
+        if (f.poligonoDelimitador && f.poligonoDelimitador.length > 5) {
           try {
             const points = JSON.parse(f.poligonoDelimitador);
             if (Array.isArray(points) && points.length > 2) {
-               L.polygon(points, { 
-                   color: '#333', 
-                   fillColor: 'transparent', 
-                   weight: 2,
-                   dashArray: '5, 5' 
-               }).addTo(this.markersLayer);
-               // Add bounds of fraccionamiento to view
-               bounds.extend(L.latLngBounds(points));
-               hasMarkers = true;
+               // Stricter Filter for geographical map: Mexico region + reasonable size
+               const firstPoint = points[0];
+               if (Array.isArray(firstPoint) && 
+                   firstPoint[0] > 14 && firstPoint[0] < 33 && 
+                   firstPoint[1] < -86 && firstPoint[1] > -118) {
+                   
+                   L.polygon(points, { 
+                       color: '#333', 
+                       fillColor: 'transparent', 
+                       weight: 2,
+                       dashArray: '5, 5' 
+                   }).addTo(this.markersLayer);
+                   // Add bounds of fraccionamiento to view
+                   bounds.extend(L.latLngBounds(points));
+                   hasMarkers = true;
+               }
             }
           } catch(e) {}
         }
@@ -115,36 +128,61 @@ export class MapComponent implements AfterViewInit, OnChanges {
               fillColor = '#28a745';
               break;
           case 'VENDIDO': 
-              color = '#dc3545'; // Red
-              fillColor = '#dc3545';
+              color = '#8B4513'; // Brown/Coffee
+              fillColor = '#8B4513';
               break;
           case 'APARTADO': 
-              color = '#ffc107'; // Orange/Yellow
-              fillColor = '#ffc107';
+              color = '#007bff'; // Blue
+              fillColor = '#007bff';
               break;
       }
 
       // 2.1 Plot Polygons
-      if (lote.planoCoordinates && lote.planoCoordinates.startsWith('[')) {
+      // Restoration with safety check: Only plot if coordinates look like GPS (Lat between -90 and 90)
+      if (lote.planoCoordinates && lote.planoCoordinates.length > 5) {
         try {
           const points = JSON.parse(lote.planoCoordinates);
           if (Array.isArray(points) && points.length > 2) {
-             const poly = L.polygon(points, { 
-                color: color,
-                fillColor: fillColor,
-                fillOpacity: 0.6, // More visible
-                weight: 1
-             }).addTo(this.markersLayer);
+             // 1. Check if first point is valid GPS in Mexico region
+             const firstPoint = points[0];
+             const isMexico = Array.isArray(firstPoint) && 
+                              firstPoint[0] > 14 && firstPoint[0] < 33 && 
+                              firstPoint[1] < -86 && firstPoint[1] > -118;
              
-             // Add tooltip to polygon too
-             poly.bindTooltip(`Lote ${lote.numeroLote}`, { sticky: true });
-             
-             poly.on('click', () => {
-                 this.router.navigate(['/lote', lote.id]);
-             });
-             
-             bounds.extend(poly.getBounds());
-             hasMarkers = true;
+             if (isMexico) {
+                 // 2. Extra Safety: Size Check - A lot polygon shouldn't span more than 0.01 degrees (~1km)
+                 const pBounds = L.latLngBounds(points);
+                 const latSpan = Math.abs(pBounds.getNorth() - pBounds.getSouth());
+                 const lngSpan = Math.abs(pBounds.getEast() - pBounds.getWest());
+                 
+                 if (latSpan < 0.01 && lngSpan < 0.01) {
+                     const poly = L.polygon(points, { 
+                        color: color,
+                        fillColor: fillColor,
+                        fillOpacity: 0.4,
+                        weight: 1
+                     }).addTo(this.markersLayer);
+                     
+                     // Add tooltip to polygon
+                     poly.bindTooltip(`
+                                    <div class="text-center">
+                                        <strong>Lote ${lote.numeroLote || lote.numero}</strong><br>
+                                        <span class="badge" style="background-color: ${fillColor}; color: white;">${lote.estatus}</span><br>
+                                        <div class="fw-bold text-warning" style="font-size: 1.1em; margin: 3px 0;">
+                                            ${new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(lote.precioTotal)}
+                                        </div>
+                                        ${lote.areaMetrosCuadrados} m²
+                                    </div>
+                                `, { sticky: true, direction: 'top' });
+                     
+                     poly.on('click', () => {
+                         this.router.navigate(['/lote', lote.id]);
+                     });
+                     
+                     bounds.extend(poly.getBounds());
+                     hasMarkers = true;
+                 }
+             }
           }
         } catch(e) {}
       }
@@ -165,12 +203,15 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
           // Tooltip permanently visible on hover? User said "cuando te pares en el" -> Hover.
           marker.bindTooltip(`
-              <div style="text-align: center;">
-                  <strong>Lote ${lote.numeroLote}</strong><br>
-                  <span class="badge ${lote.estatus === 'DISPONIBLE' ? 'badge-success' : (lote.estatus === 'VENDIDO' ? 'badge-danger' : 'badge-warning')}">${lote.estatus}</span><br>
-                  ${lote.areaMetrosCuadrados} m²
+          <div style="text-align: center;">
+              <strong>Lote ${lote.numeroLote}</strong><br>
+              <span class="badge" style="background-color: ${fillColor}; color: white;">${lote.estatus}</span><br>
+              <div class="fw-bold text-warning" style="font-size: 1.1em; margin: 3px 0;">
+                ${new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(lote.precioTotal)}
               </div>
-          `, { direction: 'top', offset: [0, -5] });
+              ${lote.areaMetrosCuadrados} m²
+          </div>
+      `, { direction: 'top', offset: [0, -5] });
           
           marker.on('click', () => {
               this.router.navigate(['/lote', lote.id]);
@@ -185,15 +226,17 @@ export class MapComponent implements AfterViewInit, OnChanges {
     });
 
     if (hasMarkers) {
-      const sw = bounds.getSouthWest();
-      const ne = bounds.getNorthEast();
-      
-      // Check if it's a single point (bounds are identical)
-      if (sw.lat === ne.lat && sw.lng === ne.lng) {
-        this.map.setView(sw, 18); // High zoom for single point
-      } else {
-        this.map.fitBounds(bounds, { padding: [30, 30], maxZoom: 18 });
-      }
+      setTimeout(() => {
+        this.map.invalidateSize();
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+        
+        if (sw.lat === ne.lat && sw.lng === ne.lng) {
+            this.map.setView(sw, 18);
+        } else {
+            this.map.fitBounds(bounds, { padding: [50, 50], maxZoom: 18 });
+        }
+      }, 200);
     }
   }
 

@@ -3,31 +3,40 @@
   
   <!-- DISEÑO CON BARRA LATERAL (Admin, Vendedor, Recepción, etc.) -->
   <ng-container *ngIf="showAdminBoard || showRecepcionBoard || showVendedorBoard || showContabilidadBoard || showDirectivoBoard || showUserBoard; else publicLayout">
-    <div class="d-flex" id="wrapper">
+    <div class="d-flex" id="wrapper" [class.toggled]="isSidebarToggled">
       
+      <!-- Overlay para móvil -->
+      <div class="sidebar-overlay" (click)="toggleSidebar()"></div>
+
       <!-- Componente Sidebar (Barra Lateral) -->
-      <app-sidebar></app-sidebar>
+      <app-sidebar [class.toggled]="isSidebarToggled" (navItemClicked)="isSidebarToggled = false"></app-sidebar>
 
       <!-- Contenedor del Contenido de Página -->
-      <div id="page-content-wrapper" style="margin-left: 250px; width: 100%;">
+      <div id="page-content-wrapper" style="width: 100%;">
         
         <!-- Navbar Superior (Premium Look) -->
-        <nav class="navbar navbar-expand navbar-light bg-white border-bottom shadow-sm py-2">
-          <div class="container-fluid">
+        <nav class="navbar navbar-expand navbar-light bg-white border-bottom shadow-sm py-1 py-lg-2">
+          <div class="container-fluid px-2 px-lg-3">
+            <!-- Botón de Toggle para Móvil -->
+            <button class="btn btn-link d-lg-none me-2" (click)="toggleSidebar()">
+              <i class="fas fa-bars text-primary" style="font-size: 1.25rem;"></i>
+            </button>
+
             <!-- Branding / Logo -->
-            <a href="#" class="navbar-brand ms-3 fw-bold text-primary" routerLink="home">
-              <i class="fas fa-home"></i> CasaVida
+            <a href="#" class="navbar-brand ms-1 ms-lg-3 fw-bold text-primary text-truncate" style="max-width: 200px;" routerLink="home">
+              <i class="fas fa-home"></i> <span class="d-none d-md-inline">Casa Vida</span>
             </a>
 
             <!-- Menú de Usuario (Derecha) -->
             <ul class="navbar-nav ms-auto me-3 align-items-center">
-              <li class="nav-item me-3">
-                <!-- Etiqueta de Rol del Usuario -->
-                <span class="badge bg-soft-primary text-primary border border-primary-soft">
+              <li class="nav-item me-1 me-lg-3">
+                <!-- Etiqueta de Rol del Usuario - Oculta en móviles -->
+                <span class="badge bg-soft-primary text-primary border border-primary-soft d-none d-lg-inline-flex">
                   <i class="fas fa-user-shield" *ngIf="showAdminBoard"></i>
                   <i class="fas fa-user-tie" *ngIf="showVendedorBoard"></i>
                   <i class="fas fa-concierge-bell" *ngIf="showRecepcionBoard"></i>
-                  {{ username }} <span class="text-muted fw-normal ms-1">({{ userRoleDisplay }})</span>
+                  <span class="ms-1">{{ username }}</span>
+                  <span class="text-muted fw-normal ms-1">({{ userRoleDisplay }})</span>
                 </span>
               </li>
 
@@ -74,7 +83,7 @@
       <div class="container">
         <!-- Logo Público -->
         <a href="#" class="navbar-brand fw-bold fs-4" routerLink="/home">
-           <span class="text-primary">Casa</span>Vida
+           <span class="text-primary">Casa</span> Vida
         </a>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPublic">

@@ -43,27 +43,36 @@ export class BoardClientsComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadClientes();
+        
+        // Subscribe to query params to react even if already on this component
+        this.route.queryParamMap.subscribe(params => {
+            const clientIdParam = params.get('clientId');
+            const actionParam = params.get('action');
+
+            if (clientIdParam && this.clientes.length > 0) {
+                const client = this.clientes.find(c => c.id === Number(clientIdParam));
+                if (client) {
+                    this.openDossier(client);
+                }
+            }
+
+            if (actionParam === 'new_client') {
+                this.openClientModal();
+            }
+        });
     }
 
     loadClientes(): void {
         this.clienteService.getAllClientes().subscribe({
             next: data => {
                 this.clientes = data;
-                this.checkQueryParam();
+                // Reactive params subscription will handle initial check
             },
             error: err => console.error('Error loading clients', err)
         });
     }
 
-    checkQueryParam(): void {
-        const clientIdParam = this.route.snapshot.queryParamMap.get('clientId');
-        if (clientIdParam && this.clientes.length > 0) {
-            const client = this.clientes.find(c => c.id === Number(clientIdParam));
-            if (client) {
-                this.openDossier(client);
-            }
-        }
-    }
+    // Removed checkQueryParams as it's now handled by the observable subscription in ngOnInit
 
     get filteredClientes() {
         if (!this.searchTerm) return this.clientes;

@@ -71,11 +71,11 @@ export class HomeComponent implements OnInit {
     }
     // Fix old image URLs that don't have the context path
     if (url.startsWith('/api/images/')) {
-      return '/casavida' + url;
+      return url;
     }
     // Fix static asset paths (like /images/lotes/)
     if (url.startsWith('/images/')) {
-      return '/casavida' + url;
+      return url;
     }
     return url;
   }

@@ -55,7 +55,7 @@
                             </button>
                             <button class="btn btn-success btn-block mt-2" 
                                 style="position: relative; z-index: 1001; pointer-events: auto !important;"
-                                (click)="saveFraccionamientoPolygon()">
+                                (click)="saveFraccionamientoPolygon($event)">
                                 💾 Guardar Polígono ({{currentPoints.length}} pts)
                             </button>
                             <button class="btn btn-warning btn-block mt-2" (click)="clearPoints()">
@@ -158,7 +158,7 @@
                         </button>
                         <button class="btn btn-success btn-block mt-2" 
                             style="position: relative; z-index: 1001; pointer-events: auto !important;"
-                            (click)="saveLotePolygon()">
+                            (click)="saveLotePolygon($event)">
                             💾 Guardar Lote ({{currentPoints.length}} pts)
                         </button>
                         <button class="btn btn-warning btn-block mt-2" (click)="clearPoints()">
@@ -260,7 +260,7 @@
                             ✨ Nuevo Polígono
                         </button>
                         <button class="btn btn-success btn-block mt-2"
-                            (click)="savePlanoLotePolygon()">
+                            (click)="savePlanoLotePolygon($event)">
                             💾 Guardar en Plano ({{currentPoints.length}} pts)
                         </button>
                         <button class="btn btn-warning btn-block mt-2" (click)="clearPoints()">

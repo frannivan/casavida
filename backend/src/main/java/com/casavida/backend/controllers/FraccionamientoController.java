@@ -56,7 +56,7 @@ public class FraccionamientoController {
     }
 
     @org.springframework.web.bind.annotation.PostMapping("/create")
-    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public org.springframework.http.ResponseEntity<?> createFraccionamiento(
             @org.springframework.web.bind.annotation.RequestBody Fraccionamiento fraccionamiento) {
         fraccionamientoRepository.save(fraccionamiento);
@@ -65,7 +65,7 @@ public class FraccionamientoController {
     }
 
     @org.springframework.web.bind.annotation.PutMapping("/{id}")
-    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public org.springframework.http.ResponseEntity<?> updateFraccionamiento(
             @org.springframework.web.bind.annotation.PathVariable Long id,
             @org.springframework.web.bind.annotation.RequestBody Fraccionamiento details) {
@@ -87,7 +87,7 @@ public class FraccionamientoController {
     }
 
     @org.springframework.web.bind.annotation.DeleteMapping("/{id}")
-    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public org.springframework.http.ResponseEntity<?> deleteFraccionamiento(
             @org.springframework.web.bind.annotation.PathVariable Long id) {
         if (fraccionamientoRepository.existsById(id)) {
@@ -100,7 +100,7 @@ public class FraccionamientoController {
     }
 
     @org.springframework.web.bind.annotation.PutMapping("/adm/{id}/plano-svg")
-    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public org.springframework.http.ResponseEntity<?> uploadPlanoSvg(
             @org.springframework.web.bind.annotation.PathVariable Long id,
             @org.springframework.web.bind.annotation.RequestBody String svgContent) {
@@ -119,7 +119,7 @@ public class FraccionamientoController {
     }
 
     @org.springframework.web.bind.annotation.DeleteMapping("/adm/{id}/plano-svg")
-    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public org.springframework.http.ResponseEntity<?> deletePlanoSvg(
             @org.springframework.web.bind.annotation.PathVariable Long id) {
         return fraccionamientoRepository.findById(id).map(fraccionamiento -> {
@@ -131,7 +131,7 @@ public class FraccionamientoController {
     }
 
     @org.springframework.web.bind.annotation.PutMapping("/adm/{id}/poligono")
-    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public org.springframework.http.ResponseEntity<?> updatePoligonoDelimitador(
             @org.springframework.web.bind.annotation.PathVariable Long id,
             @org.springframework.web.bind.annotation.RequestBody String poligono) {
@@ -144,7 +144,7 @@ public class FraccionamientoController {
     }
 
     @org.springframework.web.bind.annotation.DeleteMapping("/adm/{id}/poligono")
-    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'DIRECTIVO', 'RECEPCION')")
     public org.springframework.http.ResponseEntity<?> deletePoligonoDelimitador(
             @org.springframework.web.bind.annotation.PathVariable Long id) {
         return fraccionamientoRepository.findById(id).map(fracc -> {

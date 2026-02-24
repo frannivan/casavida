@@ -5,7 +5,7 @@
     justify-content: space-between;
     align-items: center;
     position: relative; /* Ensure z-index works if needed */
-    z-index: 1000;      /* Keep above other content */
+    z-index: 1000;
 }
 
 .navbar-brand {
@@ -20,6 +20,9 @@
     margin: 0;
     padding: 0;
     display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-shrink: 0; /* Don't let user menu shrink too much */
 }
 
 .nav-item {
@@ -39,4 +42,46 @@
 
 .container.mt-3 {
     margin-top: 20px;
+}
+
+/* Responsive Layout for Sidebar */
+#wrapper {
+    overflow-x: hidden;
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+    transition: padding-left 0.3s ease;
+}
+
+/* Desktop View (Sidebar Fixed) */
+@media (min-width: 992px) {
+    #page-content-wrapper {
+        padding-left: 250px;
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+/* Mobile Toggle Effect - Handled inside sidebar component for better encapsulation */
+@media (max-width: 991.98px) {
+    #page-content-wrapper {
+        padding-left: 0;
+    }
+}
+
+/* Overlay for Mobile */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1500; /* Below sidebar (2000) but above content */
+    display: none;
+}
+
+#wrapper.toggled .sidebar-overlay {
+    display: block;
 }
